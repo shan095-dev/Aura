@@ -587,13 +587,13 @@ ${jsonBlock}`;
   --po-stamp: var(--muyu-red, #8B3A33);
   --po-air-1: color-mix(in srgb, var(--po-stamp) 88%, #000 12%);
   --po-air-2: #3d4f6a;
-  --po-air-3: color-mix(in srgb, var(--bg-device, #fafafa) 92%, var(--po-air-2) 8%);
+  --po-air-3: color-mix(in srgb, var(--bg-device, rgba(235,248,255,0.7)) 92%, var(--po-air-2) 8%);
   position: fixed; inset: 0; z-index: 1001;
   background:
     radial-gradient(ellipse 100% 48% at 50% -8%, color-mix(in srgb, var(--po-stamp) 9%, transparent) 0%, transparent 55%),
     radial-gradient(ellipse 70% 50% at 100% 18%, color-mix(in srgb, var(--po-air-2) 7%, transparent) 0%, transparent 45%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg-card, #fff) 40%, var(--bg-device, #fafafa)) 0%, var(--bg-device, #fafafa) 28%, var(--bg-device, #fafafa) 100%);
-  color: var(--text-main, #1a1a1a);
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-card, #fff) 40%, var(--bg-device, rgba(235,248,255,0.7))) 0%, var(--bg-device, rgba(235,248,255,0.7)) 28%, var(--bg-device, rgba(235,248,255,0.7)) 100%);
+  color: var(--text-main, #1a3a50);
   font-family: var(--po-sans);
   overflow: hidden;
   transform: translateY(110%);
@@ -614,7 +614,7 @@ ${jsonBlock}`;
   background:
     radial-gradient(ellipse 90% 42% at 50% -5%, color-mix(in srgb, var(--po-stamp) 14%, transparent) 0%, transparent 50%),
     radial-gradient(ellipse 60% 45% at 0% 40%, rgba(80,120,180,0.08) 0%, transparent 42%),
-    var(--bg-device, #1a1a1a);
+    var(--bg-device, #1a3a50);
 }
 #post-office-root .po-watermark {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -644,7 +644,7 @@ ${jsonBlock}`;
   justify-content: space-between;
   gap: 12px;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--bg-device, #fafafa) 92%, transparent) 0%, color-mix(in srgb, var(--bg-device, #fafafa) 75%, transparent) 55%, transparent 100%);
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-device, rgba(235,248,255,0.7)) 92%, transparent) 0%, color-mix(in srgb, var(--bg-device, rgba(235,248,255,0.7)) 75%, transparent) 55%, transparent 100%);
   backdrop-filter: none;
 }
 [data-theme="dark"] #post-office-root .po-topbar {
@@ -779,14 +779,14 @@ ${jsonBlock}`;
   color: #aaa;
 }
 #post-office-root .po-close:hover {
-  color: var(--text-main, #1a1a1a);
+  color: var(--text-main, #1a3a50);
 }
-#post-office-root .po-close:active { color: var(--text-main, #1a1a1a); opacity: 0.7; }
+#post-office-root .po-close:active { color: var(--text-main, #1a3a50); opacity: 0.7; }
 
 #post-office-root .po-inbox-btn {
   width: 36px; height: 36px; border-radius: 50%;
   border: 1px solid var(--border-line, #e8e8e8);
-  background: color-mix(in srgb, var(--bg-body, #f2f2f2) 100%, transparent);
+  background: color-mix(in srgb, var(--bg-body, rgba(220,242,255,0.5)) 100%, transparent);
   cursor: pointer; font-size: 1rem; line-height: 1; color: var(--text-sub, #888);
   display: flex; align-items: center; justify-content: center;
   position: relative;
@@ -798,7 +798,7 @@ ${jsonBlock}`;
   color: #aaa;
 }
 #post-office-root .po-inbox-btn:hover {
-  color: var(--text-main, #1a1a1a);
+  color: var(--text-main, #1a3a50);
   background: var(--bg-body, #eaeaea);
   border-color: color-mix(in srgb, var(--text-main, #111) 15%, var(--border-line, #e0e0e0));
 }
@@ -826,7 +826,7 @@ ${jsonBlock}`;
 #post-office-root .po-title {
   font-family: var(--po-serif); font-size: 2.2rem; font-weight: 700; font-style: italic;
   line-height: 1.05; letter-spacing: -0.025em; margin-bottom: 5px;
-  color: var(--text-main, #1a1a1a);
+  color: var(--text-main, #1a3a50);
 }
 #post-office-root .po-sub {
   font-size: 0.68rem; color: var(--text-sub, #666); letter-spacing: 0.14em;
@@ -840,7 +840,7 @@ ${jsonBlock}`;
   padding: 11px 14px;
   border-radius: 14px;
   border: 1px solid var(--border-line, #e8e8e8);
-  background: color-mix(in srgb, var(--bg-body, #f2f2f2) 55%, var(--bg-card, #fff) 45%);
+  background: color-mix(in srgb, var(--bg-body, rgba(220,242,255,0.5)) 55%, var(--bg-card, #fff) 45%);
   box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 70%, transparent);
 }
 [data-theme="dark"] #post-office-root .po-hub-band {
@@ -865,7 +865,7 @@ ${jsonBlock}`;
 }
 #post-office-root .po-hub-station {
   font-family: var(--po-mono); font-size: 0.52rem; letter-spacing: 0.16em;
-  color: var(--text-main, #1a1a1a); font-weight: 600;
+  color: var(--text-main, #1a3a50); font-weight: 600;
 }
 #post-office-root .po-hub-band-flex { flex: 1; min-width: 8px; }
 #post-office-root .po-hub-coords {
@@ -878,7 +878,7 @@ ${jsonBlock}`;
   display: flex; align-items: center; gap: 15px;
   text-align: left;
   border: 1px solid color-mix(in srgb, #000 65%, transparent);
-  background: linear-gradient(168deg, #2a2a2a 0%, #141414 48%, #1f1f1f 100%);
+  background: linear-gradient(168deg, #2a5070 0%, #141414 48%, #1f1f1f 100%);
   color: #f6f6f6;
   font-family: var(--po-sans);
   padding: 16px 18px;
@@ -1011,7 +1011,7 @@ ${jsonBlock}`;
   border: 1px solid color-mix(in srgb, var(--border-line, #e0e0e0) 78%, var(--po-air-2) 22%);
   background:
     radial-gradient(ellipse 120% 55% at 50% -10%, color-mix(in srgb, var(--po-air-2) 10%, transparent) 0%, transparent 60%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg-card, #fff) 92%, var(--bg-body, #f2f2f2) 8%) 0%, var(--bg-body, #f2f2f2) 100%);
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-card, #fff) 92%, var(--bg-body, rgba(220,242,255,0.5)) 8%) 0%, var(--bg-body, rgba(220,242,255,0.5)) 100%);
   box-shadow: 0 18px 44px rgba(0,0,0,0.06);
   padding: 18px 18px 16px;
   overflow: hidden;
@@ -1061,7 +1061,7 @@ ${jsonBlock}`;
   background:
     radial-gradient(circle at 18% 40%, color-mix(in srgb, var(--po-air-2) 12%, transparent) 0%, transparent 52%),
     radial-gradient(circle at 70% 45%, color-mix(in srgb, var(--po-stamp) 10%, transparent) 0%, transparent 55%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg-card, #fff) 85%, var(--po-air-2) 6%) 0%, color-mix(in srgb, var(--bg-body, #f2f2f2) 85%, var(--po-air-2) 7%) 100%);
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-card, #fff) 85%, var(--po-air-2) 6%) 0%, color-mix(in srgb, var(--bg-body, rgba(220,242,255,0.5)) 85%, var(--po-air-2) 7%) 100%);
   overflow: hidden;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
 }
@@ -1138,13 +1138,13 @@ ${jsonBlock}`;
 #post-office-root .po-skel-line {
   flex: 1; min-height: 76px; border-radius: 4px 20px 20px 12px;
   border: 1px solid var(--border-line, #e0e0e0);
-  background: linear-gradient(90deg, var(--bg-body, #f2f2f2) 0%, var(--bg-card, #fff) 50%, var(--bg-body, #f2f2f2) 100%);
+  background: linear-gradient(90deg, var(--bg-body, rgba(220,242,255,0.5)) 0%, var(--bg-card, #fff) 50%, var(--bg-body, rgba(220,242,255,0.5)) 100%);
   background-size: 200% 100%; animation: po-shine 1.1s ease infinite;
 }
 [data-theme="dark"] #post-office-root .po-skel-mark,
 [data-theme="dark"] #post-office-root .po-skel-line {
   border-color: var(--border-line, #333);
-  background: linear-gradient(90deg, #1e1e1e 0%, #2a2a2a 50%, #1e1e1e 100%); background-size: 200% 100%;
+  background: linear-gradient(90deg, #1e1e1e 0%, #2a5070 50%, #1e1e1e 100%); background-size: 200% 100%;
 }
 @keyframes po-shine { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
 
@@ -1205,7 +1205,7 @@ ${jsonBlock}`;
   border-radius: 3px 22px 22px 14px;
   border: 1px solid color-mix(in srgb, var(--border-line, #e0e0e0) 90%, var(--text-main, #111) 10%);
   background:
-    linear-gradient(165deg, color-mix(in srgb, var(--bg-card, #fff) 92%, var(--bg-body, #f2f2f2) 8%) 0%, var(--bg-card, #fff) 40%, var(--bg-card, #fff) 100%);
+    linear-gradient(165deg, color-mix(in srgb, var(--bg-card, #fff) 92%, var(--bg-body, rgba(220,242,255,0.5)) 8%) 0%, var(--bg-card, #fff) 40%, var(--bg-card, #fff) 100%);
   box-shadow:
     0 1px 0 color-mix(in srgb, var(--text-main, #111) 6%, transparent),
     0 14px 32px rgba(0,0,0,0.07);
@@ -1265,7 +1265,7 @@ ${jsonBlock}`;
 }
 #post-office-root .po-card-to {
   font-family: var(--po-serif); font-size: 1.18rem; font-style: italic; font-weight: 600;
-  color: var(--text-main, #1a1a1a); line-height: 1.15;
+  color: var(--text-main, #1a3a50); line-height: 1.15;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 #post-office-root .po-card-from {
@@ -1291,7 +1291,7 @@ ${jsonBlock}`;
   color: var(--text-sub, #888); font-size: 1rem;
   border: 1px dashed var(--border-line, #e0e0e0);
   border-radius: 20px;
-  background: color-mix(in srgb, var(--bg-card, #fff) 88%, var(--bg-body, #f2f2f2) 12%);
+  background: color-mix(in srgb, var(--bg-card, #fff) 88%, var(--bg-body, rgba(220,242,255,0.5)) 12%);
 }
 [data-theme="dark"] #post-office-root .po-empty {
   background: rgba(255,255,255,0.03);
@@ -1308,7 +1308,7 @@ ${jsonBlock}`;
   margin-bottom: 16px; padding: 12px 14px 14px;
   border-radius: 16px;
   border: 1px solid var(--border-line, #e8e8e8);
-  background: color-mix(in srgb, var(--bg-card, #fff) 90%, var(--bg-body, #f2f2f2) 10%);
+  background: color-mix(in srgb, var(--bg-card, #fff) 90%, var(--bg-body, rgba(220,242,255,0.5)) 10%);
   box-shadow: 0 8px 24px rgba(0,0,0,0.04);
 }
 [data-theme="dark"] #post-office-root .po-detail-topnav {
@@ -1342,7 +1342,7 @@ ${jsonBlock}`;
   display: flex; align-items: stretch;
   border-radius: 20px 26px 24px 20px;
   border: 1px solid color-mix(in srgb, var(--border-line, #e0e0e0) 75%, var(--text-main, #111) 25%);
-  background: color-mix(in srgb, var(--bg-card, #fff) 94%, var(--bg-body, #f2f2f2) 6%);
+  background: color-mix(in srgb, var(--bg-card, #fff) 94%, var(--bg-body, rgba(220,242,255,0.5)) 6%);
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--text-main, #111) 4%, transparent),
     0 22px 48px rgba(0,0,0,0.08);
@@ -1351,7 +1351,7 @@ ${jsonBlock}`;
 }
 [data-theme="dark"] #post-office-root .po-detail-dossier {
   box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 26px 56px rgba(0,0,0,0.5);
-  background: linear-gradient(145deg, #2a2a2a 0%, var(--bg-card, #222) 40%, #1e1e1e 100%);
+  background: linear-gradient(145deg, #2a5070 0%, var(--bg-card, #222) 40%, #1e1e1e 100%);
 }
 @keyframes po-detail-unfold {
   from { opacity: 0; transform: translateY(20px) rotate(-0.6deg); }
@@ -1400,7 +1400,7 @@ ${jsonBlock}`;
 }
 #post-office-root .po-detail-h2 {
   font-family: var(--po-serif); font-size: 1.65rem; font-weight: 700; font-style: italic;
-  line-height: 1.05; letter-spacing: -0.02em; color: var(--text-main, #1a1a1a); margin-bottom: 6px;
+  line-height: 1.05; letter-spacing: -0.02em; color: var(--text-main, #1a3a50); margin-bottom: 6px;
 }
 #post-office-root .po-detail-ref {
   font-family: var(--po-mono); font-size: 0.5rem; letter-spacing: 0.12em;
@@ -1411,12 +1411,12 @@ ${jsonBlock}`;
   margin-bottom: 20px;
   padding: 14px 14px 12px;
   border-radius: 10px;
-  background: color-mix(in srgb, var(--bg-body, #f2f2f2) 88%, var(--po-stamp) 5%);
+  background: color-mix(in srgb, var(--bg-body, rgba(220,242,255,0.5)) 88%, var(--po-stamp) 5%);
   border: 1px solid color-mix(in srgb, var(--border-line, #e0e0e0) 85%, var(--po-stamp) 15%);
   box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 60%, transparent);
 }
 [data-theme="dark"] #post-office-root .po-routing {
-  background: color-mix(in srgb, #1a1a1a 92%, var(--po-stamp) 8%);
+  background: color-mix(in srgb, #1a3a50 92%, var(--po-stamp) 8%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
 }
 #post-office-root .po-routing-grid {
@@ -1472,7 +1472,7 @@ ${jsonBlock}`;
       color-mix(in srgb, var(--border-line, #e0e0e0) 45%, transparent) 28px
     );
   font-family: var(--po-serif); font-size: 0.95rem; line-height: 28px;
-  color: var(--text-main, #1a1a1a); white-space: pre-wrap;
+  color: var(--text-main, #1a3a50); white-space: pre-wrap;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, #fff 40%, transparent), 0 8px 28px rgba(0,0,0,0.05);
 }
 [data-theme="dark"] #post-office-root .po-letter-sheet {
@@ -1510,7 +1510,7 @@ ${jsonBlock}`;
   margin: 0 -4px 0 -2px;
   border-radius: 12px 4px 4px 12px;
   border: 1px dashed color-mix(in srgb, var(--text-main, #111) 22%, var(--border-line, #e0e0e0));
-  background: color-mix(in srgb, var(--bg-body, #f2f2f2) 55%, var(--bg-card, #fff) 45%);
+  background: color-mix(in srgb, var(--bg-body, rgba(220,242,255,0.5)) 55%, var(--bg-card, #fff) 45%);
 }
 [data-theme="dark"] #post-office-root .po-docket {
   background: color-mix(in srgb, #222 70%, #181818 30%);
@@ -1519,7 +1519,7 @@ ${jsonBlock}`;
   position: absolute; top: -11px; left: 18px;
   display: inline-flex; align-items: baseline; gap: 10px;
   padding: 5px 14px 6px;
-  background: var(--text-main, #1a1a1a); color: var(--bg-device, #fafafa);
+  background: var(--text-main, #1a3a50); color: var(--bg-device, rgba(235,248,255,0.7));
   border-radius: 4px 4px 10px 4px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.15);
 }
@@ -1536,7 +1536,7 @@ ${jsonBlock}`;
 #post-office-root .po-textarea {
   width: 100%; border: 1px solid color-mix(in srgb, var(--border-line, #e0e0e0) 90%, var(--text-main, #111) 10%);
   border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; resize: vertical; min-height: 96px;
-  background: var(--bg-card, #fff); color: var(--text-main, #1a1a1a); font-family: var(--po-sans);
+  background: var(--bg-card, #fff); color: var(--text-main, #1a3a50); font-family: var(--po-sans);
   font-size: 0.86rem; line-height: 26px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -1552,7 +1552,7 @@ ${jsonBlock}`;
     color-mix(in srgb, var(--border-line, #e0e0e0) 55%, transparent) 25px,
     color-mix(in srgb, var(--border-line, #e0e0e0) 55%, transparent) 26px
   );
-  background-color: color-mix(in srgb, var(--bg-card, #fff) 96%, var(--bg-body, #f2f2f2) 4%);
+  background-color: color-mix(in srgb, var(--bg-card, #fff) 96%, var(--bg-body, rgba(220,242,255,0.5)) 4%);
 }
 [data-theme="dark"] #post-office-root .po-textarea--ruled {
   background-image: repeating-linear-gradient(
@@ -1567,12 +1567,12 @@ ${jsonBlock}`;
 #post-office-root .po-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 #post-office-root .po-btn-solid {
   width: 100%; padding: 15px 16px; border: none; border-radius: 3px;
-  background: var(--text-main, #1a1a1a); color: var(--bg-device, #fafafa);
+  background: var(--text-main, #1a3a50); color: var(--bg-device, rgba(235,248,255,0.7));
   font-family: var(--po-sans); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.18em; cursor: pointer;
   box-shadow: 0 2px 0 color-mix(in srgb, var(--po-stamp) 55%, transparent);
 }
 [data-theme="dark"] #post-office-root .po-btn-solid {
-  background: var(--text-main, #f0f0f0); color: var(--bg-device, #111);
+  background: var(--text-main, rgba(220,242,255,0.5)); color: var(--bg-device, #111);
 }
 #post-office-root .po-btn-solid:active { opacity: 0.88; transform: translateY(1px); }
 
@@ -1599,13 +1599,13 @@ ${jsonBlock}`;
 #post-office-root .po-btn-outline {
   flex: 1; padding: 12px 10px;
   border: 1px solid color-mix(in srgb, var(--po-stamp) 65%, var(--text-main, #111) 35%);
-  background: transparent; color: var(--text-main, #1a1a1a);
+  background: transparent; color: var(--text-main, #1a3a50);
   font-family: var(--po-sans); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.08em; cursor: pointer; border-radius: 3px;
 }
 #post-office-root .po-btn-ghost {
   flex: 1; padding: 12px 10px;
   border: 1px solid var(--border-line, #e0e0e0);
-  background: var(--bg-body, #f2f2f2); color: var(--text-main, #1a1a1a);
+  background: var(--bg-body, rgba(220,242,255,0.5)); color: var(--text-main, #1a3a50);
   font-size: 0.76rem; cursor: pointer; border-radius: 3px;
 }
 
@@ -1629,7 +1629,7 @@ ${jsonBlock}`;
   overflow: hidden;
   border-radius: 18px;
   border: 1px solid color-mix(in srgb, var(--border-line, #e0e0e0) 70%, var(--po-stamp) 30%);
-  background: color-mix(in srgb, var(--bg-card, #fff) 94%, var(--bg-body, #f2f2f2) 6%);
+  background: color-mix(in srgb, var(--bg-card, #fff) 94%, var(--bg-body, rgba(220,242,255,0.5)) 6%);
   box-shadow: 0 30px 80px rgba(0,0,0,0.35);
 }
 [data-theme="dark"] #post-office-root .po-modal-panel {
@@ -1648,10 +1648,10 @@ ${jsonBlock}`;
 }
 #post-office-root .po-modal-close {
   border: 1px solid var(--border-line, #e0e0e0);
-  background: var(--bg-body, #f2f2f2);
+  background: var(--bg-body, rgba(220,242,255,0.5));
   width: 34px; height: 34px;
   border-radius: 10px; cursor: pointer;
-  color: var(--text-main, #1a1a1a);
+  color: var(--text-main, #1a3a50);
 }
 [data-theme="dark"] #post-office-root .po-modal-close {
   background: rgba(255,255,255,0.06);
@@ -1695,7 +1695,7 @@ ${jsonBlock}`;
 #post-office-root .po-reply-text {
   white-space: pre-wrap;
   font-family: var(--po-sans);
-  color: var(--text-main, #1a1a1a);
+  color: var(--text-main, #1a3a50);
   line-height: 1.75;
   font-size: 0.9rem;
   border-top: 1px dashed color-mix(in srgb, var(--border-line, #e0e0e0) 80%, transparent);
@@ -1710,13 +1710,13 @@ ${jsonBlock}`;
   padding: 10px 10px;
   border-radius: 10px;
   border: 1px solid var(--border-line, #e0e0e0);
-  background: var(--bg-body, #f2f2f2);
+  background: var(--bg-body, rgba(220,242,255,0.5));
   cursor: pointer;
   font-size: 0.78rem;
 }
 #post-office-root .po-mini-btn--danger {
   border-color: color-mix(in srgb, #c23b3b 55%, var(--border-line, #e0e0e0));
-  background: color-mix(in srgb, #c23b3b 10%, var(--bg-body, #f2f2f2));
+  background: color-mix(in srgb, #c23b3b 10%, var(--bg-body, rgba(220,242,255,0.5)));
 }
 `;
     document.head.appendChild(style);

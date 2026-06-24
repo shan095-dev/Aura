@@ -19,16 +19,16 @@ const SubjectsModule = (() => {
         #subjects-screen {
             /* 局部变量隔离 */
             --archive-bg: #080808; --card-bg: #f4f4f4; 
-            --bg-light: #f2f2f3; --surface-white: #ffffff; --surface-dark: #1a1a1a;
-            --text-dark: #111111; --text-gray: #888888; --text-light: #cccccc;
+            --bg-light: #f2f2f3; --surface-white: #ffffff; --surface-dark: #1a3a50;
+            --text-dark: #1a3a50; --text-gray: #888888; --text-light: #cccccc;
             --accent-green: #d1e8d5; --accent-pink: #ff3366; 
-            --bg-dark: #121212; --paper-color: #fcfcf9; --ink-color: #1a1a1a; 
+            --bg-dark: #1a3a50; --paper-color: #fcfcf9; --ink-color: #1a3a50; 
             --ink-faded: #666666; --stamp-red: #d32f2f; 
             --font-sans: 'Inter', -apple-system, sans-serif;
             --font-serif-en: 'Playfair Display', serif; --font-serif-cn: 'Noto Serif SC', serif;
             --font-hand: 'Caveat', cursive; --font-mono: 'Space Mono', monospace;
             --font-sign: 'Great Vibes', 'Zhi Mang Xing', cursive;
-            --bg-color: #050505; --text-main: #f0f0f0; --text-muted: #666666; 
+            --bg-color: #050505; --text-main: rgba(220,242,255,0.5); --text-muted: #666666; 
             --line-color: rgba(255, 255, 255, 0.15); --accent-color: #e0e0e0;
             --font-hand-cn: 'Zhi Mang Xing', cursive; --font-hand-en: 'Caveat', cursive;
 
@@ -152,7 +152,7 @@ const SubjectsModule = (() => {
         #subjects-screen .notes-paper::before { content: ''; position: absolute; top: 0; left: 8px; width: 1px; height: 100%; background: #e8cca7; opacity: 0.5; }
         #subjects-screen .handwriting { font-family: var(--font-hand); font-size: 20px; color: #333; line-height: 1.1; }
 
-        #subjects-screen .widget-cart { position: absolute; top: 450px; left: 20px; width: 175px; background: #fff; padding: 12px 14px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); transform: rotate(2deg); display: flex; align-items: center; z-index: 10; border-radius: 2px; border: 1px solid #f0f0f0; border-right: 1px dashed #ccc; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        #subjects-screen .widget-cart { position: absolute; top: 450px; left: 20px; width: 175px; background: #fff; padding: 12px 14px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); transform: rotate(2deg); display: flex; align-items: center; z-index: 10; border-radius: 2px; border: 1px solid rgba(220,242,255,0.5); border-right: 1px dashed #ccc; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
         #subjects-screen .widget-cart:active { transform: rotate(2deg) scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         #subjects-screen .widget-cart::before { content: ''; position: absolute; left: -5px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background: var(--bg-light); border-radius: 50%; box-shadow: inset -2px 0 3px rgba(0,0,0,0.03); }
         #subjects-screen .widget-cart::after { content: ''; position: absolute; right: -5px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background: var(--bg-light); border-radius: 50%; box-shadow: inset 2px 0 3px rgba(0,0,0,0.03); }
@@ -291,20 +291,20 @@ const SubjectsModule = (() => {
         #subjects-screen .m-section-os { position: relative; width: 100%; display: flex; flex-direction: column; }
         #subjects-screen .m-sys-box { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 16px 16px 24px 16px; margin-bottom: 10px; }
         #subjects-screen .m-sys-result { font-family: var(--font-sans); font-size: 12px; line-height: 1.6; color: #d0d0d0; }
-        #subjects-screen .m-handwriting-os { position: relative; display: block; width: 100%; box-sizing: border-box; margin-top: -20px; margin-left: 5px; padding-right: 15px; font-family: var(--font-hand-cn); font-size: 26px; color: #f0f0f0; line-height: 1.3; transform: rotate(-2deg); text-shadow: 2px 2px 10px rgba(0,0,0,0.8); word-wrap: break-word; white-space: normal; z-index: 2; }
+        #subjects-screen .m-handwriting-os { position: relative; display: block; width: 100%; box-sizing: border-box; margin-top: -20px; margin-left: 5px; padding-right: 15px; font-family: var(--font-hand-cn); font-size: 26px; color: rgba(220,242,255,0.5); line-height: 1.3; transform: rotate(-2deg); text-shadow: 2px 2px 10px rgba(0,0,0,0.8); word-wrap: break-word; white-space: normal; z-index: 2; }
         #subjects-screen .m-handwriting-os span.en { font-family: var(--font-hand-en); font-size: 30px; }
         #subjects-screen .m-footer-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 50px; font-size: 8px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
 
         /* ================= 视图 4：音乐解析 Music (Audio Vibe) ================= */
         #subjects-screen #view-music {
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-            color: #f0f0f0; font-family: var(--font-sans);
+            color: rgba(220,242,255,0.5); font-family: var(--font-sans);
         }
         #subjects-screen #view-music .music-container { width: 100%; max-width: 430px; position: relative; min-height: 100%; padding-bottom: 80px; }
 
         /* 音乐顶部区域 */
         #subjects-screen #view-music .music-header { padding: calc(env(safe-area-inset-top, 20px) + 20px) 20px 10px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10; }
-        #subjects-screen #view-music .music-btn-back { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #f0f0f0; text-decoration: none; cursor:pointer; }
+        #subjects-screen #view-music .music-btn-back { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: rgba(220,242,255,0.5); text-decoration: none; cursor:pointer; }
         #subjects-screen #view-music .music-meta-text { font-size: 9px; font-family: var(--font-mono); color: #666666; letter-spacing: 1px; }
 
         #subjects-screen #view-music .music-page-title { padding: 10px 20px 30px; text-align: center; }
@@ -341,7 +341,7 @@ const SubjectsModule = (() => {
         #subjects-screen #view-music .vinyl-label::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #080808; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
 
         #subjects-screen #view-music .css-sleeve {
-            width: 140px; height: 140px; background: linear-gradient(135deg, #2a2a2a, #0a0a0a);
+            width: 140px; height: 140px; background: linear-gradient(135deg, #2a5070, #0a0a0a);
             position: absolute; left: 50px; z-index: 5; border-radius: 4px;
             box-shadow: 10px 0 20px rgba(0,0,0,0.6), inset 1px 1px 0 rgba(255,255,255,0.1);
             overflow: hidden; display: flex; justify-content: center; align-items: center;
@@ -379,7 +379,7 @@ const SubjectsModule = (() => {
         #subjects-screen #view-music .status-label { flex-shrink: 0; }
         #subjects-screen #view-music .status-pill {
             background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 10px; 
-            color: #f0f0f0; font-weight: 700; flex-shrink: 0; font-family: var(--font-sans);
+            color: rgba(220,242,255,0.5); font-weight: 700; flex-shrink: 0; font-family: var(--font-sans);
         }
         #subjects-screen #view-music .track-os-inline {
             flex: 1; padding: 0 12px; font-family: var(--font-serif-cn); font-size: 11px;
@@ -416,22 +416,22 @@ const SubjectsModule = (() => {
 
         /* ================= 视图 5：通讯拦截 (Intercept) ================= */
         #subjects-screen #view-intercept-list,
-        #subjects-screen #view-intercept-detail { background-color: #f4f4f5; color: #111111; }
+        #subjects-screen #view-intercept-detail { background-color: #f4f4f5; color: #1a3a50; }
         
         #subjects-screen .ic-app-container { width: 100%; max-width: 430px; margin: 0 auto; position: relative; min-height: 100vh; overflow-x: hidden; padding-bottom: 20px; }
         #subjects-screen #view-intercept-detail .ic-app-container { height: 100%; padding-bottom: 0; }
-        #subjects-screen #view-intercept-list .btn-back, #subjects-screen #view-intercept-detail .btn-back { color: #111111; }
+        #subjects-screen #view-intercept-list .btn-back, #subjects-screen #view-intercept-detail .btn-back { color: #1a3a50; }
         #subjects-screen .ic-header { padding: calc(env(safe-area-inset-top, 20px) + 20px) 20px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10; }
         #subjects-screen .ic-meta-text { font-size: 9px; font-family: var(--font-serif-en); font-style: italic; color: #888888; letter-spacing: 1px;}
         #subjects-screen .ic-page-title-box { padding: 10px 20px 30px; border-bottom: 1px solid rgba(0,0,0,0.05); }
         #subjects-screen .ic-title-en { font-family: var(--font-serif-en); font-size: 46px; font-weight: 800; line-height: 0.9; letter-spacing: -2px; text-transform: uppercase; }
         #subjects-screen .ic-title-en span { color: #888888; font-style: italic; font-weight: 400; }
-        #subjects-screen .ic-title-cn { font-family: var(--font-serif-cn); font-size: 11px; font-weight: 700; color: #111111; margin-top: 12px; letter-spacing: 2px; }
+        #subjects-screen .ic-title-cn { font-family: var(--font-serif-cn); font-size: 11px; font-weight: 700; color: #1a3a50; margin-top: 12px; letter-spacing: 2px; }
 
         #subjects-screen .ic-chat-list { padding: 30px 20px; display: flex; flex-direction: column; gap: 24px; }
         #subjects-screen .ic-chat-card { display: flex; align-items: center; gap: 16px; background: #fff; padding: 16px; border-radius: 2px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); cursor: pointer; position: relative; transition: transform 0.2s, box-shadow 0.2s; border-left: 2px solid transparent; }
         #subjects-screen .ic-chat-card:active { transform: scale(0.98); }
-        #subjects-screen .ic-chat-card.group { border-left-color: #111111; } 
+        #subjects-screen .ic-chat-card.group { border-left-color: #1a3a50; } 
         #subjects-screen .ic-avatar-box { width: 54px; height: 54px; flex-shrink: 0; background: #eee; border-radius: 50%; overflow: hidden; filter: grayscale(100%) contrast(1.2); }
         #subjects-screen .ic-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
         #subjects-screen .ic-chat-info { flex: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
@@ -445,7 +445,7 @@ const SubjectsModule = (() => {
         #subjects-screen .ic-cd-title { font-family: var(--font-serif-en); font-size: 16px; font-weight: 800; display: flex; flex-direction: column; line-height: 1.1;}
         #subjects-screen .ic-cd-title span { font-family: var(--font-sans); font-size: 8px; color: #888888; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
         #subjects-screen .ic-decode-switch-wrapper { display: flex; align-items: center; gap: 8px; }
-        #subjects-screen .ic-decode-label { font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #111111; transition: color 0.3s; }
+        #subjects-screen .ic-decode-label { font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #1a3a50; transition: color 0.3s; }
         #subjects-screen .ic-decode-label.active { color: #d32f2f; }
         #subjects-screen .ic-switch { position: relative; display: inline-block; width: 36px; height: 18px; }
         #subjects-screen .ic-switch input { opacity: 0; width: 0; height: 0; }
@@ -460,8 +460,8 @@ const SubjectsModule = (() => {
         #subjects-screen .ic-msg-wrapper.right { align-items: flex-end; }
         #subjects-screen .ic-msg-meta { font-size: 8px; color: #aaa; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
         #subjects-screen .ic-bubble { max-width: 80%; padding: 12px 16px; font-size: 13px; line-height: 1.5; position: relative; font-family: var(--font-serif-cn); font-weight: 600; transition: opacity 0.3s, filter 0.3s; }
-        #subjects-screen .ic-bubble.left { background: #fff; color: #111111; border-radius: 12px 12px 12px 2px; box-shadow: 2px 4px 15px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.02); }
-        #subjects-screen .ic-bubble.right { background: #111111; color: #fff; border-radius: 12px 12px 2px 12px; box-shadow: -2px 4px 15px rgba(0,0,0,0.08); }
+        #subjects-screen .ic-bubble.left { background: #fff; color: #1a3a50; border-radius: 12px 12px 12px 2px; box-shadow: 2px 4px 15px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.02); }
+        #subjects-screen .ic-bubble.right { background: #1a3a50; color: #fff; border-radius: 12px 12px 2px 12px; box-shadow: -2px 4px 15px rgba(0,0,0,0.08); }
 
         /* OS 批注样式 */
         #subjects-screen .ic-inner-os { position: absolute; font-family: var(--font-hand-cn); color: #d32f2f; font-size: 24px; line-height: 1.2; white-space: normal; word-wrap: break-word; width: 90%; max-width: 300px; pointer-events: none; opacity: 0; transform: scale(0.9) rotate(0deg); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10; text-shadow: 1px 1px 0px #f4f4f5, -1px -1px 0px #f4f4f5, 2px 2px 5px rgba(0,0,0,0.1); }
@@ -481,7 +481,7 @@ const SubjectsModule = (() => {
 
         #subjects-screen .ic-scratch-out { text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.4); text-decoration-thickness: 2px; color: #888; }
         #subjects-screen .ic-cd-footer { padding: 20px 20px calc(env(safe-area-inset-bottom, 20px) + 20px) 20px; background: #fff; border-top: 1px solid rgba(0,0,0,0.05); }
-        #subjects-screen .ic-fake-input { width: 100%; background: #f0f0f0; border-radius: 20px; padding: 12px 16px; font-size: 12px; color: #aaa; display: flex; justify-content: space-between; align-items: center; }
+        #subjects-screen .ic-fake-input { width: 100%; background: rgba(220,242,255,0.5); border-radius: 20px; padding: 12px 16px; font-size: 12px; color: #aaa; display: flex; justify-content: space-between; align-items: center; }
 
         /* ================= 视图 7：时间碎片 (Time Fragments) ================= */
         #subjects-screen #view-time-fragments { background-color: #e9e4df; color: #3a3532; font-family: var(--font-sans); }
@@ -554,7 +554,7 @@ const SubjectsModule = (() => {
         /* ================= 视图 8：备忘录 Notes ================= */
         #subjects-screen #view-notes {
             /* 局部变量映射，确保不污染外部 */
-            --n-bg-color: #f8f8f9; --n-text-dark: #121212; --n-text-gray: #666666;
+            --n-bg-color: #f8f8f9; --n-text-dark: #1a3a50; --n-text-gray: #666666;
             --n-text-light: #aaaaaa; --n-line-color: rgba(0, 0, 0, 0.08);
 
             background-color: var(--n-bg-color); color: var(--n-text-dark);
@@ -623,7 +623,7 @@ const SubjectsModule = (() => {
         /* ================= 视图 9：推荐 Curated Index ================= */
         #subjects-screen #view-recommend {
             --r-bg-color: #f7f7f8; --r-surface-white: #ffffff;
-            --r-text-main: #1a1a1a; --r-text-gray: #777777; --r-text-light: #b0b0b0;
+            --r-text-main: #1a3a50; --r-text-gray: #777777; --r-text-light: #b0b0b0;
             --r-line-color: rgba(0, 0, 0, 0.1); --r-accent-color: #2b2b2b;
             
             background-color: var(--r-bg-color); color: var(--r-text-main);
@@ -667,7 +667,7 @@ const SubjectsModule = (() => {
         #subjects-screen #view-recommend .item-card.expanded .btn-reveal i { transform: rotate(180deg); color: #fff; }
         #subjects-screen #view-recommend .item-card.expanded .btn-reveal { background: var(--r-text-main); color: #fff; border-color: var(--r-text-main); }
 
-        #subjects-screen #view-recommend .private-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); background: #111111; }
+        #subjects-screen #view-recommend .private-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); background: #1a3a50; }
         #subjects-screen #view-recommend .item-card.expanded .private-wrapper { grid-template-rows: 1fr; }
         #subjects-screen #view-recommend .private-inner { overflow: hidden; }
         #subjects-screen #view-recommend .private-content { padding: 30px 24px 40px; text-align: center; }
@@ -679,7 +679,7 @@ const SubjectsModule = (() => {
         /* ================= 视图 10：邮件 Mail ================= */
         #subjects-screen #view-mail {
             --m-bg-base: #f9f9fa; --m-surface-white: #ffffff;
-            --m-text-main: #111111; --m-text-secondary: #666666; --m-text-tertiary: #999999;
+            --m-text-main: #1a3a50; --m-text-secondary: #666666; --m-text-tertiary: #999999;
             --m-border-color: rgba(0, 0, 0, 0.06); --m-accent-blue: #007aff;
             
             background-color: var(--m-bg-base); color: var(--m-text-main); font-family: var(--font-sans);
@@ -729,7 +729,7 @@ const SubjectsModule = (() => {
         #subjects-screen #view-mail .receipt-map { width: 100%; height: 120px; background: #eee; margin-top: 20px; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: #aaa; }
         #subjects-screen #view-mail .promo-format { text-align: center; font-family: var(--font-serif-cn); }
         #subjects-screen #view-mail .promo-logo { font-family: var(--font-serif-en); font-size: 28px; letter-spacing: 4px; margin-bottom: 20px; }
-        #subjects-screen #view-mail .promo-img { width: 100%; height: 200px; background: #f0f0f0; margin: 20px 0; object-fit: cover; filter: grayscale(100%); }
+        #subjects-screen #view-mail .promo-img { width: 100%; height: 200px; background: rgba(220,242,255,0.5); margin: 20px 0; object-fit: cover; filter: grayscale(100%); }
         #subjects-screen #view-mail .promo-btn { display: inline-block; padding: 10px 30px; background: var(--m-text-main); color: #fff; text-decoration: none; font-family: var(--font-sans); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 20px; }
 
         #subjects-screen #view-mail .draft-reply-section { background: var(--m-bg-base); border-top: 1px solid var(--m-border-color); padding: 20px calc(env(safe-area-inset-bottom, 20px) + 20px); margin-top: auto; }
@@ -842,7 +842,7 @@ const SubjectsModule = (() => {
         #subjects-screen .sc-btn { flex: 1; padding: 12px 0; border-radius: 12px; font-size: 13px; font-weight: 700; border: none; outline: none; cursor: pointer; transition: transform 0.2s, background 0.2s; font-family: var(--font-sans); }
         #subjects-screen .sc-btn:active { transform: scale(0.96); }
         #subjects-screen .sc-btn.cancel { background: #f2f2f3; color: #555; }
-        #subjects-screen .sc-btn.confirm { background: #111111; color: #fff; }
+        #subjects-screen .sc-btn.confirm { background: #1a3a50; color: #fff; }
        /* ==========================================================
    CSS 样式修复包
    ========================================================== */
@@ -2251,7 +2251,7 @@ const data = JSON.parse(cleaned.substring(start, end + 1));
             const coverEl = document.getElementById('ph-m-cover-text');
             if(coverEl) coverEl.innerText = track.coverText;
             const colorEl = document.getElementById('ph-m-vinyl-color');
-            if(colorEl) colorEl.style.backgroundColor = track.labelColor || '#333';
+            if(colorEl) colorEl.style.backgroundColor = track.labelColor || '#2a5070';
             
             if(osElement) {
                 osElement.innerHTML = track.os;

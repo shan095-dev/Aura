@@ -27,7 +27,7 @@ const ForumModule = (() => {
 
             #forum-screen {
                 --fm-bg: #070707;
-                --fm-surface: #121212;
+                --fm-surface: #1a3a50;
                 --fm-surface-light: #1E1E1E;
                 --fm-fg: #F0F0F0;
                 --fm-fg-muted: #888888;
@@ -174,7 +174,7 @@ const ForumModule = (() => {
                 padding: 12px 14px; border: 1px solid var(--fm-line); border-radius: 8px;
                 /* 正文字号从 0.95rem 缩小到 0.8rem，缩减行高和间距 */
                 font-size: 0.8rem; font-weight: 300; max-width: 95%; margin-top: 12px;
-                line-height: 1.5; color: #f0f0f0;
+                line-height: 1.5; color: rgba(220,242,255,0.5);
                 /* 👇 核心修复：增加最大高度限制，超出的文字可以在半透明黑框内独立上下滑动，绝对不会再遮挡底部按钮 */
                 max-height: 150px; overflow-y: auto; scrollbar-width: none; overscroll-behavior: contain;
             }
@@ -373,7 +373,7 @@ const ForumModule = (() => {
             #forum-screen .fm-btn-danger:active { background: #ff4d4f; color: #fff; }
             /* 假装是图片的加密视觉组件 */
             #forum-screen .fm-fake-img-wrap {
-                position: relative; width: 100%; height: 160px; background: #121212;
+                position: relative; width: 100%; height: 160px; background: #1a3a50;
                 border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; margin: 12px 0;
                 cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;
                 transition: border-color 0.3s;
@@ -381,7 +381,7 @@ const ForumModule = (() => {
             #forum-screen .fm-fake-img-wrap:active { border-color: var(--fm-fg); }
             #forum-screen .fm-fake-img-cover {
                 position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-                color: var(--fm-fg-muted); transition: opacity 0.4s ease; z-index: 2; background: #121212;
+                color: var(--fm-fg-muted); transition: opacity 0.4s ease; z-index: 2; background: #1a3a50;
             }
             #forum-screen .fm-fake-img-cover i { font-size: 2rem; margin-bottom: 8px; }
             #forum-screen .fm-fake-img-cover span { font-family: var(--fm-font-mono); font-size: 0.65rem; text-align: center; letter-spacing: 2px; }

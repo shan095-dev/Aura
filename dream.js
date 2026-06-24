@@ -17,9 +17,9 @@ const DreamModule = (() => {
         #dream-root {
             --bg-silver: #dcdedc;
             --paper-white: #f5f5f5;
-            --text-dark: #121212;
+            --text-dark: #1a3a50;
             --text-muted: #555555;
-            --tag-bg: #1a1a1a;
+            --tag-bg: #1a3a50;
             --font-typewriter: 'Special Elite', monospace;
             --font-gothic: 'Cinzel', serif;
             --font-serif: 'Noto Serif SC', serif;
@@ -562,7 +562,7 @@ const DreamModule = (() => {
         /* 正文区 */
         .text-content-area { padding-bottom: 30px; }
         #dream-root .modal-content-text {
-            font-size: 14px; line-height: 1.8; color: #2a2a2a; text-align: justify;
+            font-size: 14px; line-height: 1.8; color: #2a5070; text-align: justify;
         }
        #dream-root .modal-content-text::first-letter {
             float: left;
@@ -578,7 +578,7 @@ const DreamModule = (() => {
         /* 现实锚点 */
         #dream-root .origins-box {
             border-top: 1px solid #ddd;
-            padding: 25px; background: #fafafa;
+            padding: 25px; background: rgba(235,248,255,0.7);
         }
         #dream-root .origins-title {
             font-family: var(--font-gothic); font-size: 12px; color: #666;
@@ -612,7 +612,7 @@ const DreamModule = (() => {
             display: flex; justify-content: center; align-items: center;
             cursor: pointer; transition: all 0.3s;
         }
-        .btn-whisper-play:active { background: #f0f0f0; }
+        .btn-whisper-play:active { background: rgba(220,242,255,0.5); }
         #dream-root .voice-track-container {
             flex: 1; position: relative; height: 24px;
             display: flex; align-items: center;
@@ -664,7 +664,7 @@ const DreamModule = (() => {
         #dream-root .transcript-content.open { max-height: 300px; opacity: 1; }
         #dream-root .transcript-text {
             margin-top: 15px; padding-left: 12px;
-            border-left: 1px solid #121212;
+            border-left: 1px solid #1a3a50;
             font-family: var(--font-serif); font-size: 13px;
             line-height: 1.8; color: var(--text-dark); font-style: italic;
         }

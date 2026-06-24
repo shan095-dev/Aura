@@ -249,7 +249,7 @@ const EditorialModule = (() => {
             #ed-view-bot .post-watermark { position: absolute; top: -20px; right: -10px; font-family: 'Playfair Display', serif; font-size: 4.5rem; font-weight: 700; font-style: italic; color: rgba(0,0,0,0.03); pointer-events: none; z-index: 0; line-height: 1; }
             #ed-view-bot .post-meta-tag { position: relative; z-index: 3; align-self: flex-start; font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 4px 12px 4px 4px; margin-bottom: -10px; margin-left: 16px; box-shadow: var(--shadow-float); }
             
-            #ed-view-bot .tag-bot { background: #2a2a2a; color: #fff; }
+            #ed-view-bot .tag-bot { background: #2a5070; color: #fff; }
             #ed-view-bot .tag-role { background: var(--sage-green); color: #fff; }
             #ed-view-bot .tag-user { background: var(--dusty-blue); color: #fff; }
             #ed-view-bot .tag-guest { background: #e0dcd3; color: var(--text-dark); }
@@ -282,7 +282,7 @@ const EditorialModule = (() => {
             #ed-view-bot .action-btn i { font-size: 1.1rem; }
 
             #ed-view-bot .receipt-comments { display: none; width: 90%; margin: 0 auto; background: #faf9f6; border: 1px solid rgba(0,0,0,0.06); border-top: none; border-radius: 0 0 12px 12px; padding: 24px 20px 20px; position: relative; z-index: 1; margin-top: -12px; box-shadow: 0 10px 20px rgba(0,0,0,0.04); background-image: radial-gradient(circle at 10px 0, transparent 10px, #faf9f6 11px); background-size: 20px 100%; background-repeat: repeat-x; background-position: top; }
-            #ed-view-bot .receipt-comments.dark-receipt { background: #2a2a2a; color: #e0dcd3; border: 1px solid rgba(255,255,255,0.1); background-image: radial-gradient(circle at 10px 0, transparent 10px, #2a2a2a 11px); }
+            #ed-view-bot .receipt-comments.dark-receipt { background: #2a5070; color: #e0dcd3; border: 1px solid rgba(255,255,255,0.1); background-image: radial-gradient(circle at 10px 0, transparent 10px, #2a5070 11px); }
             #ed-view-bot .receipt-list { display: flex; flex-direction: column; gap: 14px; }
             #ed-view-bot .receipt-item { font-size: 0.8rem; line-height: 1.5; color: var(--text-dark); padding-bottom: 10px; border-bottom: 1px dotted rgba(0,0,0,0.15); }
             #ed-view-bot .dark-receipt .receipt-item { color: #e0dcd3; border-bottom-color: rgba(255,255,255,0.15); }

@@ -89,7 +89,7 @@ const DiaryModule = (() => {
             #diary-view-directory .empty-state { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 0.7rem; color: #666; letter-spacing: 2px; text-transform: uppercase; }
 
             /* LEVEL 2: List */
-            :root { --dl-bg-paper: #F9F9F7; --dl-text-ink: #111111; --dl-text-muted: #999999; --dl-line-color: rgba(17, 17, 17, 0.12); --dl-accent-red: #8B0000; }
+            :root { --dl-bg-paper: rgba(220,242,255,0.6); --dl-text-ink: #1a3a50; --dl-text-muted: #999999; --dl-line-color: rgba(17, 17, 17, 0.12); --dl-accent-red: #8B0000; }
             #diary-view-list { background-color: var(--dl-bg-paper); color: var(--dl-text-ink); padding-top: calc(env(safe-area-inset-top, 20px) + 76px); padding-bottom: 48px; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"); }
             #diary-view-list .font-serif-elegant { font-family: 'Cormorant Garamond', serif; }
             #diary-view-list .font-mono-data { font-family: 'JetBrains Mono', monospace; }
@@ -174,7 +174,7 @@ const DiaryModule = (() => {
             #diary-view-detail .vertical-ornament { position: absolute; left: -20px; top: 10px; writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'Inter', sans-serif; font-size: 0.45rem; letter-spacing: 0.3em; color: var(--dd-text-gray); display: flex; align-items: center; gap: 20px; }
             #diary-view-detail .vertical-ornament::before { content: ''; width: 1px; height: 40px; background-color: var(--dd-text-gray); }
             #diary-view-detail .interaction-hint { font-size: 0.45rem; letter-spacing: 0.2em; color: var(--dd-text-gray); margin-bottom: 32px; opacity: 0.8; font-family: 'Inter', sans-serif; }
-            #diary-view-detail .diary-content p { font-size: 13px; line-height: 2.4; color: #333333; font-weight: 300; margin-bottom: 24px; text-align: justify; letter-spacing: 0.02em; }
+            #diary-view-detail .diary-content p { font-size: 13px; line-height: 2.4; color: #2a5070; font-weight: 300; margin-bottom: 24px; text-align: justify; letter-spacing: 0.02em; }
 
             /* 墨迹解密 */
             #diary-view-detail .redact-block { color: transparent; text-shadow: 0 0 7px rgba(34, 34, 34, 0.35); cursor: pointer; position: relative; display: inline; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); user-select: none; border-bottom: 0.5px dotted rgba(34, 34, 34, 0.25); }

@@ -394,7 +394,7 @@ const MemoryRAG = (() => {
   /* ============================================================
    *  UI 层 —— 自注入,真接口
    * ============================================================ */
-  const FALLBACK_BG = ['#1a1a1a','#4a4a4a','#5c5c5c','#8a8a8a','#3d3d3d','#6b6b6b','#2c2c2c','#7a7a7a'];
+  const FALLBACK_BG = ['#1a3a50','#4a4a4a','#5c5c5c','#8a8a8a','#3d3d3d','#6b6b6b','#2c2c2c','#7a7a7a'];
   const _hash = (s)=>{ let h=0; for(let i=0;i<s.length;i++) h=(h<<5)-h+s.charCodeAt(i); return h; };
   const _bgOf = (id)=>FALLBACK_BG[Math.abs(_hash(String(id)))%FALLBACK_BG.length];
 
@@ -415,8 +415,8 @@ const MemoryRAG = (() => {
   function _injectStyles() {
     if (document.getElementById('memrag-style')) return;
     const css = `
-#${SCREEN_ID}{z-index:160;--mr-bg:#f7f6f4;--mr-card:#fff;--mr-main:#1a1a1a;--mr-sub:#666;--mr-faint:#9a958d;--mr-line:#e3e0db;--mr-soft:rgba(18,18,18,.08);--mr-accent:#1a1a1a;--mr-red:#8B3A33;--mr-tag:rgba(18,18,18,.05);background:var(--mr-bg);font-family:'DM Sans','Noto Sans SC',sans-serif;color:var(--mr-main);}
-[data-theme="dark"] #${SCREEN_ID}{--mr-bg:#141414;--mr-card:#1f1f1f;--mr-main:#f0f0f0;--mr-sub:#999;--mr-faint:#777;--mr-line:#333;--mr-soft:rgba(255,255,255,.08);--mr-accent:#f0f0f0;--mr-red:#d4796e;--mr-tag:rgba(255,255,255,.06);}
+#${SCREEN_ID}{z-index:160;--mr-bg:#f7f6f4;--mr-card:#fff;--mr-main:#1a3a50;--mr-sub:#666;--mr-faint:#9a958d;--mr-line:#e3e0db;--mr-soft:rgba(18,18,18,.08);--mr-accent:#1a3a50;--mr-red:#8B3A33;--mr-tag:rgba(18,18,18,.05);background:var(--mr-bg);font-family:'DM Sans','Noto Sans SC',sans-serif;color:var(--mr-main);}
+[data-theme="dark"] #${SCREEN_ID}{--mr-bg:#141414;--mr-card:#1f1f1f;--mr-main:rgba(220,242,255,0.5);--mr-sub:#999;--mr-faint:#777;--mr-line:#333;--mr-soft:rgba(255,255,255,.08);--mr-accent:rgba(220,242,255,0.5);--mr-red:#d4796e;--mr-tag:rgba(255,255,255,.06);}
 #${SCREEN_ID} .mr-wrap{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--mr-bg);}
 #${SCREEN_ID} *{box-sizing:border-box;}
 /* header */

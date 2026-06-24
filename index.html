@@ -53,7 +53,7 @@
   /* 玻璃效果 */
   --glass-bg:rgba(255,255,255,0.42);
   --glass-border:rgba(255,255,255,0.75);
-  --glass-blur:blur(28px);
+  --glass-blur:blur(10px);
   /* 文字 */
   --text-main:#1a3a50;
   --text-sub:#5a8aaa;
@@ -125,8 +125,8 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 .device{
   width:390px;height:844px;
   background:rgba(235,248,255,0.38);
-  backdrop-filter:blur(40px) saturate(180%);
-  -webkit-backdrop-filter:blur(40px) saturate(180%);
+  backdrop-filter:blur(14px) saturate(120%);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
   border-radius:44px;position:relative;
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.6),
@@ -179,13 +179,13 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 .auth-subtitle strong { color: rgba(230,248,255,0.85); font-weight: 500; font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; }
 
 .auth-form-group { margin-bottom: 32px; position: relative; }
-.auth-form-group label { display: flex; align-items: baseline; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: rgba(230,248,255,0.85); letter-spacing: 0.05em; font-family: 'Space Mono', monospace; text-transform: uppercase;}
-.auth-form-group label .en-deco { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(244, 243, 238, 0.5); margin-left: 8px; font-weight: 400; }
+.auth-form-group label { display: flex; align-items: baseline; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: rgba(230,248,255,0.85); letter-spacing: 0.03em; font-family: 'DM Sans', 'Noto Sans SC', sans-serif; text-transform: uppercase;}
+.auth-form-group label .en-deco { font-family: 'DM Sans', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(244, 243, 238, 0.5); margin-left: 8px; font-weight: 400; }
 .auth-form-group input { width: 100%; padding: 12px 0; border: none; border-bottom: 1px solid rgba(244, 243, 238, 0.3); background: transparent; color: rgba(230,248,255,0.85); font-size: 20px; border-radius: 0; transition: all 0.3s; font-family: 'Playfair Display', serif; box-sizing: border-box; }
 .auth-form-group input:focus { outline: none; border-bottom-color: rgba(230,248,255,0.85); }
 .auth-form-group input::placeholder { color: rgba(244, 243, 238, 0.2); font-family: 'DM Sans', sans-serif; font-size: 16px; }
 
-.auth-btn { width: 100%; padding: 16px; border: 1px solid rgba(230,248,255,0.85); background: rgba(230,248,255,0.85); color: #0d1f2d; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); margin-top: 16px; font-family:'Space Mono', monospace; box-sizing: border-box; }
+.auth-btn { width: 100%; padding: 16px; border: 1px solid rgba(230,248,255,0.85); background: rgba(230,248,255,0.85); color: #0d1f2d; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); margin-top: 16px; font-family:'DM Sans', sans-serif; box-sizing: border-box; }
 .auth-btn:hover:not(:disabled) { background: transparent; color: rgba(230,248,255,0.85); }
 .auth-btn:disabled { opacity: 0.4; cursor: not-allowed; background: transparent; color: rgba(230,248,255,0.85); }
 
@@ -465,7 +465,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 }
 /* Dock */
 .dock-wrapper{position:absolute;bottom:0;left:0;width:100%;height:100px;display:flex;justify-content:center;align-items:center;z-index:50;padding-bottom:calc(env(safe-area-inset-bottom,24px));transition:transform .5s cubic-bezier(.19,1,.22,1);pointer-events:none;}
-.dock{pointer-events:auto;background:var(--dock-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:12px 28px;border-radius:100px;border:1px solid var(--border-line);display:flex;gap:28px;box-shadow:0 10px 40px rgba(0,0,0,.1);}
+.dock{pointer-events:auto;background:var(--dock-bg);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:12px 28px;border-radius:100px;border:1px solid var(--border-line);display:flex;gap:28px;box-shadow:0 10px 40px rgba(0,0,0,.1);}
 .dock-item{font-size:1.6rem;color:var(--text-main);transition:transform .2s;display:flex;align-items:center;cursor:pointer;}
 .dock-item:active{transform:scale(.85);}
 .dock-item.active-dot{position:relative;}
@@ -475,7 +475,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 /* ============================================================
    Settings Screen
    ============================================================ */
-.bg-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-size:500px;font-style:italic;color:var(--s-watermark);pointer-events:none;z-index:0;line-height:1;white-space:nowrap;transition:opacity 0.3s ease;}
+.bg-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-size:220px;font-style:italic;color:var(--s-watermark);pointer-events:none;z-index:0;line-height:1;white-space:nowrap;transition:opacity 0.3s ease;}
 .main-view{position:relative;z-index:1;padding:0 40px 40px 40px;height:100%;display:flex;flex-direction:column;overflow-y:auto;}
 .main-view::-webkit-scrollbar{display:none;}
 .main-back-btn{position:absolute;top:calc(env(safe-area-inset-top,40px) + 20px);right:30px;border:none;background:transparent;cursor:pointer;transition:opacity .3s;z-index:20;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;text-transform:uppercase;letter-spacing:2px;color:var(--s-text-primary);text-decoration:underline;text-underline-offset:4px;padding:4px 0;}
@@ -491,7 +491,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 [data-theme="dark"] .menu-item::after{background:linear-gradient(90deg,var(--s-line) 0%,rgba(255,255,255,0) 80%);}
 .menu-item:last-child::after{display:none;}
 .menu-text-cn{font-size:1.6rem;font-weight:500;color:var(--s-text-primary);display:block;margin-bottom:4px;transition:color .3s;}
-.menu-text-en{font-family:'Playfair Display',serif;font-size:0.9333rem;font-style:italic;color:var(--s-text-secondary);}
+.menu-text-en{font-family:'DM Sans','Noto Sans SC',sans-serif;font-size:0.8rem;color:var(--s-text-secondary);}
 .menu-item:active .menu-text-cn{color:var(--s-text-secondary);}
 
 /* Settings Sub Pages */
@@ -501,7 +501,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 .nav-title{font-size:1.0667rem;font-weight:600;color:var(--s-text-primary);}
 .content-scroll{flex:1;overflow-y:auto;padding:30px;}
 .content-scroll::-webkit-scrollbar{display:none;}
-.page-watermark{position:absolute;bottom:-50px;right:-20px;font-family:'Playfair Display',serif;font-size:200px;color:var(--s-watermark);font-style:italic;pointer-events:none;z-index:-1;}
+.page-watermark{position:absolute;bottom:-10px;right:0px;font-family:'Playfair Display',serif;font-size:80px;color:var(--s-watermark);font-style:italic;pointer-events:none;z-index:-1;}
 
 /* Form Elements */
 .form-section{margin-bottom:40px;}
@@ -514,7 +514,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 .slider-row{display:flex;align-items:center;gap:15px;}
 .styled-slider{flex:1;-webkit-appearance:none;height:2px;background:var(--s-line);}
 .styled-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--s-accent);border-radius:0;transform:rotate(45deg);}
-.slider-val{font-family:'Playfair Display',serif;font-size:1.2rem;font-style:italic;width:40px;text-align:right;color:var(--s-text-primary);}
+.slider-val{font-family:'DM Sans','Noto Sans SC',sans-serif;font-size:1rem;width:40px;text-align:right;color:var(--s-text-primary);}
 .novel-prompt-ta{width:100%;min-height:88px;margin-top:12px;padding:10px;background:rgba(0,0,0,0.03);border:0.5px solid rgba(18,18,18,0.12);border-radius:10px;font-size:0.8rem;font-family:inherit;color:var(--s-text-primary);resize:vertical;outline:none;line-height:1.5;box-sizing:border-box;}
 [data-theme="dark"] .novel-prompt-ta{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);}
 #novel-test-preview-area{min-height:160px;display:flex;align-items:center;justify-content:center;}
@@ -671,13 +671,15 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
   z-index: 150;
   background: var(--char-paper);
   font-family: var(--font-serif-char);
-  --char-paper: #ECEAE5;
+  --char-paper: rgba(215,240,255,0.75);
   --char-ink: #1e3d54;
-  --char-ink-light: #5A5855;
-  --char-blood: #8B2E2E;
+  --char-ink-light: #5a8aaa;
+  --char-blood: #7ab8d8;
   --font-serif-char: 'Cormorant Garamond', serif;
   --font-mono-char: 'Space Mono', monospace;
   --ease-char: cubic-bezier(0.19, 1, 0.22, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 #character-screen.active { transform: translateX(0); opacity: 1; visibility: visible; }
 [data-theme="dark"] #character-screen {
@@ -899,7 +901,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 /* Sidebar */
 #chat-screen .ch-app { width: 100%; height: 100%; display: flex; position: relative; }
 #chat-screen .ch-sidebar {
-  width: 64px; height: 100%; background: rgba(239,236,231,0.95);
+  width: 64px; height: 100%; background: rgba(200,232,250,0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   border-right: 1px solid rgba(255,255,255,0.7);
   display: flex; flex-direction: column; justify-content: space-between; align-items: center;
   padding: 3rem 0 2rem; position: relative; z-index: 100; flex-shrink: 0;
@@ -1034,7 +1036,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #chat-screen .ch-feed { height: 100%; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; }
 #chat-screen .ch-feed::-webkit-scrollbar { display: none; }
 #chat-screen .ch-page { width: 100%; height: 100%; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-#chat-screen .ch-bg-typo { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Cormorant Garamond', serif; font-size: 24vh; font-weight: 500; font-style: italic; color: rgba(0,0,0,0.025); white-space: nowrap; z-index: 0; pointer-events: none; }
+#chat-screen .ch-bg-typo { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Cormorant Garamond', serif; font-size: 12vh; font-weight: 500; font-style: italic; color: rgba(0,0,0,0.02); white-space: nowrap; z-index: 0; pointer-events: none; }
 #chat-screen .ch-pres-group { position: relative; width: 68%; max-width: 250px; transform: translateX(-10px); z-index: 10; }
 #chat-screen .ch-photo-wrapper { position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 12px; z-index: 2; box-shadow: 0 25px 50px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(255,255,255,0.3); overflow: hidden; background: #ccc; transform: scale(0.9) translateY(20px); opacity: 0; transition: transform 0.8s cubic-bezier(0.16,1,0.3,1), opacity 0.8s cubic-bezier(0.16,1,0.3,1); }
 #chat-screen .ch-photo { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); transition: transform 1.2s cubic-bezier(0.16,1,0.3,1); }
@@ -1062,7 +1064,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #chat-screen .ch-deco-title { font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; line-height: 0.85; font-weight: 500; color: #1a3a50; letter-spacing: -1.5px; margin: 0 0 12px -2px; }
 #chat-screen .ch-deco-title em { font-style: italic; font-weight: 300; color: rgba(0,0,0,0.45); font-size: 2.8rem; }
 #chat-screen .ch-deco-footer { display: flex; align-items: center; gap: 10px; }
-#chat-screen .ch-barcode { font-family: 'Libre Barcode 39 Text', cursive; font-size: 1.4rem; line-height: 0.7; opacity: 0.7; }
+#chat-screen .ch-barcode { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; opacity: 0.35; text-transform: uppercase; }
 #chat-screen .ch-deco-div { width: 1px; height: 14px; background: rgba(0,0,0,0.25); transform: rotate(20deg); }
 #chat-screen .ch-deco-coord { font-size: 0.45rem; text-transform: uppercase; letter-spacing: 2px; color: #888; }
 
@@ -1077,14 +1079,14 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #chat-screen .ch-invite-card { display: flex; width: 100%; background: rgba(235,248,255,0.7); border-radius: 4px; box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.02); position: relative; overflow: hidden; cursor: pointer; transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s; }
 #chat-screen .ch-invite-card:active { transform: scale(0.97); }
 #chat-screen .ch-invite-card.pinned { background: rgba(30,61,84,0.85); color: #fff; }
-#chat-screen .ch-wm-letter { position: absolute; top: -30px; right: 10px; font-family: 'Cormorant Garamond', serif; font-size: 160px; font-style: italic; font-weight: 300; color: rgba(0,0,0,0.035); z-index: 0; pointer-events: none; line-height: 1; user-select: none; }
+#chat-screen .ch-wm-letter { position: absolute; top: -10px; right: 10px; font-family: 'Cormorant Garamond', serif; font-size: 80px; font-style: italic; font-weight: 300; color: rgba(0,0,0,0.03); z-index: 0; pointer-events: none; line-height: 1; user-select: none; }
 #chat-screen .ch-invite-card.pinned .ch-wm-letter { color: rgba(255,255,255,0.04); }
 #chat-screen .ch-invite-main { flex: 1; padding: 1.5rem; border-right: 2px dashed rgba(0,0,0,0.1); position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; }
 #chat-screen .ch-invite-card.pinned .ch-invite-main { border-right-color: rgba(255,255,255,0.15); }
 #chat-screen .ch-invite-top { display: flex; justify-content: space-between; align-items: flex-start; }
 #chat-screen .ch-invite-season { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; color: #888; }
 #chat-screen .ch-invite-card.pinned .ch-invite-season { color: rgba(255,255,255,0.5); }
-#chat-screen .ch-barcode-sm { font-family: 'Libre Barcode 39 Text', cursive; font-size: 1.2rem; line-height: 0.8; opacity: 0.5; }
+#chat-screen .ch-barcode-sm { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 2px; opacity: 0.3; text-transform: uppercase; }
 #chat-screen .ch-invite-name { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 600; margin: 0.8rem 0 0.4rem; line-height: 1; color: inherit; }
 #chat-screen .ch-invite-bottom { display: flex; align-items: center; gap: 1rem; }
 #chat-screen .ch-invite-seats { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; color: inherit; }
@@ -1343,10 +1345,10 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
    ============================================================ */
 #conv-screen { background: rgba(210,238,252,0.45); overflow: hidden; z-index: 160; font-family: 'Inter','Noto Sans SC',sans-serif; }
 #conv-screen .cv-noise { position:absolute;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); }
-#conv-screen .cv-watermark { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-size:280px;font-style:italic;font-weight:300;color:rgba(0,0,0,0.025);pointer-events:none;z-index:0;line-height:1; }
+#conv-screen .cv-watermark { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-size:120px;font-style:italic;font-weight:300;color:rgba(0,0,0,0.02);pointer-events:none;z-index:0;line-height:1; }
 
 /* Header */
-#conv-screen .cv-header { position:absolute;top:calc(env(safe-area-inset-top, 20px) + 10px);left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(239,236,231,0.7);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.4);border-radius:28px;box-shadow:0 10px 30px rgba(0,0,0,0.06);z-index:20; }
+#conv-screen .cv-header { position:absolute;top:calc(env(safe-area-inset-top, 20px) + 10px);left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(239,236,231,0.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.4);border-radius:28px;box-shadow:0 10px 30px rgba(0,0,0,0.06);z-index:20; }
 
 #conv-screen .cv-icon-btn { width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid rgba(18,18,18,0.05);color:#1a3a50;font-size:1.2rem;display:flex;justify-content:center;align-items:center;cursor:pointer;transition:0.2s;box-shadow:0 2px 10px rgba(0,0,0,0.03); flex-shrink:0; }
 #conv-screen .cv-icon-btn:active { transform:scale(0.9); }
@@ -1387,7 +1389,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 
 /* Bubbles */
 #conv-screen .cv-bubble { max-width:75%;width:fit-content;padding:8px 12px;border-radius:14px;font-size:0.85rem;line-height:1.4;border:0.5px solid #1a3a50;position:relative;z-index:1;word-break:break-word; }
-#conv-screen .cv-msg-row.ai  .cv-bubble { background:rgba(255,255,255,0.65);color:#1a3a50;border-color:rgba(200,235,250,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px); }
+#conv-screen .cv-msg-row.ai  .cv-bubble { background:rgba(255,255,255,0.65);color:#1a3a50;border-color:rgba(200,235,250,0.5);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px); }
 #conv-screen .cv-msg-row.user .cv-bubble { background:#fff;color:#1a3a50;box-shadow:0 4px 10px rgba(0,0,0,0.02); }
 /* ── HTML 自定义交互组件 ── */
 #conv-screen .cv-html-widget {
@@ -1505,7 +1507,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-dr-value { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 500; font-style: italic; color: #1e3d54; line-height: 1; }
 
 /* Footer */
-#conv-screen .cv-footer { position:absolute;bottom:24px;left:16px;right:16px;padding:8px 12px;background:rgba(239,236,231,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.4);border-radius:36px;box-shadow:0 15px 40px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.6);display:flex;flex-direction:column;z-index:20;transition:border-radius 0.5s cubic-bezier(0.19,1,0.22,1),transform 0.5s cubic-bezier(0.19,1,0.22,1),opacity 0.5s cubic-bezier(0.19,1,0.22,1); }
+#conv-screen .cv-footer { position:absolute;bottom:24px;left:16px;right:16px;padding:8px 12px;background:rgba(239,236,231,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.4);border-radius:36px;box-shadow:0 15px 40px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.6);display:flex;flex-direction:column;z-index:20;transition:border-radius 0.5s cubic-bezier(0.19,1,0.22,1),transform 0.5s cubic-bezier(0.19,1,0.22,1),opacity 0.5s cubic-bezier(0.19,1,0.22,1); }
 #conv-screen .cv-footer.expanded { border-radius:24px; }
 /* Action panel grid */
 #conv-screen .cv-action-panel { width:100%;display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.6s cubic-bezier(0.16,1,0.3,1); }
@@ -2603,7 +2605,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #chat-screen .ch-bio-auth-text { font-family: 'Space Mono', monospace; font-size: 0.45rem; letter-spacing: 1px; color: #1a3a50; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 6px; text-align: center; }
 #chat-screen .ch-bio-auth-text::before { content: 'TOUCH TO AUTH'; }
 #chat-screen .ch-bio-card:active .ch-bio-auth-text::before { content: 'AUTHENTICATING...'; animation: blinkText 0.8s infinite; }
-#chat-screen .ch-bio-barcode { position: absolute; right: -20px; top: 30%; font-family: 'Libre Barcode 39 Text', cursive; font-size: 3rem; color: rgba(0,0,0,0.06); transform: rotate(90deg); pointer-events: none; z-index: 0; }
+#chat-screen .ch-bio-barcode { position: absolute; right: -20px; top: 30%; font-family: 'Space Mono', monospace; font-size: 1rem; color: rgba(0,0,0,0.04); transform: rotate(90deg); pointer-events: none; z-index: 0; letter-spacing: 4px; text-transform: uppercase; }
 
 /* 2. 共用推拉框架 (Wallet & Vault) */
 #chat-screen .wl-view { z-index: 60; background: rgba(225,245,255,0.7); display: flex; flex-direction: column; transform: translateX(100%); opacity: 1; pointer-events: auto; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
@@ -2641,7 +2643,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 .wl-tag-label-chs { font-size: 0.5rem; letter-spacing: 1px; color: rgba(255,255,255,0.3); margin-top: 2px; margin-bottom: 12px;}
 .wl-tag-balance { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; font-style: italic; line-height: 0.9; letter-spacing: -2px; color: #fff; position: relative; z-index: 2; word-break: break-all; }
 .wl-tag-currency { font-family: 'Space Mono', monospace; font-size: 1rem; font-style: normal; letter-spacing: 0; vertical-align: top; margin-right: 4px; opacity: 0.6; }
-.wl-tag-barcode { position: absolute; bottom: -15px; left: -10px; font-family: 'Libre Barcode 39 Text', cursive; font-size: 4.5rem; color: rgba(255,255,255,0.03); pointer-events: none; }
+.wl-tag-barcode { position: absolute; bottom: -15px; left: -10px; font-family: 'Space Mono', monospace; font-size: 1rem; color: rgba(255,255,255,0.03); pointer-events: none; letter-spacing: 6px; text-transform: uppercase; }
 @keyframes fadeSlideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 .wl-ledger-section { padding: 0 2rem; }
 .wl-ledger-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid rgba(0,0,0,0.8); padding-bottom: 0.5rem; margin-bottom: 1rem; }
@@ -2940,7 +2942,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 /* ============================================================
    Feed View (Sparkle / Editorial)
    ============================================================ */
-#ch-view-sparkle { background: #F7F7F5; }
+#ch-view-sparkle { background: rgba(215,240,255,0.45); }
 .fd-scroll { height:100%; overflow-y:auto; scrollbar-width:none; position:relative; z-index:10; }
 .fd-scroll::-webkit-scrollbar { display:none; }
 .niche-container { max-width: 600px; margin: 0 auto; padding-bottom: 120px; }
@@ -3383,7 +3385,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 /* 玻璃卡片 */
 #story-roster-screen .sr-glass {
     position: relative; z-index: 5; margin: 0 20px calc(env(safe-area-inset-bottom, 20px) + 20px) 20px; padding: 30px 24px;
-    background: var(--sr-glass); backdrop-filter: blur(25px) saturate(110%); -webkit-backdrop-filter: blur(25px) saturate(110%);
+    background: var(--sr-glass); backdrop-filter: blur(10px) saturate(110%); -webkit-backdrop-filter: blur(10px) saturate(110%);
     border: 0.5px solid var(--sr-border); border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 #story-roster-screen .sr-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; border-bottom: 0.5px solid rgba(255,255,255,0.12); padding-bottom: 16px; }
@@ -3422,7 +3424,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
    Story Chat Screen (独立志档案风长文聊天)
    ============================================================ */
 #story-chat-screen {
-    --sc-bg: #EBEAE5; 
+    --sc-bg: rgba(210,238,255,0.6); 
     --sc-char: #FFFFFF; 
     --sc-user: rgba(168,216,240,0.75); 
     --sc-ink: #1A1A1A; 
@@ -3444,7 +3446,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     background-blend-mode: multiply;
 }
-#story-chat-screen .sc-container::before { content: ''; position: absolute; inset: 0; background: rgba(235, 234, 229, 0.95); pointer-events: none; z-index: 0; }
+#story-chat-screen .sc-container::before { content: ''; position: absolute; inset: 0; background: rgba(210, 238, 255, 0.6); pointer-events: none; z-index: 0; }
 
 /* 顶部导航 */
 #story-chat-screen .top-bar { display: flex; justify-content: space-between; align-items: center; padding: max(env(safe-area-inset-top, 20px), 16px) 20px 16px; background-color: var(--sc-bg); border-bottom: 1px solid var(--sc-line); z-index: 10; position: relative; }
@@ -3807,7 +3809,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
   display: flex; align-items: center; justify-content: center; margin: 8px 0; padding-left: 10px;
 }
 .rb-cursive {
-  font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--text-main); 
+  font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.5rem; color: var(--text-main);
   transform: rotate(-90deg); white-space: nowrap; margin-right: -25px; z-index: 5; outline: none;
 }
 .rb-polaroid-stack { display: flex; align-items: center; }
@@ -4247,6 +4249,132 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
   margin-top: 2px;
   letter-spacing: .06em;
 }
+
+/* ═══════════════════════════════════════════ */
+/* PeriodModule — Luna 经期陪伴              */
+/* ═══════════════════════════════════════════ */
+#period-screen { background: var(--s-bg); }
+#period-screen .pd-content { padding: 80px 20px 40px; overflow-y: auto; height: 100%; box-sizing: border-box; }
+#period-screen .pd-nav { position: absolute; top: calc(env(safe-area-inset-top, 20px) + 10px); left: 16px; right: 16px;
+  display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;
+  background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.4); border-radius: 28px; z-index: 20;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+#period-screen .pd-nav-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; color: var(--text-main); }
+#period-screen .pd-nav-back { width: 36px; height: 36px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.05);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; color: var(--text-main); }
+
+/* status card */
+#period-screen .pd-status-card { background: rgba(255,255,255,0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(200,220,240,0.5); border-radius: 20px; padding: 18px 20px; margin-bottom: 16px;
+  box-shadow: 0 4px 20px rgba(140,180,210,0.08); }
+#period-screen .pd-phase-icon { font-size: 2rem; margin-bottom: 4px; }
+#period-screen .pd-phase-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-style: italic; color: var(--text-main); margin: 0 0 2px; }
+#period-screen .pd-phase-sub { font-size: 0.75rem; color: var(--text-sub); font-family: 'DM Sans', 'Noto Sans SC', sans-serif; }
+#period-screen .pd-mini-bar { height: 4px; background: rgba(180,200,220,0.3); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+#period-screen .pd-mini-bar-fill { height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, #b8c8e8, #c8b8e0); transition: width 0.5s ease; }
+#period-screen .pd-phase-tags { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+#period-screen .pd-phase-tag { font-size: 0.65rem; padding: 3px 12px; border-radius: 100px;
+  background: rgba(180,190,220,0.15); color: var(--text-sub); font-family: 'DM Sans', sans-serif; letter-spacing: 0.5px; }
+#period-screen .pd-phase-tag.active { background: rgba(180,170,220,0.3); color: var(--text-main); font-weight: 500; }
+
+/* tabs */
+#period-screen .pd-tabs { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 1px solid rgba(180,200,220,0.25); }
+#period-screen .pd-tab { flex: 1; text-align: center; padding: 10px 0; font-size: 0.78rem;
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif; color: var(--text-sub); cursor: pointer;
+  transition: all 0.2s; border-bottom: 2px solid transparent; }
+#period-screen .pd-tab.on { color: var(--text-main); font-weight: 600; border-bottom-color: #9aabc8; }
+
+/* calendar */
+#period-screen .pd-cal-wrap { display: none; }
+#period-screen .pd-cal-wrap.on { display: block; }
+#period-screen .pd-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+#period-screen .pd-month-label { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; color: var(--text-main); }
+#period-screen .pd-month-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(180,200,220,0.4);
+  background: transparent; cursor: pointer; color: var(--text-sub); font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
+#period-screen .pd-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+#period-screen .pd-cal-header { font-size: 0.6rem; color: var(--text-sub); padding: 4px 0;
+  font-family: 'DM Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+#period-screen .pd-cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; font-size: 0.78rem; cursor: pointer; border-radius: 10px; position: relative;
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif; color: var(--text-main); transition: 0.15s; }
+#period-screen .pd-cal-day:hover { background: rgba(180,190,220,0.1); }
+#period-screen .pd-cal-day.other-month { color: rgba(0,0,0,0.15); pointer-events: none; }
+#period-screen .pd-cal-day.today { font-weight: 700; }
+#period-screen .pd-cal-day.today::after { content: ''; position: absolute; bottom: 3px; width: 4px; height: 4px;
+  border-radius: 50%; background: var(--text-main); }
+#period-screen .pd-cal-day.period { background: rgba(175,160,210,0.2); color: #5a4a7a; font-weight: 600; }
+#period-screen .pd-cal-day.period .pd-dot { width: 6px; height: 6px; border-radius: 50%; background: #a898c8; margin-top: 1px; }
+#period-screen .pd-cal-day.predicted { border: 1px dashed rgba(175,160,210,0.5); }
+#period-screen .pd-cal-day.ovulation .pd-dot { background: #c8b8d8; }
+#period-screen .pd-cal-day.selected { box-shadow: 0 0 0 2px #9aabc8; }
+
+/* daily log panel */
+#period-screen .pd-log { background: rgba(255,255,255,0.5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(200,220,240,0.4); border-radius: 16px; padding: 16px; margin-top: 14px; }
+#period-screen .pd-log-title { font-size: 0.75rem; font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  color: var(--text-sub); margin-bottom: 12px; text-transform: uppercase; }
+#period-screen .pd-log-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+#period-screen .pd-log-label { font-size: 0.7rem; color: var(--text-sub); min-width: 50px; font-family: 'DM Sans', 'Noto Sans SC', sans-serif; }
+#period-screen .pd-dots { display: flex; gap: 6px; }
+#period-screen .pd-dot-btn { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(180,200,220,0.5);
+  background: transparent; cursor: pointer; transition: 0.15s; }
+#period-screen .pd-dot-btn.fill { background: #b0a0c8; border-color: #b0a0c8; }
+#period-screen .pd-mood-row { display: flex; gap: 6px; flex-wrap: wrap; }
+#period-screen .pd-mood-chip { font-size: 0.7rem; padding: 4px 12px; border-radius: 100px;
+  border: 1px solid rgba(180,200,220,0.4); background: transparent; cursor: pointer; transition: 0.15s;
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif; }
+#period-screen .pd-mood-chip.on { background: rgba(180,170,220,0.2); border-color: #b0a0c8; }
+#period-screen .pd-symptom-row { display: flex; gap: 6px; flex-wrap: wrap; }
+#period-screen .pd-symptom-chip { font-size: 0.65rem; padding: 4px 12px; border-radius: 100px;
+  border: 1px solid rgba(180,200,220,0.35); background: transparent; cursor: pointer; transition: 0.15s;
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif; color: var(--text-sub); }
+#period-screen .pd-symptom-chip.on { background: rgba(180,160,210,0.18); border-color: #c0b0d8; color: var(--text-main); }
+#period-screen .pd-note-input { width: 100%; border: none; border-bottom: 1px solid rgba(180,200,220,0.4);
+  background: transparent; font-size: 0.8rem; padding: 6px 0; outline: none; color: var(--text-main);
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif; resize: none; }
+
+/* companion area */
+#period-screen .pd-companion { background: rgba(255,255,255,0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(200,220,240,0.35); border-radius: 16px; padding: 14px 16px; margin-top: 14px; margin-bottom: 40px; }
+#period-screen .pd-comp-text { font-size: 0.82rem; color: var(--text-main); line-height: 1.5; font-style: italic;
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif; }
+#period-screen .pd-comp-from { font-size: 0.7rem; color: var(--text-sub); margin-top: 8px; text-align: right;
+  font-family: 'Playfair Display', serif; }
+
+/* stats page */
+#period-screen .pd-stats-wrap { display: none; }
+#period-screen .pd-stats-wrap.on { display: block; }
+#period-screen .pd-stat-item { background: rgba(255,255,255,0.5); border-radius: 14px; padding: 16px; margin-bottom: 10px;
+  border: 1px solid rgba(200,220,240,0.35); }
+#period-screen .pd-stat-label { font-size: 0.65rem; font-family: 'Space Mono', monospace; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 4px; }
+#period-screen .pd-stat-val { font-size: 1.5rem; font-family: 'Playfair Display', serif; font-style: italic; color: var(--text-main); }
+#period-screen .pd-stat-sub { font-size: 0.7rem; color: var(--text-sub); margin-top: 2px; }
+
+/* settings page */
+#period-screen .pd-settings-wrap { display: none; }
+#period-screen .pd-settings-wrap.on { display: block; }
+#period-screen .pd-set-item { background: rgba(255,255,255,0.5); border-radius: 14px; padding: 16px; margin-bottom: 10px;
+  border: 1px solid rgba(200,220,240,0.35); }
+#period-screen .pd-set-label { font-size: 0.78rem; color: var(--text-main); margin-bottom: 6px; }
+#period-screen .pd-set-sub { font-size: 0.65rem; color: var(--text-sub); margin-top: 2px; }
+#period-screen .pd-set-input { width: 60px; border: none; border-bottom: 1px solid rgba(180,200,220,0.4);
+  background: transparent; font-size: 1rem; text-align: center; font-family: 'Playfair Display', serif; color: var(--text-main); outline: none; }
+
+/* home mini widget */
+.pd-home-widget { background: rgba(255,255,255,0.48); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(200,220,240,0.45); border-radius: 18px; padding: 14px 16px; cursor: pointer;
+  box-shadow: 0 2px 12px rgba(140,180,210,0.06); transition: 0.2s; }
+.pd-home-widget:hover { background: rgba(255,255,255,0.6); }
+.pd-home-widget .pd-hw-icon { font-size: 1.3rem; margin-bottom: 4px; }
+.pd-home-widget .pd-hw-title { font-size: 0.72rem; font-weight: 600; color: var(--text-main);
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif; }
+.pd-home-widget .pd-hw-sub { font-size: 0.62rem; color: var(--text-sub); margin-top: 2px; }
+.pd-home-widget .pd-hw-bar { height: 3px; background: rgba(180,200,220,0.3); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.pd-home-widget .pd-hw-bar-fill { height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, #b8c8e8, #c8b8e0); transition: width 0.5s ease; }
+
 </style>
 
 <style id="milk-blue-override">
@@ -4259,23 +4387,23 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
 [data-theme="dark"] .screen{background:rgba(12,28,48,0.75) !important;}
 
 /* Dock 底栏 */
-.dock-wrapper{background:rgba(255,255,255,0.5) !important;backdrop-filter:blur(20px) saturate(160%) !important;-webkit-backdrop-filter:blur(20px) saturate(160%) !important;border-top:1px solid rgba(255,255,255,0.7) !important;box-shadow:0 -4px 20px rgba(140,200,230,0.12) !important;}
+.dock-wrapper{background:rgba(255,255,255,0.5) !important;backdrop-filter:blur(10px) saturate(160%) !important;-webkit-backdrop-filter:blur(10px) saturate(160%) !important;border-top:1px solid rgba(255,255,255,0.7) !important;box-shadow:0 -4px 20px rgba(140,200,230,0.12) !important;}
 
 /* Screen 背景 */
-.screen{background:rgba(220,242,255,0.45) !important;backdrop-filter:blur(20px) !important;-webkit-backdrop-filter:blur(20px) !important;}
+.screen{background:rgba(220,242,255,0.45) !important;backdrop-filter:blur(10px) !important;-webkit-backdrop-filter:blur(10px) !important;}
 
 /* 聊天气泡 - 对方 */
-#conv-screen .cv-bubble{background:rgba(255,255,255,0.6) !important;backdrop-filter:blur(12px) !important;-webkit-backdrop-filter:blur(12px) !important;border:1px solid rgba(255,255,255,0.7) !important;color:#1a3a50 !important;}
+#conv-screen .cv-bubble{background:rgba(255,255,255,0.6) !important;backdrop-filter:blur(5px) !important;-webkit-backdrop-filter:blur(5px) !important;border:1px solid rgba(255,255,255,0.7) !important;color:#1a3a50 !important;}
 /* 聊天气泡 - 自己 */
 #conv-screen .cv-msg-row.user .cv-bubble{background:linear-gradient(135deg,rgba(168,216,240,0.75),rgba(140,200,230,0.65)) !important;border:1px solid rgba(200,235,250,0.6) !important;color:#1a3a50 !important;}
 
 /* 输入区 */
-#conv-screen .cv-footer{background:rgba(240,252,255,0.65) !important;backdrop-filter:blur(16px) !important;-webkit-backdrop-filter:blur(16px) !important;border-top:1px solid rgba(200,235,250,0.4) !important;}
+#conv-screen .cv-footer{background:rgba(240,252,255,0.65) !important;backdrop-filter:blur(8px) !important;-webkit-backdrop-filter:blur(8px) !important;border-top:1px solid rgba(200,235,250,0.4) !important;}
 #conv-screen .cv-input{background:rgba(255,255,255,0.6) !important;border:1px solid rgba(200,235,250,0.5) !important;color:#1a3a50 !important;border-radius:20px !important;}
 #conv-screen .cv-input::placeholder{color:#8ab8cc !important;}
 
 /* Settings */
-#settings-screen{background:rgba(210,238,255,0.55) !important;backdrop-filter:blur(24px) !important;-webkit-backdrop-filter:blur(24px) !important;}
+#settings-screen{background:rgba(210,238,255,0.55) !important;backdrop-filter:blur(10px) !important;-webkit-backdrop-filter:blur(10px) !important;}
 
 /* 滚动条 */
 ::-webkit-scrollbar{width:3px;}
@@ -4287,7 +4415,133 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
 <div class="device">
 
 <!-- ==================== AUTH SCREENS ==================== -->
-  <div id="auth-screen" class="screen auth-screen">
+  
+<!-- ═══════════════════════════════════════════ -->
+<!-- PeriodModule — Luna 经期陪伴 Screen        -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="period-screen" class="screen">
+  <div class="pd-nav">
+    <button class="pd-nav-back" onclick="Router.back()"><i class="ph ph-arrow-left"></i></button>
+    <span class="pd-nav-title">Luna · 经期陪伴</span>
+    <div style="width:36px;"></div>
+  </div>
+  <div class="pd-content">
+    <!-- status card -->
+    <div class="pd-status-card" id="pd-status-card">
+      <div class="pd-phase-icon" id="pd-phase-icon">🌸</div>
+      <div class="pd-phase-title" id="pd-phase-title">周期第 1 天</div>
+      <div class="pd-phase-sub" id="pd-phase-sub">开始记录你的周期吧</div>
+      <div class="pd-mini-bar"><div class="pd-mini-bar-fill" id="pd-mini-bar-fill" style="width:0%"></div></div>
+      <div class="pd-phase-tags" id="pd-phase-tags">
+        <span class="pd-phase-tag">经期</span>
+        <span class="pd-phase-tag">安全期</span>
+        <span class="pd-phase-tag">排卵期</span>
+      </div>
+    </div>
+
+    <!-- tabs -->
+    <div class="pd-tabs">
+      <div class="pd-tab on" data-pd-tab="calendar" onclick="PeriodModule._switchTab('calendar')">日历</div>
+      <div class="pd-tab" data-pd-tab="stats" onclick="PeriodModule._switchTab('stats')">统计</div>
+      <div class="pd-tab" data-pd-tab="settings" onclick="PeriodModule._switchTab('settings')">设置</div>
+    </div>
+
+    <!-- calendar -->
+    <div class="pd-cal-wrap on" id="pd-cal-wrap">
+      <div class="pd-month-nav">
+        <button class="pd-month-btn" onclick="PeriodModule._prevMonth()"><i class="ph ph-caret-left"></i></button>
+        <span class="pd-month-label" id="pd-month-label">2026年 6月</span>
+        <button class="pd-month-btn" onclick="PeriodModule._nextMonth()"><i class="ph ph-caret-right"></i></button>
+      </div>
+      <div class="pd-cal-grid" id="pd-cal-grid">
+        <div class="pd-cal-header">日</div><div class="pd-cal-header">一</div><div class="pd-cal-header">二</div>
+        <div class="pd-cal-header">三</div><div class="pd-cal-header">四</div><div class="pd-cal-header">五</div>
+        <div class="pd-cal-header">六</div>
+      </div>
+      <!-- daily log -->
+      <div class="pd-log" id="pd-log" style="display:none;">
+        <div class="pd-log-title" id="pd-log-title">记录 · 6月24日</div>
+        <div class="pd-log-row">
+          <span class="pd-log-label">经期</span>
+          <div class="cv-mag-toggle" id="pd-is-period-toggle" onclick="PeriodModule._togglePeriodDate()"></div>
+          <span style="font-size:0.65rem;color:var(--text-sub);margin-left:4px;" id="pd-period-label">未标记</span>
+        </div>
+        <div class="pd-log-row" id="pd-flow-row" style="display:none;">
+          <span class="pd-log-label">流量</span>
+          <div class="pd-dots" id="pd-flow-dots"></div>
+        </div>
+        <div class="pd-log-row">
+          <span class="pd-log-label">痛经</span>
+          <div class="pd-dots" id="pd-pain-dots"></div>
+        </div>
+        <div class="pd-log-row">
+          <span class="pd-log-label">心情</span>
+          <div class="pd-mood-row" id="pd-mood-row"></div>
+        </div>
+        <div class="pd-log-row" style="flex-wrap:wrap;">
+          <span class="pd-log-label">症状</span>
+          <div class="pd-symptom-row" id="pd-symptom-row"></div>
+        </div>
+        <textarea class="pd-note-input" id="pd-note" placeholder="写点什么…" rows="1" onchange="PeriodModule._saveNote()"></textarea>
+      </div>
+    </div>
+
+    <!-- stats -->
+    <div class="pd-stats-wrap" id="pd-stats-wrap">
+      <div class="pd-stat-item">
+        <div class="pd-stat-label">平均周期 / AVG CYCLE</div>
+        <div class="pd-stat-val" id="pd-stat-cycle">-- 天</div>
+        <div class="pd-stat-sub" id="pd-stat-cycle-sub"></div>
+      </div>
+      <div class="pd-stat-item">
+        <div class="pd-stat-label">平均经期 / AVG PERIOD</div>
+        <div class="pd-stat-val" id="pd-stat-period">-- 天</div>
+        <div class="pd-stat-sub" id="pd-stat-period-sub"></div>
+      </div>
+      <div class="pd-stat-item">
+        <div class="pd-stat-label">记录总数 / TOTAL RECORDS</div>
+        <div class="pd-stat-val" id="pd-stat-records">-- 条</div>
+        <div class="pd-stat-sub" id="pd-stat-records-sub"></div>
+      </div>
+      <div class="pd-stat-item">
+        <div class="pd-stat-label">下次预测 / NEXT PREDICTED</div>
+        <div class="pd-stat-val" id="pd-stat-next">--</div>
+        <div class="pd-stat-sub" id="pd-stat-next-sub"></div>
+      </div>
+    </div>
+
+    <!-- settings -->
+    <div class="pd-settings-wrap" id="pd-settings-wrap">
+      <div class="pd-set-item">
+        <div class="pd-set-label">平均周期天数</div>
+        <input type="number" class="pd-set-input" id="pd-cfg-cycle" min="20" max="45" value="28" onchange="PeriodModule._saveCfg()">
+        <div class="pd-set-sub">默认 28 天，有足够记录后会自动计算</div>
+      </div>
+      <div class="pd-set-item">
+        <div class="pd-set-label">平均经期天数</div>
+        <input type="number" class="pd-set-input" id="pd-cfg-period" min="2" max="10" value="5" onchange="PeriodModule._saveCfg()">
+        <div class="pd-set-sub">默认 5 天</div>
+      </div>
+      <div class="pd-set-item" style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="pd-set-label">每日问候提醒</div>
+          <div class="pd-set-sub">打开应用时显示陪伴消息</div>
+        </div>
+        <div class="cv-mag-toggle" id="pd-cfg-reminder" onclick="PeriodModule._toggleReminder()"></div>
+      </div>
+      <div id="pd-char-picker"></div>
+    </div>
+
+    <!-- companion message -->
+    <div class="pd-companion" id="pd-companion" style="display:none;">
+      <div class="pd-comp-text" id="pd-comp-text"></div>
+      <div class="pd-comp-from" id="pd-comp-from"></div>
+    </div>
+  </div>
+</div>
+
+
+<div id="auth-screen" class="screen auth-screen">
     <!-- Login Wrap -->
     <div id="page-login" class="auth-wrap">
       <header class="auth-header">
@@ -4473,6 +4727,9 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
         </div>
       </div>
 
+      <!-- Luna 经期小组件 -->
+      <div id="pd-home-widget-container" style="margin-bottom: 24px; padding: 0 4px;"></div>
+
       <div class="grid-icons" id="grid-icons">
         <div class="icon-cell">
          <div class="icon-box" data-icon-id="0"><i class="ph-fill ph-coffee"></i></div>
@@ -4595,6 +4852,10 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
     <div class="icon-cell" id="icon-dream">
     <div class="icon-box" data-icon-id="16"><i class="ph ph-moon-stars"></i></div>
     <span class="icon-label">梦境</span>
+</div>
+    <div class="icon-cell" id="icon-period">
+    <div class="icon-box"><i class="ph ph-drop-half"></i></div>
+    <span class="icon-label">Luna</span>
 </div>
       </div>
     </div>
@@ -4720,10 +4981,27 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
         <button class="sub-back-btn" onclick="Router.back()">Back</button>
       </div>
       <div class="main-view" style="padding-top:80px;">
-        <div class="menu-list">
+        <div class="form-section" style="margin-bottom:8px;">
+          <label class="label-text">当前 TTS 渠道 / PROVIDER</label>
+          <select id="voice-provider-select" class="select-stylish" style="margin-top:6px;"
+            onchange="VoiceModule.save(this.value)">
+            <option value="minimax">MiniMax TTS</option>
+            <option value="elevenlabs">ElevenLabs</option>
+            <option value="mimo">Mimo</option>
+          </select>
+        </div>
+        <div class="menu-list" style="margin-top:16px;">
           <div class="menu-item" onclick="Router.go('minimax-page','M')">
             <span class="menu-text-cn">MiniMax 设置</span>
-            <span class="menu-text-en">TTS Voice Synthesis</span>
+            <span class="menu-text-en">API Key · 模型 · 音色</span>
+          </div>
+          <div class="menu-item" onclick="Router.go('elevenlabs-page','E')">
+            <span class="menu-text-cn">ElevenLabs 设置</span>
+            <span class="menu-text-en">API Key · 模型 · 音色</span>
+          </div>
+          <div class="menu-item" onclick="Router.go('mimo-page','I')">
+            <span class="menu-text-cn">Mimo 设置</span>
+            <span class="menu-text-en">API Key · Endpoint · 音色</span>
           </div>
           <div class="menu-item" onclick="Router.go('novel-settings-page','N')">
             <span class="menu-text-cn">生图设置</span>
@@ -4747,19 +5025,19 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
         </div>
         <div class="input-wrapper">
           <label class="label-text">API Key / KEY</label>
-          <input type="password" id="voice-api-key" class="input-line" placeholder="eyJ...">
+          <input type="password" id="mm-api-key" class="input-line" placeholder="eyJ...">
         </div>
         <div class="input-wrapper">
           <label class="label-text">Group ID</label>
-          <input type="text" id="voice-group-id" class="input-line" placeholder="1234567890">
+          <input type="text" id="mm-group-id" class="input-line" placeholder="1234567890">
         </div>
       <div class="input-wrapper">
           <label class="label-text">模型 / MODEL</label>
-          <select id="voice-model" class="select-stylish">
+          <select id="mm-model" class="select-stylish">
             <!-- 🌟 最新 2.8 系列 -->
             <option value="speech-2.8-hd">speech-2.8-hd（最新带语气词·高定音质）</option>
             <option value="speech-2.8-turbo">speech-2.8-turbo（最新 2.8 极速版）</option>
-            
+
             <!-- 🌟 主力 02 / 2.6 系列 -->
             <option value="speech-02-hd">speech-02-hd（零样本复刻神模·高音质）</option>
             <option value="speech-02-turbo">speech-02-turbo（02系列·丝滑低延迟）</option>
@@ -4773,7 +5051,7 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
         </div>
         <div class="input-wrapper">
           <label class="label-text">语言 / LANGUAGE</label>
-          <select id="voice-lang" class="select-stylish">
+          <select id="mm-lang" class="select-stylish">
            <option value="Chinese">中文</option>
            <option value="English">English</option>
            <option value="Japanese">日本語</option>
@@ -4785,26 +5063,145 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
         <div class="input-wrapper">
           <label class="label-text">语速 / SPEED</label>
           <div class="slider-row">
-            <input type="range" id="voice-speed" class="styled-slider" min="0.5" max="2.0" step="0.1" value="1.0"
-              oninput="document.getElementById('voice-speed-val').textContent=parseFloat(this.value).toFixed(1)">
-            <span class="slider-val" id="voice-speed-val">1.0</span>
+            <input type="range" id="mm-speed" class="styled-slider" min="0.5" max="2.0" step="0.1" value="1.0"
+              oninput="document.getElementById('mm-speed-val').textContent=parseFloat(this.value).toFixed(1)">
+            <span class="slider-val" id="mm-speed-val">1.0</span>
           </div>
         </div>
         <div class="input-wrapper">
           <label class="label-text">音量 / VOL</label>
           <div class="slider-row">
-            <input type="range" id="voice-vol" class="styled-slider" min="1" max="10" step="1" value="5"
-              oninput="document.getElementById('voice-vol-val').textContent=this.value">
-            <span class="slider-val" id="voice-vol-val">5</span>
+            <input type="range" id="mm-vol" class="styled-slider" min="1" max="10" step="1" value="5"
+              oninput="document.getElementById('mm-vol-val').textContent=this.value">
+            <span class="slider-val" id="mm-vol-val">5</span>
           </div>
         </div>
         <div style="margin-top:40px;">
-          <button class="btn-primary" onclick="VoiceModule.save()">保存配置</button>
+          <button class="btn-primary" onclick="VoiceModule.save('minimax')">保存配置</button>
         </div>
       </div>
     </div>
 
-    <!-- 生图设置页：后端（免费 / NovelAI / OpenAI 兼容），DOM id 仍为 novel-settings-page -->
+    <!-- ElevenLabs 设置页 -->
+    <div id="elevenlabs-page" class="settings-page">
+      <div class="page-watermark">El</div>
+      <div class="nav-bar">
+        <span class="nav-title">ElevenLabs 设置</span>
+        <button class="sub-back-btn" onclick="Router.back()">Back</button>
+      </div>
+      <div class="content-scroll">
+        <div class="form-section" style="margin-bottom:8px;">
+          <label class="label-text">服务商 / PROVIDER</label>
+          <div style="font-family:'Space Mono',monospace;font-size:0.75rem;color:#888;margin-top:6px;">ElevenLabs</div>
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">API Key / xi-api-key</label>
+          <input type="password" id="el-api-key" class="input-line" placeholder="sk_...">
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">代理地址 / BASE URL（可选）</label>
+          <input type="text" id="el-base-url" class="input-line" placeholder="留空=直连 ElevenLabs">
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">模型 / MODEL</label>
+          <select id="el-model" class="select-stylish">
+            <option value="eleven_multilingual_v2">eleven_multilingual_v2（多语言 v2·推荐）</option>
+            <option value="eleven_flash_v2_5">eleven_flash_v2_5（极速 75+语言）</option>
+            <option value="eleven_flash_v2">eleven_flash_v2</option>
+            <option value="eleven_turbo_v2_5">eleven_turbo_v2_5（快速 32语言）</option>
+            <option value="eleven_turbo_v2">eleven_turbo_v2</option>
+            <option value="eleven_multilingual_v1">eleven_multilingual_v1（多语言 v1）</option>
+            <option value="eleven_monolingual_v1">eleven_monolingual_v1（英语单语）</option>
+            <option value="eleven_english_v2">eleven_english_v2（英语 v2）</option>
+          </select>
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">稳定性 / STABILITY</label>
+          <div class="slider-row">
+            <input type="range" id="el-stability" class="styled-slider" min="0" max="1.0" step="0.05" value="0.5"
+              oninput="document.getElementById('el-stability-val').textContent=parseFloat(this.value).toFixed(2)">
+            <span class="slider-val" id="el-stability-val">0.50</span>
+          </div>
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">相似度 / SIMILARITY</label>
+          <div class="slider-row">
+            <input type="range" id="el-similarity" class="styled-slider" min="0" max="1.0" step="0.05" value="0.75"
+              oninput="document.getElementById('el-similarity-val').textContent=parseFloat(this.value).toFixed(2)">
+            <span class="slider-val" id="el-similarity-val">0.75</span>
+          </div>
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">风格夸张 / STYLE</label>
+          <div class="slider-row">
+            <input type="range" id="el-style" class="styled-slider" min="0" max="1.0" step="0.05" value="0"
+              oninput="document.getElementById('el-style-val').textContent=parseFloat(this.value).toFixed(2)">
+            <span class="slider-val" id="el-style-val">0.00</span>
+          </div>
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">语速 / SPEED</label>
+          <div class="slider-row">
+            <input type="range" id="el-speed" class="styled-slider" min="0.5" max="2.0" step="0.1" value="1.0"
+              oninput="document.getElementById('el-speed-val').textContent=parseFloat(this.value).toFixed(1)">
+            <span class="slider-val" id="el-speed-val">1.0</span>
+          </div>
+        </div>
+        <div style="margin-top:40px;">
+          <button class="btn-primary" onclick="VoiceModule.save('elevenlabs')">保存配置</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mimo 设置页 -->
+    <div id="mimo-page" class="settings-page">
+      <div class="page-watermark">Mi</div>
+      <div class="nav-bar">
+        <span class="nav-title">Mimo 设置</span>
+        <button class="sub-back-btn" onclick="Router.back()">Back</button>
+      </div>
+      <div class="content-scroll">
+        <div class="form-section" style="margin-bottom:8px;">
+          <label class="label-text">服务商 / PROVIDER</label>
+          <div style="font-family:'Space Mono',monospace;font-size:0.75rem;color:#888;margin-top:6px;">Mimo</div>
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">API Key / KEY</label>
+          <input type="password" id="mo-api-key" class="input-line" placeholder="输入 API Key...">
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">Endpoint URL</label>
+          <input type="text" id="mo-endpoint" class="input-line" placeholder="https://api.mimo.example.com/v1/tts">
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">模型 / MODEL</label>
+          <select id="mo-model" class="select-stylish">
+            <option value="mimo-tts-v1">mimo-tts-v1（默认）</option>
+          </select>
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">语速 / SPEED</label>
+          <div class="slider-row">
+            <input type="range" id="mo-speed" class="styled-slider" min="0.5" max="2.0" step="0.1" value="1.0"
+              oninput="document.getElementById('mo-speed-val').textContent=parseFloat(this.value).toFixed(1)">
+            <span class="slider-val" id="mo-speed-val">1.0</span>
+          </div>
+        </div>
+        <div class="input-wrapper">
+          <label class="label-text">音量 / VOL</label>
+          <div class="slider-row">
+            <input type="range" id="mo-vol" class="styled-slider" min="1" max="10" step="1" value="5"
+              oninput="document.getElementById('mo-vol-val').textContent=this.value">
+            <span class="slider-val" id="mo-vol-val">5</span>
+          </div>
+        </div>
+        <div style="margin-top:40px;">
+          <button class="btn-primary" onclick="VoiceModule.save('mimo')">保存配置</button>
+        </div>
+      </div>
+    </div>
+
+        <!-- 生图设置页：后端（免费 / NovelAI / OpenAI 兼容），DOM id 仍为 novel-settings-page -->
     <div id="novel-settings-page" class="settings-page">
       <div class="page-watermark">Ig</div>
       <div class="nav-bar">
@@ -6429,7 +6826,7 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
           <div class="cv-set-sec-title">Voice</div>
           <div class="cv-set-item">
             <div class="cv-si-info">
-              <span class="cv-si-label">MiniMax 语音合成</span>
+              <span class="cv-si-label">语音合成 / TTS</span>
               <span class="cv-si-sub">TTS Auto-Synthesis</span>
             </div>
             <div class="cv-mag-toggle" id="cv-voice-tts-toggle" onclick="ConvModule._toggleTTS(this)"></div>
@@ -6437,13 +6834,13 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
           <div id="cv-voice-options-wrap" class="cv-voice-options-wrap" style="display:none;">
             <div class="cv-set-item col">
               <div class="cv-si-info">
-                <span class="cv-si-label">音色 ID</span>
-                <span class="cv-si-sub">MiniMax Voice ID</span>
+                <span class="cv-si-label">音色 ID / Voice ID</span>
+                <span class="cv-si-sub">当前渠道的音色标识</span>
               </div>
               <div style="display:flex;gap:8px;width:100%;align-items:center;">
                 <input type="text" id="cv-voice-id-input" class="cv-clean-input"
                   style="flex:1;border:none;border-bottom:0.5px solid rgba(18,18,18,0.15);padding:6px 2px;font-size:0.85rem;background:transparent;outline:none;"
-                  placeholder="MiniMax 控制台复制的 Voice ID">
+                  placeholder="从 TTS 服务商控制台复制的 Voice ID">
                 <button id="cv-voice-preview-btn" onclick="ConvModule.previewVoice()"
                   style="flex-shrink:0;padding:6px 14px;border:0.5px solid #1a3a50;border-radius:20px;background:transparent;font-size:0.75rem;font-family:'Space Mono',monospace;letter-spacing:1px;cursor:pointer;transition:.2s;"
                   onmousedown="this.style.background='#1a3a50';this.style.color='#fff'"
@@ -8070,7 +8467,7 @@ if ('serviceWorker' in navigator) {
 // ============================================================
 const DB = (() => {
   const DB_NAME    = 'chillOS';
-  const DB_VERSION =11;
+  const DB_VERSION =12;
   let _db = null;
 
   function open() {
@@ -8146,6 +8543,11 @@ const DB = (() => {
             const sch = db.createObjectStore('schedules', { keyPath: 'id' });
             // 复合索引，方便按 角色+日期 查询
             sch.createIndex('charId_date', ['charId', 'date'], { unique: true });
+          }
+        }
+        if (old < 12) {
+          if (!db.objectStoreNames.contains('periods')) {
+            db.createObjectStore('periods', { keyPath: 'date' });
           }
         }
     };
@@ -8658,7 +9060,40 @@ async function msgDel(id) {
       req.onerror   = e => reject(e.target.error);
     });
   }
-  
+    // ---- periods ----
+  async function periodsGetAll() {
+    await open();
+    return new Promise((resolve, reject) => {
+      const req = tx('periods').getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror   = e => reject(e.target.error);
+    });
+  }
+  async function periodsGet(date) {
+    await open();
+    return new Promise((resolve, reject) => {
+      const req = tx('periods').get(date);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror   = e => reject(e.target.error);
+    });
+  }
+  async function periodsPut(record) {
+    await open();
+    return new Promise((resolve, reject) => {
+      const req = tx('periods', 'readwrite').put(record);
+      req.onsuccess = () => resolve();
+      req.onerror   = e => reject(e.target.error);
+    });
+  }
+  async function periodsDel(date) {
+    await open();
+    return new Promise((resolve, reject) => {
+      const req = tx('periods', 'readwrite').delete(date);
+      req.onsuccess = () => resolve();
+      req.onerror   = e => reject(e.target.error);
+    });
+  }
+
   return {
     VERSION: DB_VERSION,
     settings:   { get: settingsGet, set: settingsSet, del: settingsDel },
@@ -8675,6 +9110,7 @@ async function msgDel(id) {
     forum: { getAll: forumGetAll, put: forumPut, del: forumDel },
     routines:   { get: routineGet, put: routinePut },
     schedules:  { get: scheduleGet, put: schedulePut, del: scheduleDel },
+    periods:    { getAll: periodsGetAll, get: periodsGet, put: periodsPut, del: periodsDel },
     clearAll,
     init: open,
   };
@@ -8888,12 +9324,12 @@ const KeepAliveModule = (() => {
 // ============================================================
 const Router = (() => {
   // 恢复原状，不把 home-screen 放在这里，让它永远沉在最底部
-  const TOP_SCREENS =['settings-screen', 'character-screen', 'chat-screen', 'conv-screen', 'worldbook-screen', 'story-roster-screen', 'story-chat-screen', 'forum-screen','lifestyle-screen', 'codex-screen', 'auth-screen', 'claim-screen','group-story-screen'];
+  const TOP_SCREENS =['settings-screen', 'character-screen', 'chat-screen', 'conv-screen', 'worldbook-screen', 'story-roster-screen', 'story-chat-screen', 'forum-screen','lifestyle-screen', 'codex-screen', 'auth-screen', 'claim-screen','group-story-screen','period-screen'];
   
   const _subStack = {};
   
   function go(target, watermark) {
-    if (target === 'settings' || target === 'character' || target === 'chat' || target === 'conv' || target === 'worldbook' || target === 'story-roster' || target === 'story-chat' || target === 'forum' || target === 'lifestyle' || target === 'codex' || target === 'auth' || target === 'claim') {
+    if (target === 'settings' || target === 'character' || target === 'chat' || target === 'conv' || target === 'worldbook' || target === 'story-roster' || target === 'story-chat' || target === 'forum' || target === 'lifestyle' || target === 'codex' || target === 'auth' || target === 'claim' || target === 'period') {
       
       const map = { 
         settings:  'settings-screen', 
@@ -8908,7 +9344,9 @@ const Router = (() => {
         codex:     'codex-screen',
         auth:      'auth-screen',
         claim:     'claim-screen'
-      };
+      ,
+	        period:    'period-screen'
+	      };
       
       const screenId = map[target];
       if (!screenId) return;
@@ -8964,6 +9402,7 @@ const Router = (() => {
     if (target === 'story-roster') StoryModule.onEnter();
     if (target === 'forum' && typeof ForumModule !== 'undefined') ForumModule.onEnter(); 
     if (target === 'lifestyle' && typeof LifestyleModule !== 'undefined') LifestyleModule.onEnter();
+    if (target === 'period')     PeriodModule.onEnter();
   }
 
   function _onEnterPage(pageId) {
@@ -9718,6 +10157,731 @@ const UIModule = (() => {
 // ============================================================
 // DataModule — 数据统计页 & 全量备份与恢复 (纯净稳定版 + 自定义弹窗)
 // ============================================================
+
+// ============================================================
+// PeriodModule — Luna 经期记录与陪伴
+// ============================================================
+const PeriodModule = (() => {
+  const MOODS = [
+    { key: 'happy',    emoji: '😊', label: '开心' },
+    { key: 'calm',     emoji: '😌', label: '平静' },
+    { key: 'tired',    emoji: '😴', label: '疲惫' },
+    { key: 'irritable',emoji: '😤', label: '烦躁' },
+    { key: 'sad',      emoji: '😢', label: '低落' },
+    { key: 'sensitive',emoji: '🥺', label: '敏感' },
+  ];
+  const SYMPTOMS = ['痛经','腰酸','腹胀','头痛','乏力','失眠','食欲变化','胸部胀痛','情绪波动','皮肤变差'];
+  const PHASES = {
+    period:    { emoji: '🩸', label: '经期',     color: '#b0a0c8' },
+    follicular:{ emoji: '🌱', label: '卵泡期',   color: '#a8c8c0' },
+    ovulation: { emoji: '🌸', label: '排卵期',   color: '#c8b8d8' },
+    luteal:    { emoji: '🌙', label: '黄体期',   color: '#b8c0d8' },
+  };
+
+  let _records = {};         // date → record
+  let _cfg = null;
+  let _calYear = 2026, _calMonth = 6;
+  let _selectedDate = null;  // 'YYYY-MM-DD'
+  let _today = _ymd(new Date());
+  let _lastReminderDate = null;
+
+  function _ymd(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  function _fmtDate(d) { return `${d.getFullYear()}年 ${d.getMonth()+1}月${d.getDate()}日`; }
+
+  // ══════════════ 初始化 ══════════════
+  async function init() {
+    try {
+      _cfg = await DB.settings.get('period-config');
+      if (!_cfg) {
+        _cfg = { cycleLength: 28, periodLength: 5, lastPeriodStart: '', companionCharId: null, reminderEnabled: true, lastReminderDate: '' };
+        await DB.settings.set('period-config', _cfg);
+      }
+      _lastReminderDate = _cfg.lastReminderDate || '';
+      await _loadRecords();
+      const now = new Date();
+      _calYear = now.getFullYear(); _calMonth = now.getMonth() + 1;
+      _selectedDate = _today;
+      _renderHomeWidget();
+      _checkAndRemind();
+      await _injectPeriodMemory();
+    } catch(e) { console.warn('[PeriodModule] init failed', e); }
+  }
+
+  async function _loadRecords() {
+    try {
+      const all = await DB.periods.getAll();
+      _records = {};
+      all.forEach(r => { _records[r.date] = r; });
+    } catch(e) { _records = {}; }
+  }
+
+  async function onEnter() {
+    await _loadRecords();
+    _selectedDate = _today;
+    _renderAll();
+  }
+
+  // ===== 角色记忆注入 =====
+  async function _injectPeriodMemory() {
+    try {
+      const info = getCycleInfo();
+      if (!info) return;
+      var periodNote = null;
+      if (info.isPeriod) {
+        periodNote = "【用户生理状态】用户目前正在经期（第" + info.periodDay + "天），预计还有" + info.periodRemaining + "天结束。可能会感到腹痛、疲倦或情绪波动，请在互动中更加温柔和体贴。";
+      } else if (info.daysUntilNext !== null && info.daysUntilNext <= 3) {
+        periodNote = "【用户生理状态】用户的经期预计在" + info.daysUntilNext + "天后（" + info.nextStartStr + "）开始，目前处于黄体期末期，可能会有 PMS 症状。";
+      } else if (info.daysUntilNext !== null) {
+        periodNote = "【用户生理状态】用户目前处于周期第" + info.day + "天，预计下次经期在" + info.nextStartStr + "。";
+      }
+      if (!periodNote) return;
+      var chars = await DB.characters.getAll().catch(function(){return [];});
+      for (var i = 0; i < chars.length; i++) {
+        var c = chars[i];
+        try {
+          var mem = await DB.settings.get("char-memory-" + c.id).catch(function(){return null;});
+          if (!mem) { mem = { summary: "", lastMsgId: 0, autoRounds: 30 }; }
+          var todayTag = "<!--period-" + _today + "-->";
+          if ((mem.summary || "").indexOf(todayTag) >= 0) continue;
+          var summary = (mem.summary || "").replace(/【用户生理状态】[^\n]*\n?/g, "");
+          mem.summary = periodNote + "\n" + todayTag + "\n" + summary;
+          await DB.settings.set("char-memory-" + c.id, mem);
+        } catch(e) {}
+      }
+    } catch(e) { console.warn("[PeriodModule] memory inject failed", e); }
+  }
+
+  // ===== 经期提醒检查 =====
+  function _checkAndRemind() {
+    if (!_cfg || _cfg.reminderEnabled === false) return;
+    var info = getCycleInfo();
+    if (!info || !info.daysUntilNext || info.daysUntilNext > 3 || info.daysUntilNext < 0) return;
+    if (_lastReminderDate === _today) return;
+    _lastReminderDate = _today;
+    _cfg.lastReminderDate = _today;
+    DB.settings.set("period-config", _cfg).catch(function(){});
+    _renderHomeWidget();
+    if (_cfg.companionCharId) { _generateCompanionReminder(); }
+  }
+
+  async function _generateCompanionReminder() {
+    try {
+      var info = getCycleInfo();
+      if (!info) return;
+      var char = await DB.characters.get(Number(_cfg.companionCharId)).catch(function(){return null;});
+      if (!char) return;
+      var activeApi = await DB.api.getActive().catch(function(){return null;});
+      if (!activeApi) return;
+      var prompt;
+      if (info.isPeriod) {
+        prompt = "你是" + char.name + "。用户正在经期（第" + info.periodDay + "天），可能会不舒服。请以你的性格，发一条很短的温柔关心消息给她（一句话）。";
+      } else if (info.daysUntilNext <= 1) {
+        prompt = "你是" + char.name + "。用户的经期明天就要来了。请以你的性格，发一条很短的提醒消息，提醒她准备好卫生巾、注意休息（一句话）。";
+      } else {
+        prompt = "你是" + char.name + "。用户的经期预计在" + info.daysUntilNext + "天后开始。请以你的性格，发一条很短的温柔提醒（一句话）。";
+      }
+      var response = await ApiHelper.chatCompletion(activeApi, [
+        { role: "system", content: char.persona || "你是" + char.name + "，一个温柔体贴的人。" },
+        { role: "user", content: prompt }
+      ]);
+      if (response && response.trim()) {
+        await DB.settings.set("period-reminder-msg", { text: response.trim(), from: char.name, date: _today, charId: _cfg.companionCharId });
+      }
+    } catch(e) { console.warn("[PeriodModule] reminder gen failed", e); }
+  }
+
+
+  // ══════════════ 全量渲染 ══════════════
+  function _renderAll() {
+    _renderStatusCard();
+    _renderCalendar();
+    _renderDailyLog();
+    _renderStats();
+    _renderSettings();
+    _renderCompanion();
+  }
+
+  // ══════════════ Status Card ══════════════
+  function _renderStatusCard() {
+    const info = getCycleInfo();
+    const iconEl = document.getElementById('pd-phase-icon');
+    const titleEl = document.getElementById('pd-phase-title');
+    const subEl = document.getElementById('pd-phase-sub');
+    const barEl = document.getElementById('pd-mini-bar-fill');
+    const tagsEl = document.getElementById('pd-phase-tags');
+
+    if (iconEl) iconEl.textContent = PHASES[info.phase]?.emoji || '🌸';
+    if (titleEl) titleEl.textContent = `周期第 ${Math.max(1, info.day)} 天`;
+    if (subEl) {
+      if (info.isPeriod) subEl.textContent = `经期第 ${info.periodDay} 天 · 预计 ${info.periodRemaining} 天后结束`;
+      else if (info.daysUntilNext !== null) subEl.textContent = `预计 ${info.nextStartStr} 来潮 · 还有 ${info.daysUntilNext} 天`;
+      else subEl.textContent = '开始记录你的周期吧';
+    }
+    if (barEl) barEl.style.width = Math.min(100, (info.day / (_cfg.cycleLength || 28)) * 100) + '%';
+    if (tagsEl) {
+      tagsEl.innerHTML = Object.entries(PHASES).map(([k, v]) =>
+        `<span class="pd-phase-tag${info.phase === k ? ' active' : ''}">${v.emoji} ${v.label}</span>`
+      ).join('');
+    }
+  }
+
+  // ══════════════ Calendar ══════════════
+  function _renderCalendar() {
+    const labelEl = document.getElementById('pd-month-label');
+    if (labelEl) labelEl.textContent = `${_calYear}年 ${_calMonth}月`;
+
+    const gridEl = document.getElementById('pd-cal-grid');
+    if (!gridEl) return;
+    // remove old day cells, keep header
+    const headers = gridEl.querySelectorAll('.pd-cal-header');
+    const existing = gridEl.querySelectorAll('.pd-cal-day');
+    existing.forEach(e => e.remove());
+
+    const firstDay = new Date(_calYear, _calMonth - 1, 1);
+    const startDow = firstDay.getDay(); // 0=Sun
+    const daysInMonth = new Date(_calYear, _calMonth, 0).getDate();
+    const prevDaysInMonth = new Date(_calYear, _calMonth - 1, 0).getDate();
+
+    const info = getCycleInfo();
+    const periodSet = new Set();
+    const predictedSet = new Set();
+    const ovulationSet = new Set();
+
+    // Build period dates set
+    Object.entries(_records).forEach(([d, r]) => { if (r.isPeriod) periodSet.add(d); });
+
+    // Build predicted dates
+    if (info.nextStart) {
+      const ns = new Date(info.nextStart);
+      const pl = _cfg.periodLength || 5;
+      for (let i = 0; i < pl; i++) {
+        const d = new Date(ns); d.setDate(d.getDate() + i); predictedSet.add(_ymd(d));
+      }
+      if (info.ovulationDate) {
+        ovulationSet.add(info.ovulationDate);
+      }
+    }
+
+    // Fill grid
+    const totalCells = startDow + daysInMonth;
+    const rows = Math.ceil(totalCells / 7);
+    const cells = [];
+    for (let i = 0; i < rows * 7; i++) {
+      let dayNum, dateStr, isOther = false;
+      if (i < startDow) {
+        dayNum = prevDaysInMonth - startDow + i + 1;
+        const d = new Date(_calYear, _calMonth - 2, dayNum);
+        dateStr = _ymd(d); isOther = true;
+      } else if (i - startDow < daysInMonth) {
+        dayNum = i - startDow + 1;
+        const d = new Date(_calYear, _calMonth - 1, dayNum);
+        dateStr = _ymd(d);
+      } else {
+        dayNum = i - startDow - daysInMonth + 1;
+        const d = new Date(_calYear, _calMonth, dayNum);
+        dateStr = _ymd(d); isOther = true;
+      }
+
+      let cls = 'pd-cal-day';
+      if (isOther) cls += ' other-month';
+      if (dateStr === _today) cls += ' today';
+      if (periodSet.has(dateStr)) cls += ' period';
+      if (predictedSet.has(dateStr)) cls += ' predicted';
+      if (ovulationSet.has(dateStr)) cls += ' ovulation';
+      if (dateStr === _selectedDate) cls += ' selected';
+
+      cells.push({ dayNum, dateStr, cls });
+    }
+
+    cells.forEach(c => {
+      const div = document.createElement('div');
+      div.className = c.cls;
+      div.setAttribute('data-date', c.dateStr);
+      div.innerHTML = `<span style="font-size:0.78rem;">${c.dayNum}</span>` +
+        (c.cls.includes('period') || c.cls.includes('ovulation') ? '<span class="pd-dot"></span>' : '');
+      div.addEventListener('click', () => { _selectedDate = c.dateStr; _renderAll(); });
+      gridEl.appendChild(div);
+    });
+  }
+
+  // ══════════════ Daily Log ══════════════
+  function _renderDailyLog() {
+    const logEl = document.getElementById('pd-log');
+    const titleEl = document.getElementById('pd-log-title');
+    if (!logEl || !titleEl) return;
+
+    if (!_selectedDate) { logEl.style.display = 'none'; return; }
+    logEl.style.display = 'block';
+
+    const d = new Date(_selectedDate + 'T00:00:00');
+    titleEl.textContent = `记录 · ${d.getMonth()+1}月${d.getDate()}日`;
+    const rec = _records[_selectedDate] || { date: _selectedDate, isPeriod: false, flow: 0, pain: 0, mood: null, symptoms: [], note: '' };
+
+    // Period toggle
+    const toggle = document.getElementById('pd-is-period-toggle');
+    const periodLabel = document.getElementById('pd-period-label');
+    if (toggle) {
+      if (rec.isPeriod) { toggle.classList.add('checked'); } else { toggle.classList.remove('checked'); }
+    }
+    if (periodLabel) periodLabel.textContent = rec.isPeriod ? '经期日' : '未标记';
+
+    // Flow dots row
+    const flowRow = document.getElementById('pd-flow-row');
+    if (flowRow) flowRow.style.display = rec.isPeriod ? 'flex' : 'none';
+
+    // Flow dots (5 dots)
+    const flowDots = document.getElementById('pd-flow-dots');
+    if (flowDots) {
+      flowDots.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'pd-dot-btn' + (i <= (rec.flow || 0) ? ' fill' : '');
+        dot.addEventListener('click', () => { _setFlow(i); });
+        flowDots.appendChild(dot);
+      }
+    }
+
+    // Pain dots (5 dots)
+    const painDots = document.getElementById('pd-pain-dots');
+    if (painDots) {
+      painDots.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'pd-dot-btn' + (i <= (rec.pain || 0) ? ' fill' : '');
+        dot.addEventListener('click', () => { _setPain(i); });
+        painDots.appendChild(dot);
+      }
+    }
+
+    // Mood chips
+    const moodRow = document.getElementById('pd-mood-row');
+    if (moodRow) {
+      moodRow.innerHTML = MOODS.map(m =>
+        `<span class="pd-mood-chip${rec.mood === m.key ? ' on' : ''}" data-mood="${m.key}" onclick="PeriodModule._setMood('${m.key}')">${m.emoji} ${m.label}</span>`
+      ).join('');
+    }
+
+    // Symptom chips
+    const symptomRow = document.getElementById('pd-symptom-row');
+    if (symptomRow) {
+      symptomRow.innerHTML = SYMPTOMS.map(s =>
+        `<span class="pd-symptom-chip${(rec.symptoms||[]).includes(s) ? ' on' : ''}" data-symptom="${s}" onclick="PeriodModule._toggleSymptom('${s}')">${s}</span>`
+      ).join('');
+    }
+
+    // Note
+    const noteEl = document.getElementById('pd-note');
+    if (noteEl) noteEl.value = rec.note || '';
+  }
+
+  // ══════════════ Stats ══════════════
+  function _renderStats() {
+    const periodStarts = [];
+    const allDates = Object.keys(_records).sort();
+    let inPeriod = false;
+    allDates.forEach(d => {
+      const r = _records[d];
+      if (r.isPeriod && !inPeriod) { periodStarts.push(d); inPeriod = true; }
+      if (!r.isPeriod && inPeriod) { inPeriod = false; }
+    });
+
+    let avgCycle = '--', avgPeriod = '--', cycleSub = '', periodSub = '';
+    if (periodStarts.length >= 2) {
+      const cycles = [];
+      for (let i = 1; i < periodStarts.length; i++) {
+        cycles.push((new Date(periodStarts[i]) - new Date(periodStarts[i-1])) / 86400000);
+      }
+      if (cycles.length) {
+        avgCycle = Math.round(cycles.reduce((a,b)=>a+b,0) / cycles.length);
+      }
+      cycleSub = `基于 ${cycles.length} 个周期`;
+    }
+    const periodDays = Object.values(_records).filter(r => r.isPeriod).length;
+    if (periodStarts.length && periodDays) {
+      avgPeriod = Math.round(periodDays / periodStarts.length);
+      periodSub = `基于 ${periodStarts.length} 次记录`;
+    }
+
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setVal('pd-stat-cycle', avgCycle === '--' ? '-- 天' : `${avgCycle} 天`);
+    setVal('pd-stat-cycle-sub', cycleSub);
+    setVal('pd-stat-period', avgPeriod === '--' ? '-- 天' : `${avgPeriod} 天`);
+    setVal('pd-stat-period-sub', periodSub);
+    setVal('pd-stat-records', `${Object.keys(_records).length} 条`);
+    setVal('pd-stat-records-sub', periodStarts.length ? `首次记录: ${periodStarts[0]}` : '开始你的第一次记录吧');
+
+    const info = getCycleInfo();
+    if (info.nextStart) {
+      setVal('pd-stat-next', info.nextStartStr);
+      setVal('pd-stat-next-sub', info.daysUntilNext !== null ? `还有 ${info.daysUntilNext} 天` : '');
+    } else {
+      setVal('pd-stat-next', '数据不足');
+      setVal('pd-stat-next-sub', '至少需要 2 次经期记录');
+    }
+  }
+
+  // ══════════════ Settings ══════════════
+  function _renderSettings() {
+    const cycleEl = document.getElementById('pd-cfg-cycle');
+    const periodEl = document.getElementById('pd-cfg-period');
+    const reminderEl = document.getElementById('pd-cfg-reminder');
+    if (cycleEl) cycleEl.value = _cfg.cycleLength || 28;
+    if (periodEl) periodEl.value = _cfg.periodLength || 5;
+    if (reminderEl) {
+      if (_cfg.reminderEnabled !== false) reminderEl.classList.add('checked');
+      else reminderEl.classList.remove('checked');
+    }
+    _renderCharPicker();
+  }
+
+  async function _renderCharPicker() {
+    var container = document.getElementById('pd-char-picker');
+    if (!container) return;
+    try {
+      var chars = await DB.characters.getAll().catch(function(){return [];});
+      var currentId = _cfg.companionCharId;
+      var current = null;
+      for (var i = 0; i < chars.length; i++) { if (chars[i].id === Number(currentId)) { current = chars[i]; break; } }
+      var html = '<div class=\"pd-set-item\"><div class=\"pd-set-label\">陪伴角色</div><div class=\"pd-set-sub\" style=\"margin-bottom:6px;\">选择角色后，它会在经期前主动发消息提醒你</div><select id=\"pd-companion-select\" class=\"select-stylish\" onchange=\"PeriodModule._setCompanion(this.value)\" style=\"margin-bottom:8px;\"><option value=\"\">— 不选择（Luna 默认陪伴） —</option>';
+      for (var i = 0; i < chars.length; i++) {
+        var c = chars[i];
+        html += '<option value=\"' + c.id + '\"' + (c.id === Number(currentId) ? ' selected' : '') + '>' + c.name + '</option>';
+      }
+      html += '</select>';
+      if (current) html += '<div class=\"pd-set-sub\">✅ 当前陪伴：<b>' + current.name + '</b>，经期前后会主动生成提醒消息</div>';
+      html += '</div>';
+      container.innerHTML = html;
+    } catch(e) {}
+  }
+
+  async function _setCompanion(charId) {
+    _cfg.companionCharId = charId || null;
+    await DB.settings.set('period-config', _cfg);
+    _renderSettings();
+    if (charId) { await _injectPeriodMemory(); _checkAndRemind(); }
+  }
+
+  async function _saveCfg() {
+    const cycleEl = document.getElementById('pd-cfg-cycle');
+    const periodEl = document.getElementById('pd-cfg-period');
+    if (cycleEl) _cfg.cycleLength = parseInt(cycleEl.value) || 28;
+    if (periodEl) _cfg.periodLength = parseInt(periodEl.value) || 5;
+    await DB.settings.set('period-config', _cfg);
+    _renderAll();
+    await _injectPeriodMemory();
+  }
+
+  async function _toggleReminder() {
+    _cfg.reminderEnabled = !(_cfg.reminderEnabled !== false);
+    await DB.settings.set('period-config', _cfg);
+    _renderSettings();
+  }
+
+  // ══════════════ Companion ══════════════
+  async function _renderCompanion() {
+    const el = document.getElementById('pd-companion');
+    const textEl = document.getElementById('pd-comp-text');
+    const fromEl = document.getElementById('pd-comp-from');
+    if (!el) return;
+    // 检查是否有角色生成的提醒消息
+    var reminder = null;
+    try { reminder = await DB.settings.get('period-reminder-msg').catch(function(){return null;}); } catch(e) {}
+    if (reminder && reminder.date === _today) {
+      el.style.display = 'block';
+      if (textEl) textEl.textContent = '"' + reminder.text + '"';
+      if (fromEl) fromEl.textContent = '— ' + reminder.from;
+      return;
+    }
+    const msg = getDailyMessage();
+    if (msg) {
+      el.style.display = 'block';
+      if (textEl) textEl.textContent = '"' + msg.text + '"';
+      if (fromEl) {
+        if (_cfg && _cfg.companionCharId) {
+          try { var c = await DB.characters.get(Number(_cfg.companionCharId)).catch(function(){return null;}); if (c) { fromEl.textContent = '— ' + c.name; return; } } catch(e) {}
+        }
+        fromEl.textContent = '— Luna';
+      }
+    } else {
+      el.style.display = 'none';
+    }
+  }
+
+  function getDailyMessage() {
+    const info = getCycleInfo();
+    const msgs = {
+      period: [
+        '今天感觉怎么样？记得多喝热水，对自己温柔一点 💙',
+        '经期辛苦了，泡杯热茶，暖暖肚子吧～',
+        '这几天别太勉强自己，好好休息最重要',
+        '抱抱你。痛的话用热水袋敷一敷会好很多',
+        '生理期也是身体在和你对话，听听它的声音 🌸',
+      ],
+      approaching: [
+        '经期快到了，包里记得放好卫生巾哦',
+        '这几天可能会有点累，提前给自己减减压',
+        '身体在悄悄变化呢，多关注一下自己的感受',
+      ],
+      ovulation: [
+        '今天是排卵期，状态应该还不错！',
+        '身体能量慢慢回升了，适合做点开心的事 ✨',
+      ],
+      follicular: [
+        '新周期开始啦，像春天一样焕然一新 🌱',
+        '经期结束，身体轻盈了不少吧',
+      ],
+      luteal: [
+        '黄体期了，可能会有点容易累，慢慢来',
+        '允许自己有情绪波动，这很正常～',
+      ],
+    };
+
+    let pool;
+    if (info.isPeriod) pool = msgs.period;
+    else if (info.daysUntilNext !== null && info.daysUntilNext <= 3) pool = msgs.approaching;
+    else if (info.phase === 'ovulation') pool = msgs.ovulation;
+    else if (info.phase === 'follicular') pool = msgs.follicular;
+    else pool = msgs.luteal;
+
+    if (!pool) return null;
+    const text = pool[Math.floor(Math.random() * pool.length)];
+    return { text };
+  }
+
+  // ══════════════ Record Ops ══════════════
+  async function _togglePeriodDate() {
+    if (!_selectedDate) return;
+    let rec = _records[_selectedDate] || { date: _selectedDate, isPeriod: false, flow: 0, pain: 0, mood: null, symptoms: [], note: '' };
+    rec.isPeriod = !rec.isPeriod;
+    if (!rec.isPeriod) rec.flow = 0;
+    rec.updatedAt = Date.now();
+    _records[_selectedDate] = rec;
+    await DB.periods.put(rec);
+
+    // Update config: if marking as period, track as potential latest start
+    if (rec.isPeriod) {
+      const periodStarts = _getPeriodStarts();
+      const last = periodStarts[periodStarts.length - 1];
+      if (last === _selectedDate || last > (_cfg.lastPeriodStart || '')) {
+        _cfg.lastPeriodStart = _selectedDate;
+        // Recalculate avg cycle
+        if (periodStarts.length >= 2) {
+          const cycles = [];
+          for (let i = 1; i < periodStarts.length; i++) {
+            cycles.push((new Date(periodStarts[i]) - new Date(periodStarts[i-1])) / 86400000);
+          }
+          _cfg.cycleLength = Math.round(cycles.reduce((a,b)=>a+b,0) / cycles.length) || 28;
+        }
+        await DB.settings.set('period-config', _cfg);
+      }
+    }
+    // 记录变更后注入经期信息到角色记忆
+    await _injectPeriodMemory();
+    _renderAll();
+  }
+
+  function _getPeriodStarts() {
+    const starts = [];
+    const sorted = Object.keys(_records).sort();
+    let inP = false;
+    sorted.forEach(d => {
+      if (_records[d].isPeriod && !inP) { starts.push(d); inP = true; }
+      if (!_records[d].isPeriod && inP) { inP = false; }
+    });
+    return starts;
+  }
+
+  async function _setFlow(level) {
+    if (!_selectedDate) return;
+    let rec = _records[_selectedDate] || { date: _selectedDate, isPeriod: false, flow: 0, pain: 0, mood: null, symptoms: [], note: '' };
+    rec.flow = level;
+    if (level > 0 && !rec.isPeriod) { rec.isPeriod = true; }
+    rec.updatedAt = Date.now();
+    _records[_selectedDate] = rec;
+    await DB.periods.put(rec);
+    _renderDailyLog();
+    _renderCalendar();
+    _renderStatusCard();
+  }
+
+  async function _setPain(level) {
+    if (!_selectedDate) return;
+    let rec = _records[_selectedDate] || { date: _selectedDate, isPeriod: false, flow: 0, pain: 0, mood: null, symptoms: [], note: '' };
+    rec.pain = level;
+    rec.updatedAt = Date.now();
+    _records[_selectedDate] = rec;
+    await DB.periods.put(rec);
+    _renderDailyLog();
+  }
+
+  async function _setMood(mood) {
+    if (!_selectedDate) return;
+    let rec = _records[_selectedDate] || { date: _selectedDate, isPeriod: false, flow: 0, pain: 0, mood: null, symptoms: [], note: '' };
+    rec.mood = rec.mood === mood ? null : mood;
+    rec.updatedAt = Date.now();
+    _records[_selectedDate] = rec;
+    await DB.periods.put(rec);
+    _renderDailyLog();
+  }
+
+  async function _toggleSymptom(s) {
+    if (!_selectedDate) return;
+    let rec = _records[_selectedDate] || { date: _selectedDate, isPeriod: false, flow: 0, pain: 0, mood: null, symptoms: [], note: '' };
+    if (!rec.symptoms) rec.symptoms = [];
+    const idx = rec.symptoms.indexOf(s);
+    if (idx >= 0) rec.symptoms.splice(idx, 1); else rec.symptoms.push(s);
+    rec.updatedAt = Date.now();
+    _records[_selectedDate] = rec;
+    await DB.periods.put(rec);
+    _renderDailyLog();
+  }
+
+  async function _saveNote() {
+    if (!_selectedDate) return;
+    const noteEl = document.getElementById('pd-note');
+    if (!noteEl) return;
+    let rec = _records[_selectedDate] || { date: _selectedDate, isPeriod: false, flow: 0, pain: 0, mood: null, symptoms: [], note: '' };
+    rec.note = noteEl.value.trim();
+    rec.updatedAt = Date.now();
+    _records[_selectedDate] = rec;
+    await DB.periods.put(rec);
+  }
+
+  // ══════════════ Tab Switch ══════════════
+  function _switchTab(tab) {
+    document.querySelectorAll('#period-screen .pd-tab').forEach(t => t.classList.toggle('on', t.dataset.pdTab === tab));
+    const calWrap = document.getElementById('pd-cal-wrap');
+    const statsWrap = document.getElementById('pd-stats-wrap');
+    const settingsWrap = document.getElementById('pd-settings-wrap');
+    if (calWrap) calWrap.classList.toggle('on', tab === 'calendar');
+    if (statsWrap) statsWrap.classList.toggle('on', tab === 'stats');
+    if (settingsWrap) settingsWrap.classList.toggle('on', tab === 'settings');
+    if (tab === 'settings') _renderSettings();
+    if (tab === 'stats') _renderStats();
+  }
+
+  function _prevMonth() { if (_calMonth === 1) { _calMonth = 12; _calYear--; } else _calMonth--; _renderCalendar(); }
+  function _nextMonth() { if (_calMonth === 12) { _calMonth = 1; _calYear++; } else _calMonth++; _renderCalendar(); }
+
+  // ══════════════ Cycle Prediction ══════════════
+  function predictNext() {
+    const starts = _getPeriodStarts();
+    if (!starts.length) return null;
+    const lastStart = starts[starts.length - 1];
+    const cycleLen = _cfg.cycleLength || 28;
+    const periodLen = _cfg.periodLength || 5;
+    const nextStart = new Date(lastStart + 'T00:00:00');
+    nextStart.setDate(nextStart.getDate() + cycleLen);
+    const nextEnd = new Date(nextStart);
+    nextEnd.setDate(nextEnd.getDate() + periodLen - 1);
+    const ovulation = new Date(nextStart);
+    ovulation.setDate(ovulation.getDate() - 14);
+    return {
+      start: _ymd(nextStart),
+      end: _ymd(nextEnd),
+      ovulation: _ymd(ovulation),
+    };
+  }
+
+  function getCycleInfo() {
+    const starts = _getPeriodStarts();
+    const now = new Date();
+    const today = _ymd(now);
+    let day = 1, phase = 'follicular', isPeriod = false, periodDay = 0, periodRemaining = 0;
+    let daysUntilNext = null, nextStartStr = '', nextStart = null, ovulationDate = null;
+
+    // Check if today is a period day based on records
+    if (_records[today]?.isPeriod) {
+      isPeriod = true;
+      // Count which period day today is
+      if (starts.length) {
+        for (let i = starts.length - 1; i >= 0; i--) {
+          if (starts[i] <= today) {
+            const sd = new Date(starts[i] + 'T00:00:00');
+            periodDay = Math.floor((now - sd) / 86400000) + 1;
+            periodRemaining = (_cfg.periodLength || 5) - periodDay;
+            day = periodDay;
+            phase = 'period';
+            break;
+          }
+        }
+      }
+    } else if (starts.length) {
+      // Find day in cycle
+      const lastStart = starts[starts.length - 1];
+      const lsDate = new Date(lastStart + 'T00:00:00');
+      day = Math.floor((now - lsDate) / 86400000) + 1;
+      if (day <= 0) day = 1;
+
+      const cycleLen = _cfg.cycleLength || 28;
+      const periodLen = _cfg.periodLength || 5;
+
+      if (day <= periodLen) {
+        phase = 'period';
+        isPeriod = true;
+        periodDay = day;
+        periodRemaining = periodLen - day;
+      } else if (day < cycleLen - 14) {
+        phase = 'follicular';
+      } else if (day >= cycleLen - 14 && day < cycleLen - 12) {
+        phase = 'ovulation';
+      } else {
+        phase = 'luteal';
+      }
+
+      // Calculate next period
+      nextStart = new Date(lsDate);
+      nextStart.setDate(nextStart.getDate() + cycleLen);
+      nextStartStr = `${nextStart.getMonth()+1}月${nextStart.getDate()}日`;
+      daysUntilNext = Math.floor((nextStart - now) / 86400000);
+      if (daysUntilNext < 0) daysUntilNext = 0;
+
+      const ov = new Date(nextStart);
+      ov.setDate(ov.getDate() - 14);
+      ovulationDate = _ymd(ov);
+    }
+
+    return { day, phase, isPeriod, periodDay, periodRemaining, daysUntilNext, nextStartStr, nextStart, ovulationDate };
+  }
+
+  // ══════════════ Home Widget ══════════════
+  function _renderHomeWidget() {
+    const container = document.getElementById('pd-home-widget-container');
+    if (!container) return;
+    const info = getCycleInfo();
+    const phase = PHASES[info.phase] || PHASES.follicular;
+    const pct = Math.min(100, (info.day / (_cfg.cycleLength || 28)) * 100);
+
+    let subText;
+    if (info.isPeriod) subText = `经期第 ${info.periodDay} 天`;
+    else if (info.daysUntilNext !== null) { subText = `还有 ${info.daysUntilNext} 天来潮`; }
+    else subText = '开始记录';
+
+    var alertDot = '';
+    if (!info.isPeriod && info.daysUntilNext !== null && info.daysUntilNext <= 3) {
+      alertDot = '<span style=\"position:absolute;top:8px;right:10px;width:7px;height:7px;border-radius:50%;background:#b0a0c8;box-shadow:0 0 8px #b0a0c8;\"></span>';
+    }
+
+    container.innerHTML = `
+      <div class=\"pd-home-widget\" onclick=\"Router.go('period')\" style=\"position:relative;\">
+        ${alertDot}
+        <div class=\"pd-hw-icon\">${phase.emoji}</div>
+        <div class=\"pd-hw-title\">周期第 ${Math.max(1, info.day)} 天</div>
+        <div class=\"pd-hw-sub\">${subText}</div>
+        <div class=\"pd-hw-bar\"><div class=\"pd-hw-bar-fill\" style=\"width:${pct}%\"></div></div>
+      </div>`;
+  }
+
+  // ══════════════ Public ══════════════
+  return {
+    init, onEnter, predictNext, getCycleInfo,
+    _switchTab, _prevMonth, _nextMonth, _togglePeriodDate, _setFlow, _setPain, _setMood,
+    _toggleSymptom, _saveNote, _saveCfg, _toggleReminder, _setCompanion,
+    renderHomeWidget: _renderHomeWidget,
+  };
+})();
+
+
 const DataModule = (() => {
   
   // 🌟 辅助：自定义高定风危险操作弹窗（完美替代原生 confirm）
@@ -10849,6 +12013,11 @@ document.getElementById('icon-dream')?.addEventListener('click', () => {
   } else {
     Toast.show('梦境模块未加载，请检查 dream.js 是否存在');
   }
+});
+
+// Luna 经期陪伴
+document.getElementById('icon-period')?.addEventListener('click', () => {
+  Router.go('period');
 });
 
 // 查手机
@@ -13628,59 +14797,315 @@ return { show, handleClick, requestPermission };
 })();
 
 // ============================================================
-// VoiceModule — MiniMax TTS 配置 + 播放引擎
+// VoiceModule — 多Provider TTS 配置 + 播放引擎
 // ============================================================
 const VoiceModule = (() => {
-  const KEY_CFG = 'voice-config'; // { apiKey, groupId, model, lang, speed, vol }
+  const KEY_CFG = 'voice-config'; // { provider, minimax:{...}, elevenlabs:{...}, mimo:{...} }
   let _cfg = null;
-  let _audioCache = new Map(); // assetKey/msgId → AudioBuffer or blob URL
+  let _audioCache = new Map(); // assetKey/msgId → blob URL
 
+  // ═══════════════════════════════════════════
+  // Provider 注册表
+  // ═══════════════════════════════════════════
+  const _providers = {
+
+    // ── MiniMax ──
+    minimax: {
+      id: 'minimax',
+      name: 'MiniMax TTS',
+      models: [
+        { value: 'speech-2.8-hd',     label: 'speech-2.8-hd（最新带语气词·高定音质）' },
+        { value: 'speech-2.8-turbo',  label: 'speech-2.8-turbo（最新 2.8 极速版）' },
+        { value: 'speech-02-hd',      label: 'speech-02-hd（零样本复刻神模·高音质）' },
+        { value: 'speech-02-turbo',   label: 'speech-02-turbo（02系列·丝滑低延迟）' },
+        { value: 'speech-2.6-hd',     label: 'speech-2.6-hd（超低延迟优化版）' },
+        { value: 'speech-2.6-turbo',  label: 'speech-2.6-turbo（2.6 极速版）' },
+        { value: 'speech-01-turbo',   label: 'speech-01-turbo（经典推荐）' },
+        { value: 'speech-01-hd',      label: 'speech-01-hd（经典高清）' },
+      ],
+      fields: [
+        { id: 'mm-api-key',    label: 'API Key / KEY',       type: 'password', placeholder: 'eyJ...' },
+        { id: 'mm-group-id',   label: 'Group ID',             type: 'text',     placeholder: '1234567890' },
+        { id: 'mm-model',      label: '模型 / MODEL',         type: 'select',   optionsKey: 'models' },
+        { id: 'mm-lang',       label: '语言 / LANGUAGE',      type: 'select',   options: [
+          { value: 'Chinese', label: '中文' }, { value: 'English', label: 'English' },
+          { value: 'Japanese', label: '日本語' }, { value: 'Korean', label: '한국어' },
+          { value: 'Chinese,Yue', label: '粤语' }, { value: 'auto', label: '自动检测' },
+        ]},
+        { id: 'mm-speed',      label: '语速 / SPEED',         type: 'range',    min: 0.5, max: 2.0, step: 0.1, default: 1.0 },
+        { id: 'mm-vol',        label: '音量 / VOL',           type: 'range',    min: 1,   max: 10,  step: 1,   default: 5 },
+      ],
+
+      synthesize(text, voiceId, cfg) {
+        const url = `https://api.minimax.chat/v1/t2a_v2?GroupId=${cfg.groupId}`;
+        const body = {
+          model: cfg.model || 'speech-01-turbo',
+          text: text,
+          stream: false,
+          voice_setting: { voice_id: voiceId, speed: parseFloat(cfg.speed) || 1, vol: parseFloat(cfg.vol) ?? 5, pitch: 0 },
+          audio_setting: { audio_sample_rate: 32000, bitrate: 128000, format: 'mp3' },
+          language_boost: cfg.lang !== 'auto' ? cfg.lang : undefined
+        };
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${cfg.apiKey}` };
+        return { url, body, headers, parse: async (res) => {
+          const data = await res.json();
+          const hex = data?.data?.audio;
+          if (!hex) return null;
+          return new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+        }};
+      },
+    },
+
+    // ── ElevenLabs ──
+    elevenlabs: {
+      id: 'elevenlabs',
+      name: 'ElevenLabs',
+      models: [
+        { value: 'eleven_multilingual_v2',  label: 'eleven_multilingual_v2（多语言 v2·推荐）' },
+        { value: 'eleven_flash_v2_5',       label: 'eleven_flash_v2_5（极速 75+语言）' },
+        { value: 'eleven_flash_v2',         label: 'eleven_flash_v2' },
+        { value: 'eleven_turbo_v2_5',       label: 'eleven_turbo_v2_5（快速 32语言）' },
+        { value: 'eleven_turbo_v2',         label: 'eleven_turbo_v2' },
+        { value: 'eleven_multilingual_v1',  label: 'eleven_multilingual_v1（多语言 v1）' },
+        { value: 'eleven_monolingual_v1',   label: 'eleven_monolingual_v1（英语单语）' },
+        { value: 'eleven_english_v2',       label: 'eleven_english_v2（英语 v2）' },
+      ],
+      fields: [
+        { id: 'el-api-key',    label: 'API Key / xi-api-key', type: 'password', placeholder: 'sk_...' },
+        { id: 'el-base-url',  label: '代理地址 / BASE URL',   type: 'text',     placeholder: '留空=直连 api.elevenlabs.io' },
+        { id: 'el-model',      label: '模型 / MODEL',          type: 'select',   optionsKey: 'models' },
+        { id: 'el-stability',  label: '稳定性 / STABILITY',    type: 'range',    min: 0, max: 1.0, step: 0.05, default: 0.5 },
+        { id: 'el-similarity', label: '相似度 / SIMILARITY',   type: 'range',    min: 0, max: 1.0, step: 0.05, default: 0.75 },
+        { id: 'el-style',      label: '风格夸张 / STYLE',      type: 'range',    min: 0, max: 1.0, step: 0.05, default: 0 },
+        { id: 'el-speed',      label: '语速 / SPEED',          type: 'range',    min: 0.5, max: 2.0, step: 0.1, default: 1.0 },
+      ],
+
+      synthesize(text, voiceId, cfg) {
+        const base = (cfg.baseUrl || 'https://api.elevenlabs.io').replace(/\/+$/, '');
+        const url = `${base}/v1/text-to-speech/${encodeURIComponent(voiceId)}`;
+        const body = {
+          text: text,
+          model_id: cfg.model || 'eleven_multilingual_v2',
+          voice_settings: {
+            stability: parseFloat(cfg.stability) ?? 0.5,
+            similarity_boost: parseFloat(cfg.similarityBoost) ?? 0.75,
+            style: parseFloat(cfg.style) ?? 0,
+            speed: parseFloat(cfg.speed) ?? 1.0,
+            use_speaker_boost: true
+          }
+        };
+        const headers = { 'Content-Type': 'application/json', 'xi-api-key': cfg.apiKey };
+        return { url, body, headers, parse: async (res) => {
+          const buf = await res.arrayBuffer();
+          if (!buf || buf.byteLength === 0) return null;
+          return new Uint8Array(buf);
+        }};
+      },
+    },
+
+    // ── Mimo（通用 TTS 适配器 — 等 API 文档后精确调整）──
+    mimo: {
+      id: 'mimo',
+      name: 'Mimo',
+      models: [
+        { value: 'mimo-tts-v1', label: 'mimo-tts-v1（默认）' },
+      ],
+      fields: [
+        { id: 'mo-api-key',    label: 'API Key / KEY',      type: 'password', placeholder: '输入 API Key...' },
+        { id: 'mo-endpoint',   label: 'Endpoint URL',        type: 'text',     placeholder: 'https://api.mimo.example.com/v1/tts' },
+        { id: 'mo-model',      label: '模型 / MODEL',        type: 'select',   optionsKey: 'models' },
+        { id: 'mo-speed',      label: '语速 / SPEED',        type: 'range',    min: 0.5, max: 2.0, step: 0.1, default: 1.0 },
+        { id: 'mo-vol',        label: '音量 / VOL',          type: 'range',    min: 1,   max: 10,  step: 1,   default: 5 },
+      ],
+
+      // 通用实现：POST JSON → 优先 hex/base64，兜底 raw bytes
+      synthesize(text, voiceId, cfg) {
+        const endpoint = cfg.endpoint || 'https://api.mimo.example.com/v1/tts';
+        const url = endpoint;
+        const body = {
+          model: cfg.model || 'mimo-tts-v1',
+          input: text,
+          voice: voiceId,
+          speed: parseFloat(cfg.speed) || 1,
+          vol: parseFloat(cfg.vol) ?? 5,
+        };
+        const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${cfg.apiKey}` };
+        return { url, body, headers, parse: async (res) => {
+          const ctype = res.headers.get('Content-Type') || '';
+          // JSON 响应 → 尝试 hex / base64
+          if (ctype.includes('application/json') || ctype.includes('text/')) {
+            const data = await res.json().catch(() => ({}));
+            const hex = data?.data?.audio || data?.audio;
+            if (hex && typeof hex === 'string' && hex.length > 64) {
+              return new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+            }
+            const b64 = data?.data?.audio_base64 || data?.audio_base64 || data?.base64;
+            if (b64 && typeof b64 === 'string') {
+              const bin = atob(b64);
+              const bytes = new Uint8Array(bin.length);
+              for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+              return bytes;
+            }
+            return null;
+          }
+          // 二进制响应
+          const buf = await res.arrayBuffer();
+          if (!buf || buf.byteLength === 0) return null;
+          return new Uint8Array(buf);
+        }};
+      },
+
+    },
+  };
+
+  // ═══════════════════════════════════════════
+  // 默认配置 & 迁移
+  // ═══════════════════════════════════════════
+  function _defaultCfg() {
+    return {
+      provider: 'minimax',
+      minimax:   { apiKey: '', groupId: '', model: 'speech-01-turbo', lang: 'auto', speed: 1.0, vol: 5 },
+      elevenlabs:{ apiKey: '', baseUrl: '', model: 'eleven_multilingual_v2', stability: 0.5, similarityBoost: 0.75, style: 0, speed: 1.0 },
+      mimo:      { apiKey: '', endpoint: '', model: 'mimo-tts-v1', speed: 1.0, vol: 5 },
+    };
+  }
+
+  function _migrate(old) {
+    if (!old) return _defaultCfg();
+    // 已经是新格式
+    if (old.provider && old.minimax) return old;
+    // 旧格式：{ apiKey, groupId, model, lang, speed, vol }
+    const df = _defaultCfg();
+    df.provider = 'minimax';
+    df.minimax = {
+      apiKey: old.apiKey || '',
+      groupId: old.groupId || '',
+      model: old.model || 'speech-01-turbo',
+      lang: old.lang || 'auto',
+      speed: old.speed || 1.0,
+      vol: old.vol ?? 5,
+    };
+    return df;
+  }
+
+  // ═══════════════════════════════════════════
+  // 初始化 & 配置管理
+  // ═══════════════════════════════════════════
   async function init() {
     try {
       const saved = await DB.settings.get(KEY_CFG);
-      if (saved) {
-        _cfg = saved;
-        _restoreUI();
+      _cfg = _migrate(saved);
+      if (saved && !saved.provider) {
+        await DB.settings.set(KEY_CFG, _cfg).catch(() => {});
       }
+      _restoreUI();
     } catch(e) { console.warn('[VoiceModule] init failed', e); }
   }
 
   function _restoreUI() {
     if (!_cfg) return;
     const set = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val; };
-    set('voice-api-key',   _cfg.apiKey  || '');
-    set('voice-group-id',  _cfg.groupId || '');
-    set('voice-model',     _cfg.model   || 'speech-01-turbo');
-    set('voice-lang',      _cfg.lang    || 'zh');
-    set('voice-speed',     _cfg.speed   || '1.0');
-    set('voice-vol',       _cfg.vol ?? '1');
-    const speedVal = document.getElementById('voice-speed-val');
-    if (speedVal) speedVal.textContent = parseFloat(_cfg.speed || 1).toFixed(1);
-    const volVal = document.getElementById('voice-vol-val');
-    if (volVal) volVal.textContent = _cfg.vol ?? '1';
+
+    // MiniMax 页
+    set('mm-api-key',   _cfg.minimax.apiKey  || '');
+    set('mm-group-id',  _cfg.minimax.groupId || '');
+    set('mm-model',     _cfg.minimax.model   || 'speech-01-turbo');
+    set('mm-lang',      _cfg.minimax.lang    || 'auto');
+    set('mm-speed',     _cfg.minimax.speed   || 1.0);
+    set('mm-vol',       _cfg.minimax.vol     ?? 5);
+
+    // ElevenLabs 页
+    set('el-api-key',   _cfg.elevenlabs.apiKey || '');
+    set('el-base-url',  _cfg.elevenlabs.baseUrl  || '');
+    set('el-model',     _cfg.elevenlabs.model  || 'eleven_multilingual_v2');
+    set('el-stability', _cfg.elevenlabs.stability ?? 0.5);
+    set('el-similarity',_cfg.elevenlabs.similarityBoost ?? 0.75);
+    set('el-style',     _cfg.elevenlabs.style ?? 0);
+    set('el-speed',     _cfg.elevenlabs.speed || 1.0);
+
+    // Mimo 页
+    set('mo-api-key',   _cfg.mimo.apiKey   || '');
+    set('mo-endpoint',  _cfg.mimo.endpoint || '');
+    set('mo-model',     _cfg.mimo.model    || 'mimo-tts-v1');
+    set('mo-speed',     _cfg.mimo.speed    || 1.0);
+    set('mo-vol',       _cfg.mimo.vol      ?? 5);
+
+    // range 显示值刷新
+    const rangeIds = ['mm-speed','mm-vol','el-stability','el-similarity','el-style','el-speed','mo-speed','mo-vol'];
+    rangeIds.forEach(id => {
+      const el = document.getElementById(id); if (!el) return;
+      const disp = document.getElementById(id + '-val');
+      if (disp) {
+        const v = parseFloat(el.value);
+        const isInt = id.includes('vol');
+        disp.textContent = isInt ? Math.round(v) : v.toFixed(2);
+      }
+    });
+
+    // provider 选择器
+    const sel = document.getElementById('voice-provider-select');
+    if (sel && _cfg.provider) sel.value = _cfg.provider;
   }
 
-  async function save() {
-    _cfg = {
-      apiKey:  document.getElementById('voice-api-key')?.value.trim()  || '',
-      groupId: document.getElementById('voice-group-id')?.value.trim() || '',
-      model:   document.getElementById('voice-model')?.value           || 'speech-01-turbo',
-      lang:    document.getElementById('voice-lang')?.value            || 'zh',
-      speed:   parseFloat(document.getElementById('voice-speed')?.value || '1.0'),
-      vol:     parseFloat(document.getElementById('voice-vol')?.value ?? '1'),
-    };
+  async function save(providerId) {
+    if (!_cfg) _cfg = _defaultCfg();
+    if (providerId) _cfg.provider = providerId;
+    if (!providerId) { Toast.show('请选择 TTS 渠道'); return; }
+
+    const getVal = (id) => document.getElementById(id)?.value || '';
+
+    switch (providerId) {
+      case 'minimax':
+        _cfg.minimax = {
+          apiKey:  getVal('mm-api-key'),
+          groupId: getVal('mm-group-id'),
+          model:   getVal('mm-model')   || 'speech-01-turbo',
+          lang:    getVal('mm-lang')    || 'auto',
+          speed:   parseFloat(getVal('mm-speed') || '1.0'),
+          vol:     parseFloat(getVal('mm-vol')   || '5'),
+        };
+        break;
+      case 'elevenlabs':
+        _cfg.elevenlabs = {
+          apiKey:  getVal('el-api-key'),
+          baseUrl: getVal('el-base-url'),
+          model:  getVal('el-model')  || 'eleven_multilingual_v2',
+          stability: parseFloat(getVal('el-stability') || '0.5'),
+          similarityBoost: parseFloat(getVal('el-similarity') || '0.75'),
+          style: parseFloat(getVal('el-style') || '0'),
+          speed: parseFloat(getVal('el-speed') || '1.0'),
+        };
+        break;
+      case 'mimo':
+        _cfg.mimo = {
+          apiKey:   getVal('mo-api-key'),
+          endpoint: getVal('mo-endpoint'),
+          model:    getVal('mo-model')  || 'mimo-tts-v1',
+          speed:    parseFloat(getVal('mo-speed') || '1.0'),
+          vol:      parseFloat(getVal('mo-vol')   || '5'),
+        };
+        break;
+      default: break;
+    }
+
     await DB.settings.set(KEY_CFG, _cfg);
-    Toast.show('语音配置已保存');
+    Toast.show((_providers[providerId]?.name || providerId) + ' 配置已保存');
   }
 
   function getCfg() { return _cfg; }
 
+  function _activeProvider() {
+    const id = (_cfg && _cfg.provider) || 'minimax';
+    return _providers[id] || _providers.minimax;
+  }
+
+  function _activeCfg() {
+    if (!_cfg) return null;
+    const id = _cfg.provider || 'minimax';
+    return _cfg[id] || _cfg.minimax;
+  }
+
   // ── TTS 文本清洗：去掉翻译/注释/旁白，保留角色真正要念的台词 ──
-  // 设计原则：
-  //  • 圆括号 ()（） / 方括号 []【】 / 龟甲〔〕 → 整段删除（多为翻译、注释、语气说明）
-  //  • 星号 *...* → 删除（动作描写）
-  //  • 日语引号「」『』 / 书名号〈〉《》 → 只去符号、保留内部文字（这是台词本体！）
-  // 反复执行以处理「翻译括号紧跟引号」「括号内还有括号」等嵌套情况。
   function _cleanForTTS(text) {
     let s = String(text || '');
     let prev;
@@ -13688,39 +15113,36 @@ const VoiceModule = (() => {
     do {
       prev = s;
       s = s
-        .replace(/\([^()]*\)/g,   '')  // 半角圆括号（最内层先删，配合循环处理嵌套）
-        .replace(/（[^（）]*）/g,  '')  // 全角圆括号
-        .replace(/\[[^\[\]]*\]/g, '')  // 半角方括号
-        .replace(/【[^【】]*】/g,  '')  // 全角方括号
-        .replace(/〔[^〔〕]*〕/g,  '')  // 龟甲括号
-        .replace(/\*[^*]+\*/g,    ''); // 星号动作
+        .replace(/\([^()]*\)/g,   '')
+        .replace(/（[^（）]*）/g,  '')
+        .replace(/\[[^\[\]]*\]/g, '')
+        .replace(/【[^【】]*】/g,  '')
+        .replace(/〔[^〔〕]*〕/g,  '')
+        .replace(/\*[^*]+\*/g,    '');
       guard++;
     } while (s !== prev && guard < 5);
 
     s = s
-      .replace(/[「」『』〈〉《》]/g, '') // 引号/书名号只去符号，保留内部台词
-      .replace(/[ \t\u3000]{2,}/g, ' ')  // 合并多余空格（含全角空格）
-      .replace(/\s+([，。！？、…~])/g, '$1') // 删括号后残留的标点前空格
+      .replace(/[「」『』〈〉《》]/g, '')
+      .replace(/[ \t　]{2,}/g, ' ')
+      .replace(/\s+([，。！？、…~])/g, '$1')
       .trim();
 
-    // 🌟 兜底：模型没按规则给翻译加括号时（即原文里压根没出现过括号），
-    //    剥离「外语句子 + 直接跟随的中文翻译尾巴」。原文一旦带括号就说明模型守规矩了，
-    //    括号逻辑已处理完毕，此处不再插手，避免误删括号后正经的中文台词。
     const hadBracket = /[（）()【】\[\]〔〕]/.test(text);
-    const hasForeign = /[A-Za-z\u00C0-\u024F\u0400-\u04FF\u3040-\u30FF\uAC00-\uD7A3]/.test(s);
+    const hasForeign = /[A-Za-zÀ-ɏЀ-ӿ぀-ヿ가-힣]/.test(s);
     if (!hadBracket && hasForeign) {
-      // 去掉位于外语词/标点之后、破折号或空白衔接的整段中文尾巴（翻译）
-      s = s.replace(/([A-Za-z\u00C0-\u024F\u0400-\u04FF\u3040-\u30FF\uAC00-\uD7A3][^\u4e00-\u9fff]*?)\s*[—–\-]{0,2}\s*[\u4e00-\u9fff][\u4e00-\u9fff，。！？、…~：；]*\s*$/g, '$1').trim();
+      s = s.replace(/([A-Za-zÀ-ɏЀ-ӿ぀-ヿ가-힣][^一-鿿]*?)\s*[—–\-]{0,2}\s*[一-鿿][一-鿿，。！？、…~：；]*\s*$/g, '$1').trim();
     }
 
     return s;
   }
 
-  // ── 核心 TTS：文字 → 播放 ──
-  // 返回 blob URL（可直接给 <audio> 或 AudioContext）
+  // ── 核心 TTS：文字 → blob URL ──
   async function synthesize(text, voiceId) {
-    if (!_cfg?.apiKey || !_cfg?.groupId) {
-      Toast.show('请先在音画设置中填写 Key 和 GroupId');
+    const prov = _activeProvider();
+    const cfg  = _activeCfg();
+    if (!cfg?.apiKey) {
+      Toast.show('请先在音画设置中填写 ' + prov.name + ' 的 API Key');
       return null;
     }
     if (!voiceId) {
@@ -13731,51 +15153,26 @@ const VoiceModule = (() => {
     const ttsText = _cleanForTTS(text);
     if (!ttsText) return null;
 
-    const url = `https://api.minimax.chat/v1/t2a_v2?GroupId=${_cfg.groupId}`;
-    const body = {
-      model:      _cfg.model   || 'speech-01-turbo',
-      text:       ttsText,
-      stream:     false,
-      voice_setting: {
-        voice_id:   voiceId,
-        speed:      _cfg.speed || 1,
-        vol:        _cfg.vol ?? 1,
-        pitch:      0
-      },
-      audio_setting: {
-        audio_sample_rate: 32000,
-        bitrate:           128000,
-        format:            'mp3'
-      },
-      language_boost: _cfg.lang !== 'auto' ? _cfg.lang : undefined
-    };
-
     try {
+      const { url, body, headers, parse } = prov.synthesize(ttsText, voiceId, cfg);
       const res = await fetch(url, {
         method:  'POST',
-        headers: {
-          'Content-Type':  'application/json',
-          'Authorization': `Bearer ${_cfg.apiKey}`
-        },
-        body: JSON.stringify(body)
+        headers: headers,
+        body:    JSON.stringify(body)
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        console.error('[VoiceModule] TTS error', err);
-        Toast.show('TTS 请求失败：' + (err?.base_resp?.status_msg || res.status));
+        console.error('[VoiceModule] TTS error', prov.id, err);
+        Toast.show('TTS 请求失败（' + prov.name + '）：' + (err?.base_resp?.status_msg || res.status));
         return null;
       }
-      const data = await res.json();
-      // MiniMax v2 返回 hex 编码音频
-      const hex = data?.data?.audio;
-      if (!hex) { Toast.show('未收到音频数据'); return null; }
+      const bytes = await parse(res);
+      if (!bytes || bytes.length === 0) { Toast.show('未收到音频数据'); return null; }
 
-      // Uint8Array → Blob → object URL，避免 btoa 在大音频时截断产生噪声
-      const bytes = new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
-      const blob  = new Blob([bytes], { type: 'audio/mpeg' });
+      const blob = new Blob([bytes], { type: 'audio/mpeg' });
       return URL.createObjectURL(blob);
     } catch(e) {
-      console.error('[VoiceModule] synthesize error', e);
+      console.error('[VoiceModule] synthesize error', prov.id, e);
       Toast.show('TTS 请求失败，请检查网络或 Key');
       return null;
     }
@@ -13783,18 +15180,14 @@ const VoiceModule = (() => {
 
   // ── 播放语音条（懒加载 + 缓存）──
   async function playAudioBubble(cacheKey, text, voiceId, btn) {
-    // 已缓存直接播
     if (_audioCache.has(cacheKey)) {
       _playUrl(_audioCache.get(cacheKey), btn);
       return;
     }
 
-    // iOS 手势解锁：必须在用户点击的同步上下文里先 play()，
-    // 否则 await 之后 iOS 会拒绝播放（PARSE_ERROR / 手势失效）
     const audio = new Audio();
-    audio.play().catch(() => {}); // 解锁，失败静默忽略（无 src 是预期的）
+    audio.play().catch(() => {});
 
-    // 加载中状态
     if (btn) { btn.dataset.loading = '1'; btn.innerHTML = '<i class="ph ph-circle-notch" style="animation:spin .8s linear infinite"></i>'; }
     const dataUrl = await synthesize(text, voiceId);
     if (!dataUrl) {
@@ -13802,16 +15195,12 @@ const VoiceModule = (() => {
       return;
     }
     _audioCache.set(cacheKey, dataUrl);
-
-    // 复用已解锁的 audio 元素播放，而不是再 new Audio()
     _playWithElement(audio, dataUrl, btn);
   }
 
-  // 当前全局播放中的 Audio 实例（确保同时只有一个在播）
   let _currentAudio = null;
   let _currentBtn   = null;
 
-  // 停止当前播放并重置按钮（内部公共逻辑）
   function _stopCurrent(nextBtn) {
     if (_currentAudio) {
       _currentAudio.pause();
@@ -13825,7 +15214,6 @@ const VoiceModule = (() => {
     }
   }
 
-  // 接收已有 audio 元素（iOS 首次播放时用，元素已在手势上下文中解锁）
   function _playWithElement(audio, url, btn) {
     _stopCurrent(btn);
     audio.src     = url;
@@ -13846,7 +15234,6 @@ const VoiceModule = (() => {
     audio.play().catch(e => console.warn('[VoiceModule] play error', e));
   }
 
-  // 新建 audio 元素播放（缓存命中时，已在手势上下文内直接调用）
   function _playUrl(url, btn) {
     _stopCurrent(btn);
     const audio = new Audio(url);
@@ -13868,18 +15255,15 @@ const VoiceModule = (() => {
   }
 
   // ── 串行逐句播放（视频通话用）──
-  // segments: 字符串数组。逐句合成、播完一句再播下一句。
-  // 绕开 MiniMax 单次长度截断/中段被吃，并让停顿自然。
   let _seqToken = 0;
-  let _seqAudio = null;   // 复用同一个 audio 元素，减少 iOS 重复创建被拦的概率
+  let _seqAudio = null;
   async function playSequence(cacheKeyPrefix, segments, voiceId) {
-    const token = ++_seqToken;          // 新一轮播放，作废上一轮
+    const token = ++_seqToken;
     _stopCurrent(null);
-    // 复用元素：首次创建，后续 sequence 沿用
     if (!_seqAudio) _seqAudio = new Audio();
 
     for (let i = 0; i < segments.length; i++) {
-      if (token !== _seqToken) return;   // 被新一轮打断
+      if (token !== _seqToken) return;
       const seg = (segments[i] || '').trim();
       if (!seg) continue;
       const cacheKey = `${cacheKeyPrefix}-${i}`;
@@ -13906,53 +15290,42 @@ const VoiceModule = (() => {
         const p = audio.play();
         if (p && p.catch) p.catch(err => { console.warn('[VoiceModule] play() 被拒绝 @seg', i, err); resolve(); });
       });
-      // 句间留一点自然停顿
       if (token === _seqToken && i < segments.length - 1) {
         await new Promise(r => setTimeout(r, 180));
       }
     }
   }
 
-  // 清理缓存（清空聊天时调用）
   function clearCache() {
     _audioCache.forEach(url => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); });
     _audioCache.clear();
   }
 
   // ── 单句合成：返回原始字节 Uint8Array（供拼接用）。不做清洗，调用方负责。 ──
+  let _lastVoiceId = null;
+
   async function _synthesizeBytes(rawText) {
-    if (!_cfg?.apiKey || !_cfg?.groupId) return null;
+    const prov = _activeProvider();
+    const cfg  = _activeCfg();
+    if (!cfg?.apiKey) return null;
     const ttsText = String(rawText || '').trim();
     if (!ttsText) return null;
 
-    const url = `https://api.minimax.chat/v1/t2a_v2?GroupId=${_cfg.groupId}`;
-    const body = {
-      model:      _cfg.model   || 'speech-01-turbo',
-      text:       ttsText,
-      stream:     false,
-      voice_setting: { voice_id: _lastVoiceId, speed: _cfg.speed || 1, vol: _cfg.vol ?? 1, pitch: 0 },
-      audio_setting: { audio_sample_rate: 32000, bitrate: 128000, format: 'mp3' },
-      language_boost: _cfg.lang !== 'auto' ? _cfg.lang : undefined
-    };
     try {
+      const { url, body, headers, parse } = prov.synthesize(ttsText, _lastVoiceId, cfg);
       const res = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${_cfg.apiKey}` },
+        headers: headers,
         body: JSON.stringify(body)
       });
       if (!res.ok) return null;
-      const data = await res.json();
-      const hex = data?.data?.audio;
-      if (!hex) return null;
-      return new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+      return await parse(res);
     } catch (e) {
       console.error('[VoiceModule] _synthesizeBytes error', e);
       return null;
     }
   }
-  let _lastVoiceId = null; // _synthesizeBytes 用，避免改签名
 
-  // ── 把长文本按句末标点切句（与聊天 playSequence 同款逻辑，保证自然度一致）──
   function _splitSentences(text) {
     const cleaned = _cleanForTTS(text);
     if (!cleaned) return [];
@@ -13960,18 +15333,14 @@ const VoiceModule = (() => {
     return (m && m.length) ? m.map(s => s.trim()).filter(Boolean) : [cleaned.trim()];
   }
 
-  // ── 合成并存进 DB.assets（动态语音留言用）──
-  // 关键：先断句、逐句合成、再把多段 mp3 字节拼成一条，继承聊天那套自然度。
-  // 整段一次性合成（旧做法）的人机味，正是出在没断句。
-  // 返回 { audioKey, duration } 或 null。
   async function synthesizeToAsset(text, voiceId, assetKey) {
-    if (!_cfg?.apiKey || !_cfg?.groupId || !voiceId) return null;
+    const cfg = _activeCfg();
+    if (!cfg?.apiKey || !voiceId) return null;
     _lastVoiceId = voiceId;
 
     const segs = _splitSentences(text);
     if (!segs.length) return null;
 
-    // 逐句合成，收集字节段
     const chunks = [];
     for (const seg of segs) {
       const bytes = await _synthesizeBytes(seg);
@@ -13980,7 +15349,6 @@ const VoiceModule = (() => {
     if (!chunks.length) return null;
 
     try {
-      // mp3 帧可直接字节拼接，浏览器连续解码播放
       const blob = new Blob(chunks, { type: 'audio/mpeg' });
       await DB.assets.set(assetKey, blob, 'audio/mpeg');
 
@@ -13995,7 +15363,6 @@ const VoiceModule = (() => {
     }
   }
 
-  // 读音频真实秒数，处理 Infinity / NaN
   function _readDuration(url) {
     return new Promise(resolve => {
       const a = new Audio();
@@ -14007,7 +15374,6 @@ const VoiceModule = (() => {
       };
       a.addEventListener('loadedmetadata', () => {
         if (a.duration === Infinity) {
-          // Chrome 对部分 mp3 需 seek 一次才吐真时长
           a.currentTime = 1e101;
           a.addEventListener('durationchange', () => finish(a.duration), { once: true });
           setTimeout(() => finish(a.duration), 800);
@@ -14017,7 +15383,7 @@ const VoiceModule = (() => {
       });
       a.addEventListener('error', () => finish(0));
       a.src = url;
-      setTimeout(() => finish(a.duration || 0), 1500); // 终极兜底
+      setTimeout(() => finish(a.duration || 0), 1500);
     });
   }
 
@@ -22405,12 +23771,12 @@ if (!isRecall && !isHtml && !isQuote && !isAudio && !isEmote && !isTransfer && !
 #conv-screen { background: rgba(210,238,252,0.45); }
 
 /* 顶部栏 */
-#conv-screen .cv-header { background: rgba(239,236,231,0.7); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.4); border-radius: 28px; }
+#conv-screen .cv-header { background: rgba(239,236,231,0.75); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); border-radius: 28px; }
 /* 顶部返回与更多按钮 */
 #conv-screen .cv-icon-btn { background: #fff; color: #1a3a50; border: 1px solid rgba(18,18,18,0.05); }
 
 /* 底部栏面板 */
-#conv-screen .cv-footer { background: rgba(239,236,231,0.85); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.4); border-radius: 36px; }
+#conv-screen .cv-footer { background: rgba(239,236,231,0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); border-radius: 36px; }
 /* 底部 + 号按钮 */
 #conv-screen .cv-func-btn { background: #fff; color: #1a3a50; border: 1px solid rgba(18,18,18,0.05); }
 /* 底部 ↑ 强制上屏按钮 */
@@ -22419,7 +23785,7 @@ if (!isRecall && !isHtml && !isQuote && !isAudio && !isEmote && !isTransfer && !
 #conv-screen .cv-btn-ai { background: #fff; color: #1a3a50; }
 
 /* AI 气泡 */
-#conv-screen .cv-msg-row.ai .cv-bubble { background: rgba(255,255,255,0.65); color: #1a3a50; border: 0.5px solid rgba(200,235,250,0.5); backdrop-filter: blur(12px); border-radius: 14px; }
+#conv-screen .cv-msg-row.ai .cv-bubble { background: rgba(255,255,255,0.65); color: #1a3a50; border: 0.5px solid rgba(200,235,250,0.5); backdrop-filter: blur(5px); border-radius: 14px; }
 /* 用户气泡 */
 #conv-screen .cv-msg-row.user .cv-bubble { background: #fff; color: #1a3a50; border: 0.5px solid #1a3a50; border-radius: 14px; }
 
@@ -28968,6 +30334,7 @@ async function initApp() {
 
   try { await GroupChatModule.init(); } catch(e) { console.warn('groupchat init failed', e); }
   try { await VoiceModule.init(); } catch(e) { console.warn('voice init failed', e); }
+  try { await PeriodModule.init(); } catch(e) { console.warn('period init failed', e); }
   try { await NovelModule.init(); NovelModule.syncBackendUI?.(); } catch(e) { console.warn('novel init failed', e); }
   try { await EmoteModule.init(); } catch(e) { console.warn('emote init failed', e); }
   // 启动全局 Agent 后台引擎

@@ -74,12 +74,12 @@ const CoupleModule = (() => {
                ======================================= */
             #cp-view-gallery {
                 --cp-bg: #f6f8fb; --cp-card: #ffffff; --cp-primary: #6b8aab; 
-                --cp-light: #e2eaf2; --cp-dark: #3a4a5a; --cp-muted: #8b9cae; --cp-border: #e8eef4;
+                --cp-light: #e2eaf2; --cp-dark: #3a4a5a; --cp-muted: #8b9cae; --cp-border: rgba(210,235,255,0.6);
                 background-color: var(--cp-bg); color: var(--cp-dark); font-family: 'Inter', sans-serif;
             }
             [data-theme="dark"] #cp-view-gallery {
                 --cp-bg: #1a1f24; --cp-card: #222831; --cp-primary: #8ba8c9; 
-                --cp-light: #2c3540; --cp-dark: #e8eef4; --cp-muted: #8b9cae; --cp-border: #333d47;
+                --cp-light: #2c3540; --cp-dark: rgba(210,235,255,0.6); --cp-muted: #8b9cae; --cp-border: #333d47;
             }
 
             #cp-view-gallery .cp-container { max-width: 100%; margin: 0 auto; position: relative; min-height: 100vh; padding-bottom: 80px; }
@@ -131,7 +131,7 @@ const CoupleModule = (() => {
                View 2: 拼贴目录视图 (高级低饱和燕麦色)
                ======================================= */
             #cp-view-detail {
-                --dt-bg: #f4f3f0; --dt-card: #ffffff; --dt-text: #2b2826; --dt-sub: #9a948f;
+                --dt-bg: #f4f3f0; --dt-card: #ffffff; --dt-text: #1e3d54; --dt-sub: #9a948f;
                 --dt-accent: #7a4f4f; --dt-accent-lt: #e8dede; --dt-border: #e0dcd8; --dt-shape: #d5d1cc;
                 
                 background-color: var(--dt-bg); color: var(--dt-text);
@@ -215,8 +215,8 @@ const CoupleModule = (() => {
                View 3: 通缉令视图 (WANTED)
                ======================================= */
             #cp-view-wanted {
-                --wt-bg: #0a0a0a; --wt-poster: #111111; --wt-silver: #e2e2e0;
-                --wt-light: #f4f4f4; --wt-dark: #1a1a1a; --wt-red: #8b0000; --wt-grey: #333333;
+                --wt-bg: #0a0a0a; --wt-poster: #1a3a50; --wt-silver: #e2e2e0;
+                --wt-light: #f4f4f4; --wt-dark: #1a3a50; --wt-red: #8b0000; --wt-grey: #2a5070;
                 background-color: var(--wt-bg); color: var(--wt-light);
             }
             #cp-view-wanted .wt-container { max-width: 100%; margin: 0 auto; position: relative; padding-bottom: 80px; overflow-x: hidden; min-height: 100vh; }
@@ -269,7 +269,7 @@ const CoupleModule = (() => {
             /* 通缉令录入弹窗 (双模式) */
             #cp-view-wanted .wt-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 200; display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
             #cp-view-wanted .wt-modal.active { opacity: 1; pointer-events: all; }
-            #cp-view-wanted .wt-mcontent { background: #1a1a1a; width: 100%; height: 85vh; border-radius: 24px 24px 0 0; padding: 30px 24px; border-top: 1px solid #333; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; color: var(--wt-light); }
+            #cp-view-wanted .wt-mcontent { background: #1a3a50; width: 100%; height: 85vh; border-radius: 24px 24px 0 0; padding: 30px 24px; border-top: 1px solid #333; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; color: var(--wt-light); }
             #cp-view-wanted .wt-modal.active .wt-mcontent { transform: translateY(0); }
             #cp-view-wanted .wt-mhdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
             #cp-view-wanted .wt-mtitle { font-size: 16px; font-weight: 900; letter-spacing: 1px; }
@@ -294,7 +294,7 @@ const CoupleModule = (() => {
             #cp-view-wanted .wt-scanner-box { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
             #cp-view-wanted .wt-radar { width: 120px; height: 120px; border-radius: 50%; border: 1px solid #333; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: 0 0 30px rgba(139,0,0,0.1); }
             #cp-view-wanted .wt-radar::before { content: ''; position: absolute; width: 50%; height: 50%; top: 0; left: 0; background: linear-gradient(45deg, transparent, rgba(139,0,0,0.8)); transform-origin: bottom right; animation: wt-spin 2s linear infinite; }
-            #cp-view-wanted .wt-radar::after { content: ''; position: absolute; inset: 2px; background: #1a1a1a; border-radius: 50%; }
+            #cp-view-wanted .wt-radar::after { content: ''; position: absolute; inset: 2px; background: #1a3a50; border-radius: 50%; }
             #cp-view-wanted .wt-radar i { position: relative; z-index: 2; font-size: 40px; color: var(--wt-red); }
             @keyframes wt-spin { 100% { transform: rotate(360deg); } }
             #cp-view-wanted .wt-sys-text { font-family: 'Space Mono', monospace; font-size: 10px; color: #888; text-align: center; line-height: 1.6; letter-spacing: 1px; }
@@ -319,7 +319,7 @@ const CoupleModule = (() => {
                View 4: 异步漫游视图 (ROAM)
                ======================================= */
             #cp-view-roam {
-                --roam-bg: #f4f1eb; --roam-ink: #2b2826; --roam-grey: #8a8580; --roam-line: #dcd7ce;
+                --roam-bg: rgba(215,238,252,0.6); --roam-ink: #1e3d54; --roam-grey: #8a8580; --roam-line: #dcd7ce;
                 --roam-night: #3a3f4f; --roam-rain: #9baab8; --roam-sunset: #d4a392; --roam-cafe: #bdaea0;
                 background-color: var(--roam-bg); color: var(--roam-ink);
                 background-image: radial-gradient(var(--roam-line) 1px, transparent 1px);
@@ -509,7 +509,7 @@ const CoupleModule = (() => {
             #cp-view-resume .rs-input-group:last-child { margin-bottom: 0; }
             #cp-view-resume .rs-input-label { font-size: 10px; font-weight: 700; color: var(--rs-text-muted); margin-bottom: 6px; display: block; }
             #cp-view-resume .rs-inp-date { width: 100%; border: none; border-bottom: 2px solid var(--rs-text-main); background: transparent; font-size: 18px; font-weight: 800; color: var(--rs-primary-blue); padding: 4px 0; outline: none; font-family: 'Inter', sans-serif; }
-            #cp-view-resume .rs-inp-event { width: 100%; border: 1px dashed var(--rs-border-color); border-radius: 8px; background: #fafbfc; font-family: 'Noto Serif SC', serif; font-size: 14px; padding: 12px; min-height: 80px; resize: none; outline: none; color: var(--rs-text-main); line-height: 1.6; }
+            #cp-view-resume .rs-inp-event { width: 100%; border: 1px dashed var(--rs-border-color); border-radius: 8px; background: rgba(235,248,255,0.7); font-family: 'Noto Serif SC', serif; font-size: 14px; padding: 12px; min-height: 80px; resize: none; outline: none; color: var(--rs-text-main); line-height: 1.6; }
             #cp-view-resume .rs-inp-event:focus { border-color: var(--rs-primary-blue); }
             #cp-view-resume .rs-add-more-btn { text-align: center; padding: 14px; border: 1px dashed var(--rs-primary-blue); border-radius: 12px; color: var(--rs-primary-blue); font-size: 12px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
             #cp-view-resume .rs-add-more-btn:active { background: rgba(107, 138, 171, 0.05); }
@@ -630,7 +630,7 @@ const CoupleModule = (() => {
                View 7: 陪伴模块 (Focus Companion)
                ======================================= */
             #cp-view-companion {
-                --fc-bg-idle: #f4f2ed; --fc-text-idle: #2b2826; --fc-text-muted-idle: #8a8580; --fc-border-idle: #dcd7ce;
+                --fc-bg-idle: #f4f2ed; --fc-text-idle: #1e3d54; --fc-text-muted-idle: #8a8580; --fc-border-idle: #dcd7ce;
                 --fc-bg-current: var(--fc-bg-idle); --fc-text-current: var(--fc-text-idle); --fc-text-muted-current: var(--fc-text-muted-idle);
                 
                 background-color: var(--fc-bg-current); color: var(--fc-text-current);
@@ -682,7 +682,7 @@ const CoupleModule = (() => {
             #cp-view-companion .fc-task-card { background: #fff; padding: 24px 20px; border-radius: 12px; width: 85%; max-width: 320px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05); position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); z-index: 5; }
             #cp-view-companion .fc-task-title { font-family: 'Courier Prime', monospace; font-size: 9px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; text-align: center; }
             #cp-view-companion .fc-task-input { width: 100%; border: none; border-bottom: 1px dashed #ccc; background: transparent; font-family: 'Noto Serif SC', serif; font-size: 16px; color: #333; text-align: center; padding: 8px 0; outline: none; margin-bottom: 24px; }
-            #cp-view-companion .fc-custom-time-row { display: flex; justify-content: center; align-items: center; gap: 8px; font-family: 'Noto Serif SC', serif; font-size: 12px; color: #555; background: #fafbfc; padding: 10px; border-radius: 8px; border: 1px dashed #eee; }
+            #cp-view-companion .fc-custom-time-row { display: flex; justify-content: center; align-items: center; gap: 8px; font-family: 'Noto Serif SC', serif; font-size: 12px; color: #555; background: rgba(235,248,255,0.7); padding: 10px; border-radius: 8px; border: 1px dashed #eee; }
             #cp-view-companion .fc-time-number-input { width: 50px; border: none; border-bottom: 2px solid var(--fc-text-idle); background: transparent; font-family: 'Courier Prime', monospace; font-size: 18px; font-weight: bold; color: var(--fc-text-idle); text-align: center; outline: none; padding: 2px 0; }
 
             #cp-view-companion .fc-controls-section { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; align-items: center; z-index: 10; }
@@ -899,7 +899,7 @@ const CoupleModule = (() => {
                #cp-view-room {
                 --rm-bg-linen: #e4ddd3; --rm-fabric-dark: #2a2825; --rm-fabric-silk: #f4f0e6;
                 --rm-thread-rust: #8b3a2b; --rm-ink-faded: #6b655d; --rm-twine-color: #c2b59b;
-                --rm-metal-light: #f0f0f0; --rm-metal-mid: #b0b5b9; --rm-metal-dark: #5a6066;
+                --rm-metal-light: rgba(220,242,255,0.5); --rm-metal-mid: #b0b5b9; --rm-metal-dark: #5a6066;
 
                 font-family: 'Noto Serif SC', serif; background-color: var(--rm-bg-linen); color: var(--rm-fabric-dark);
                 background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
@@ -2687,7 +2687,7 @@ ${historyText || '暂无最近的聊天记录'}
         element.style.transform = 'scale(0.96)';
         setTimeout(() => { element.style.transform = ''; }, 200);
 
-        let paperTint = '#f4f1eb';
+        let paperTint = 'rgba(215,238,252,0.6)';
         if (vibeType === 'rain') paperTint = '#e6edf2';
         if (vibeType === 'night') paperTint = '#e8e9ee';
         if (vibeType === 'sunset') paperTint = '#f7edea';

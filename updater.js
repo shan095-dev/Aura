@@ -36,17 +36,17 @@ const UpdateModule = (() => {
       .upd-overlay.active .upd-card { transform: translateY(0) scale(1); }
       .upd-watermark {
         position: absolute; top: -30px; right: -20px; font-family: 'Playfair Display', serif;
-        font-size: 160px; font-style: italic; font-weight: 300; color: var(--text-main, #121212);
+        font-size: 160px; font-style: italic; font-weight: 300; color: var(--text-main, #1a3a50);
         opacity: 0.03; line-height: 1; pointer-events: none; z-index: 0;
       }
       .upd-header { margin-bottom: 24px; position: relative; z-index: 1; }
-      .upd-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 600; font-style: italic; color: var(--text-main, #121212); line-height: 1; }
+      .upd-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 600; font-style: italic; color: var(--text-main, #1a3a50); line-height: 1; }
       .upd-version { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--text-sub, #888); letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; font-weight: 700; }
       .upd-list { position: relative; z-index: 1; max-height: 40vh; overflow-y: auto; margin-bottom: 32px; padding-right: 4px; }
       .upd-list::-webkit-scrollbar { display: none; }
       .upd-item { font-family: 'Noto Sans SC', sans-serif; font-size: 0.85rem; color: var(--text-main, #333); line-height: 1.6; margin-bottom: 12px; }
       .upd-btn {
-        width: 100%; padding: 14px 0; background: var(--text-main, #121212); color: var(--bg-device, #fff);
+        width: 100%; padding: 14px 0; background: var(--text-main, #1a3a50); color: var(--bg-device, #fff);
         border: none; border-radius: 100px; font-family: 'Space Mono', monospace; font-size: 0.8rem;
         font-weight: 600; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
         position: relative; z-index: 1; transition: transform 0.2s; box-shadow: 0 10px 20px rgba(0,0,0,0.1);

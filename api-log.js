@@ -39,7 +39,7 @@ const ApiLogModule = (() => {
   const CLASSIFY = [
     { kind: 'image',     test: u => /\/images\/(generations|edits)\b/.test(u) },
     { kind: 'embedding', test: u => /\/embeddings\b/.test(u) },
-    { kind: 'tts',       test: u => /minimax\.chat\/v1\/t2a|\/audio\/speech|\/tts\b/.test(u) },
+    { kind: 'tts',       test: u => /minimax\.chat\/v1\/t2a|elevenlabs\.io\/v1\/text-to-speech|\/audio\/speech|\/tts\b/.test(u) },
     { kind: 'models',    test: u => /\/(v1|v4)\/models\b|\/models$/.test(u) },
     { kind: 'chat',      test: u => /\/chat\/completions\b|\/v1\/completions\b/.test(u) },
   ];
@@ -221,7 +221,7 @@ const ApiLogModule = (() => {
       #apilog-mask{position:fixed;inset:0;z-index:2147483001;background:rgba(0,0,0,.46);
         display:none;align-items:center;justify-content:center;padding:20px}
       #apilog-mask.on{display:flex}
-      #apilog-panel{background:#faf8f5;color:#2a2a2a;width:100%;max-width:560px;
+      #apilog-panel{background:#faf8f5;color:#2a5070;width:100%;max-width:560px;
         max-height:82vh;border-radius:16px;display:flex;flex-direction:column;
         font-family:-apple-system,'Space Mono',monospace;box-shadow:0 14px 50px rgba(0,0,0,.32);
         overflow:hidden}
@@ -232,13 +232,13 @@ const ApiLogModule = (() => {
         font-size:12px;cursor:pointer;color:#444;font-family:inherit}
       .apilog-btn:hover{background:#f1ece4}
       .apilog-btn.warn{color:#b04a4a;border-color:#e0c4c4}
-      #apilog-filters{padding:8px 16px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #efeae2}
+      #apilog-filters{padding:8px 16px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid rgba(215,238,252,0.5)}
       .apilog-chip{border:1px solid #d6cfc4;background:#fff;border-radius:20px;padding:3px 11px;
         font-size:11px;cursor:pointer;color:#666}
-      .apilog-chip.on{background:#2a2a2a;color:#fff;border-color:#2a2a2a}
-      #apilog-stat{padding:7px 16px;font-size:11px;color:#8a8275;border-bottom:1px solid #efeae2;
+      .apilog-chip.on{background:#2a5070;color:#fff;border-color:#2a5070}
+      #apilog-stat{padding:7px 16px;font-size:11px;color:#8a8275;border-bottom:1px solid rgba(215,238,252,0.5);
         display:flex;gap:14px;flex-wrap:wrap}
-      #apilog-stat b{color:#2a2a2a}
+      #apilog-stat b{color:#2a5070}
       #apilog-list{overflow-y:auto;flex:1;padding:2px 0;min-height:120px}
       .apilog-row{padding:8px 16px;border-bottom:1px solid #f0ebe3;display:flex;
         align-items:center;gap:8px;font-size:12px}

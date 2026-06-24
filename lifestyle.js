@@ -80,7 +80,7 @@ const LifestyleModule = (() => {
         style.innerHTML = `
             #lifestyle-screen {
                 --bg-deep: #030303;     
-                --card-bg: #111111;     
+                --card-bg: #1a3a50;     
                 --text-main: #fcfcfc;
                 --text-sub: #888888;
                 --divider: rgba(255, 255, 255, 0.08);
@@ -113,11 +113,11 @@ const LifestyleModule = (() => {
             .ls-view::-webkit-scrollbar { display: none; }
             
             #ls-listView { z-index: 10; }
-            #ls-detailView { z-index: 20; transform: translateX(100%); background: #F4F4F6; color: #111111; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+            #ls-detailView { z-index: 20; transform: translateX(100%); background: rgba(220,242,255,0.6); color: #1a3a50; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
             #ls-detailView.active { transform: translateX(0); }
 
             /* 第三层视图 - 具体动线页 */
-            #ls-itineraryView { z-index: 30; transform: translateX(100%); background: #F4F4F6; color: #111111; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+            #ls-itineraryView { z-index: 30; transform: translateX(100%); background: rgba(220,242,255,0.6); color: #1a3a50; font-family: 'Inter', 'Noto Sans SC', sans-serif; }
             #ls-itineraryView.active { transform: translateX(0); }
 
             /* =========================================
@@ -140,7 +140,7 @@ const LifestyleModule = (() => {
             }
             #ls-listView .ls-card.in-view { transform: translateY(0) scale(1); opacity: 1; }
             #ls-listView .ls-card:active { transform: scale(0.96) !important; box-shadow: 0 10px 20px rgba(0,0,0,0.8); border-color: rgba(255, 255, 255, 0.1); }
-            #ls-listView .card-img-wrap { position: relative; width: 100%; height: 320px; overflow: hidden; background: #1a1a1a; }
+            #ls-listView .card-img-wrap { position: relative; width: 100%; height: 320px; overflow: hidden; background: #1a3a50; }
             #ls-listView .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
             #ls-listView .ls-card:active .card-img { transform: scale(1.05); }
             #ls-listView .card-img-gradient { position: absolute; bottom: 0; left: 0; width: 100%; height: 55%; background: linear-gradient(to top, var(--card-bg) 0%, transparent 100%); pointer-events: none; }
@@ -174,7 +174,7 @@ const LifestyleModule = (() => {
 
             .ls-hero-section { position: relative; height: 55vh; width: 100%; overflow: hidden; }
             .ls-parallax-image { position: absolute; top: 0; left: 0; width: 100%; height: 130%; object-fit: cover; filter: contrast(105%) brightness(0.85); transform-origin: center; transition: transform 0.1s cubic-bezier(0.1, 0.5, 0.9, 0.5); }
-            .ls-hero-cut { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: linear-gradient(to top, #F4F4F6 0%, rgba(244,244,246,0) 100%); }
+            .ls-hero-cut { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: linear-gradient(to top, rgba(220,242,255,0.6) 0%, rgba(244,244,246,0) 100%); }
 
             .ls-temporal-axis-wrapper { position: relative; margin-top: -40px; z-index: 30; padding: 0 16px; }
             .ls-axis-glass { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 16px 12px; }
@@ -258,7 +258,7 @@ const LifestyleModule = (() => {
             .ls-modal-overlay.active { opacity: 1; pointer-events: auto; }
             .ls-modal-sheet {
                 position: absolute; bottom: 0; left: 0; width: 100%; max-height: 85vh;
-                background: #F4F4F6; color: #111; border-radius: 24px 24px 0 0;
+                background: rgba(220,242,255,0.6); color: #111; border-radius: 24px 24px 0 0;
                 transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
                 display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
             }
@@ -282,7 +282,7 @@ const LifestyleModule = (() => {
             .ls-routine-timeline { display: flex; flex-direction: column; position: relative; padding-left: 20px; }
             .ls-routine-timeline::before { content: ''; position: absolute; left: 4px; top: 8px; bottom: 0; width: 1px; background: rgba(0,0,0,0.1); }
             .ls-rt-event { position: relative; margin-bottom: 24px; }
-            .ls-rt-event::before { content: ''; position: absolute; left: -20px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: #F4F4F6; border: 2px solid #111; }
+            .ls-rt-event::before { content: ''; position: absolute; left: -20px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: rgba(220,242,255,0.6); border: 2px solid #111; }
             .ls-rt-time { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; color: #111; margin-bottom: 4px; }
             .ls-rt-title { font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 600; color: #111; margin-bottom: 4px; }
             .ls-rt-loc { font-family: 'Space Mono', monospace; font-size: 9px; color: #888; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;}

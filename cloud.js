@@ -39,9 +39,9 @@ const CloudModule = (() => {
     @keyframes cloud-pulse { 0% { box-shadow: 0 0 0 0 rgba(45, 106, 74, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(45, 106, 74, 0); } 100% { box-shadow: 0 0 0 0 rgba(45, 106, 74, 0); } }
     
     /* 诊断面板样式 */
-    #cloud-log-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 300; flex-direction: column; }
+    #cloud-log-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a3a50; z-index: 300; flex-direction: column; }
     #cloud-log-modal.active { display: flex; }
-    .log-header { padding: 50px 20px 16px; background: #1a1a1a; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; color: #fff; }
+    .log-header { padding: 50px 20px 16px; background: #1a3a50; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; color: #fff; }
     .log-content { flex: 1; overflow-y: auto; padding: 16px; font-family: 'Space Mono', monospace; font-size: 0.65rem; color: #0f0; background: #0a0a0a; white-space: pre-wrap; word-break: break-all; }
     .log-item { margin-bottom: 10px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; }
     .log-item.error { color: #ff4a4a; }
