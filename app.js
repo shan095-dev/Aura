@@ -12846,6 +12846,14 @@ function _renderImgPreviewBar() {
         _removeTyping();
       }
 
+      // 🛡️ 空回防护
+      if (!response || !String(response).trim()) {
+        console.warn('[Conv] AI 空回，response:', JSON.stringify(response));
+        Toast.show('AI 返回了空内容，请检查 API 余额或切换模型重试');
+        _pending = false;
+        return;
+      }
+
      // 🌟 核心修复：防止 AI 忘了打 ||| 导致的长串文字，按双换行符强行切分
      let rawBubbles = _splitAiBubbles(response);
       let isFirstBubble = true;
