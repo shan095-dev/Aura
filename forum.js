@@ -270,8 +270,12 @@ const ForumModule = (() => {
             }
             #forum-screen .clog-name { font-weight: 700; }
             #forum-screen .clog-text { font-size: 0.85rem; line-height: 1.5; color: #ccc; }
+            #forum-screen .clog-reply-to { font-size: 0.6rem; color: var(--fm-fg-muted); opacity: 0.7; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+            #forum-screen .clog-reply-to i { font-size: 0.55rem; }
+            #forum-screen .int-btn.liked { color: #e04060; }
+            #forum-screen .int-btn.liked i { color: #e04060; }
 
-            #forum-screen .minimal-input-area { 
+            #forum-screen .minimal-input-area {
                 display: flex; align-items: flex-end; gap: 10px; margin-top: 16px; width: 100%; box-sizing: border-box; 
             }
             #forum-screen .console-prefix { 
@@ -734,15 +738,18 @@ const ForumModule = (() => {
         const pendingCount = post.comments.length - visibleComments.length;
 
         // 新增点击触发回复交互
-        let commentsList = visibleComments.map(c => `
+        let commentsList = visibleComments.map(c => {
+            const replyToHtml = c.replyTo ? `<div class="clog-reply-to"><i class="ph ph-arrow-bend-up-right"></i> ${_escHtml(c.replyTo)}</div>` : '';
+            return `
             <div class="comment-log" onclick="ForumModule.prepareReply('${post.id}', '${_escHtml(c.author)}')">
                 <div class="clog-meta">
                     <span class="clog-name" style="color: ${_getMorandiColor(c.author)};">${_escHtml(c.author)}</span>
                     <span class="clog-time">${c.time}</span>
                 </div>
+                ${replyToHtml}
                 <div class="clog-text">${_escHtml(c.text)}</div>
             </div>
-        `).join('');
+        `}).join('');
 
         if (visibleComments.length === 0) {
             commentsList = `<div class="meta-data" style="padding:10px 0;text-align:center;">NO_LOGS_FOUND</div>`;
@@ -797,6 +804,7 @@ const ForumModule = (() => {
                             <div class="event-desc">${_escHtml(post.desc)}</div>
                         </div>
                         <div class="inner-interaction">
+                            <div class="int-btn" class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div>
                             <div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length} RESPONSES</div>
                             <!-- 👇 新增的分享按钮 -->
                             <div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i> SHARE</div>
@@ -810,16 +818,64 @@ const ForumModule = (() => {
         }  else if (post.type === 'square') {
             visualHTML = `<div class="square-visual"><div class="sq-header"><div class="sq-user"><img src="${avatarUrl}" class="sq-avatar"><div><div class="sq-name">${_escHtml(post.author)}</div><div class="sq-id">@${_escHtml(post.author.toLowerCase().replace(/\\s/g,'_'))}</div></div></div><div class="meta-data" style="color:var(--fm-fg-muted);"><i class="ph ph-wifi-high"></i> ONLINE</div></div><div class="sq-content">${_escHtml(post.content)}</div>${fakeImgHTML}<div class="sq-panel"><div class="meta-data" style="writing-mode: vertical-rl; transform: rotate(180deg);">FREQ</div><div class="waveform"></div><div class="sq-toggle"></div></div></div>`;
             // 👇 新增的分享按钮
-            interactionHTML = `<div class="interaction-bar"><div style="display:flex;gap:20px;"><div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length}</div><div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i></div></div><div class="int-btn" onclick="ForumModule.deletePost('${post.id}')"><i class="ph-thin ph-trash"></i></div></div>`;
+            interactionHTML = `<div class="interaction-bar"><div style="display:flex;gap:20px;"><div class="int-btn" class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div><div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length}</div><div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i></div></div><div class="int-btn" onclick="ForumModule.deletePost('${post.id}')"><i class="ph-thin ph-trash"></i></div></div>`;
         } else if (post.type === 'treehole') {
             visualHTML = `<div class="treehole-visual"><div class="th-badge">CLASSIFIED</div><div class="meta-data" style="margin-bottom: 12px; border-bottom:1px solid var(--fm-line); padding-bottom:8px;"><i class="ph ph-lock-key"></i> ENCRYPTED_LOG // DECRYPT_ON_HOVER</div><div class="th-content">${_escHtml(post.content)}</div>${fakeImgHTML}</div>`;
             // 👇 新增的分享按钮
-            interactionHTML = `<div class="interaction-bar"><div style="display:flex;gap:20px;"><div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length}</div><div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i></div></div><div class="int-btn" onclick="ForumModule.deletePost('${post.id}')"><i class="ph-thin ph-trash"></i></div></div>`;
+            interactionHTML = `<div class="interaction-bar"><div style="display:flex;gap:20px;"><div class="int-btn" class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div><div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length}</div><div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i></div></div><div class="int-btn" onclick="ForumModule.deletePost('${post.id}')"><i class="ph-thin ph-trash"></i></div></div>`;
         }
         return `<div class="post-card">${visualHTML}${interactionHTML}${renderCommentsHTML(post)}</div>`;
     }
 
     // --- 逻辑函数 ---
+    function toggleLike(postId) {
+        const post = _posts.find(p => p.id === postId);
+        if (!post) return;
+        if (!Array.isArray(post.likes)) post.likes = [];
+        const myName = _forumProfile.name;
+        const idx = post.likes.indexOf(myName);
+        if (idx >= 0) {
+            post.likes.splice(idx, 1);
+        } else {
+            post.likes.push(myName);
+        }
+        DB.forum.put(post).catch(()=>{});
+        refreshFeed(true);
+        // 触发生成额外的 AI 互动
+        if (idx < 0) evaluatePostLike(postId);
+    }
+    async function evaluatePostLike(postId) {
+        const post = _posts.find(p => p.id === postId);
+        if (!post || post._likeEvaluated) return;
+        post._likeEvaluated = true;
+        const activeApi = await DB.api.getActive().catch(()=>null);
+        if (!activeApi) return;
+        const chars = await DB.characters.getAll().catch(()=>[]);
+        const prompt = \`[系统任务：朋友圈点赞后的连锁反应]
+帖子「\${post.content || post.title || post.desc}」刚刚被 \${_forumProfile.name} 点赞了。
+请 1~2 个熟人角色（如果有的话）也来点赞，并在评论区留下简短互动。
+【返回格式】JSON: { "likes": ["角色名1"], "comments": [{"author":"名字","text":"评论"}] }\`;
+        try {
+            const response = await ApiHelper.chatCompletion(activeApi,[{ role: 'user', content: prompt }]);
+            const cleaned = response.replace(/\`\`\`json|\`\`\`/g, '').trim();
+            const start = cleaned.indexOf('{'), end = cleaned.lastIndexOf('}');
+            if (start === -1 || end === -1) return;
+            const result = JSON.parse(cleaned.substring(start, end + 1));
+            if (result.likes) {
+                for (const name of result.likes) {
+                    if (!post.likes.includes(name)) post.likes.push(name);
+                }
+            }
+            if (result.comments) {
+                const now = Date.now();
+                for (const c of result.comments) {
+                    post.comments.push({ id: 'fc_' + Math.random().toString(36).substr(2,9), author: c.author, avatarKey: '', text: c.text, timestamp: now + Math.random()*5000, time: new Date().toTimeString().slice(0,5) });
+                }
+            }
+            await DB.forum.put(post);
+            refreshFeed(true);
+        } catch(e) { console.warn('[Forum] evaluatePostLike failed', e); }
+    }
     function prepareReply(postId, authorName) {
         const input = document.getElementById(`fm-input-${postId}`);
         if (input) {
@@ -871,7 +927,7 @@ const ForumModule = (() => {
 
     async function publishPost() {
         const type = document.querySelector('#forum-screen .seg-btn.active').id === 'fm-tab-event' ? 'event' : 'treehole';
-        let post = { id: 'fp_' + Date.now(), type, timestamp: Date.now(), likes: 0, comments:[], author: _forumProfile.name, avatarKey: _forumProfile.avatarKey };
+        let post = { id: 'fp_' + Date.now(), type, timestamp: Date.now(), likes: [], comments:[], author: _forumProfile.name, avatarKey: _forumProfile.avatarKey };
 
         if (type === 'event') {
             post.title = document.getElementById('fm-event-title').value.trim();
@@ -916,6 +972,7 @@ const ForumModule = (() => {
         const now = new Date(), timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
         const isAnon = post.type === 'treehole';
         const newComment = { id: 'fc_' + Date.now(), author: isAnon ? 'OBS_0x' : _forumProfile.name, avatarKey: isAnon ? '' : _forumProfile.avatarKey, time: timeStr, text, timestamp: Date.now() };
+        if (replyToName) newComment.replyTo = replyToName;
         post.comments.push(newComment);
         
         try {
@@ -1168,7 +1225,8 @@ ${charProfiles || '无'}
                         author: rep.author,
                         avatarKey: avatarKey,
                         text: rep.text,
-                        timestamp: now + delayAcc
+                        timestamp: now + delayAcc,
+                        replyTo: replyToName || undefined
                     });
                 }
             }
@@ -1271,6 +1329,7 @@ ${charProfiles || '无'}
 【你的推演任务】：
 1. 熟人反应：基于上述【认知隔离铁律】，代入性格判断是否跟帖。如果不感兴趣、或者是自己发的匿名贴，请直接输出 "[IGNORE]"。
 2. 路人涌入：生成 8-10 条路人（NPC）跟帖。
+3. 点赞：1~3 个熟人角色请给这条动态点赞（返回角色名即可）。
 3. 路人名字要求：【必须像真实的网友ID】！例如：momo、已注销、熬夜冠军、西瓜碎碎冰、User_9527、J、无语子、睡不醒的猫 等等。混合中文、英文、数字，绝对不要全是一本正经的代号。
 4. 路人文风要求：【极度逼真的活人感】！
    - 使用现代网络口语、年轻人冲浪习惯（如：绝了、蹲、拔草、笑死、yyds、太真实了、抱抱、吃瓜等）。
@@ -1283,7 +1342,8 @@ ${charProfiles || '无'}
   "chars": { "熟人ID": "评论内容", "熟人ID": "[IGNORE]" },
   "npcs":[
      { "name": "路人ID", "text": "评论内容" }
-  ]
+  ],
+  "likes": ["点赞的角色名1", "点赞的角色名2"]
 }`;
 
         try {
@@ -1334,6 +1394,13 @@ ${charProfiles || '无'}
                 c.time = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
             });
 
+            // 处理点赞
+            if (result.likes && Array.isArray(result.likes)) {
+                if (!Array.isArray(post.likes)) post.likes = [];
+                for (const name of result.likes) {
+                    if (!post.likes.includes(name)) post.likes.push(name);
+                }
+            }
             post.comments =[...(post.comments || []), ...newComments];
             await DB.forum.put(post);
             
@@ -1649,7 +1716,7 @@ ${worldViewStr ? `【当前世界观设定】：\n${worldViewStr}\n` : ''}
     }
 
     // 更新 return 暴露
-    return { init, onEnter, filterFeed, switchTo, evaluateNewPost, toggleComments, addComment, prepareReply, openPanel, closePanel, switchComposeType, publishPost, deletePost, cancelDelete, changeForumAvatar, updateForumName, onEventImgSelected, removeEventImg, loadMoreComments, saveWorldView, getWorldViewContext, refreshNPCFeed,openShareModal, closeShareModal, executeShare };
+    return { init, onEnter, filterFeed, switchTo, evaluateNewPost, toggleComments, addComment, prepareReply, openPanel, closePanel, switchComposeType, publishPost, deletePost, cancelDelete, changeForumAvatar, updateForumName, onEventImgSelected, removeEventImg, loadMoreComments, saveWorldView, getWorldViewContext, refreshNPCFeed,openShareModal, closeShareModal, executeShare, toggleLike };
 })();
 
 window.ForumModule = ForumModule;

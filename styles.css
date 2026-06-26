@@ -980,6 +980,12 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
   display: block; font-size: 0.65rem; font-weight: 600; color: var(--text-sub);
   margin-bottom: 3px; letter-spacing: 0.5px;
 }
+/* 群聊回复对象指示 */
+.cv-reply-to {
+  display: block; font-size: 0.58rem; font-weight: 500; color: var(--accent, #888);
+  margin-bottom: 2px; letter-spacing: 0.3px; opacity: 0.75;
+}
+.cv-reply-to i { font-size: 0.6rem; margin-right: 2px; }
 
 /* Views */
 #chat-screen .ch-view {
@@ -1591,6 +1597,17 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
   border-radius: 20px; padding: 5px 12px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
+	#lt-floating-player .lt-close-btn {
+	  width: 22px; height: 22px; border-radius: 50%;
+	  border: none; background: rgba(0,0,0,0.08);
+	  color: #999; font-size: 0.7rem; cursor: pointer;
+	  display: flex; align-items: center; justify-content: center;
+	  flex-shrink: 0; margin-left: 4px;
+	  transition: all 0.2s;
+	}
+	#lt-floating-player .lt-close-btn:hover {
+	  background: rgba(220,38,38,0.15); color: #dc2626;
+	}
 #lt-floating-player .lt-avatar {
   width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
   border: 1.5px solid rgba(0,0,0,0.08); flex-shrink: 0;

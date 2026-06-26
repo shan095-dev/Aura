@@ -2102,6 +2102,9 @@
             <div class="cv-mh-sub">Expression & Mimicry</div>
           </div>
           <button class="cv-btn-close" onclick="EmoteModule.close()"><i class="ph ph-x"></i></button>
+	          <button class="cv-btn-mod-confirm" onclick="EmoteModule.exportDicts()" style="margin-left:auto; padding:6px 14px; font-size:0.7rem; width:auto;">⬇ 导出</button>
+	          <button class="cv-btn-mod-confirm" onclick="document.getElementById('cv-emote-json-import').click()" style="padding:6px 14px; font-size:0.7rem; width:auto;">⬆ 导入</button>
+	          <input type="file" id="cv-emote-json-import" accept=".json" style="display:none;" onchange="EmoteModule.importDicts(this)">
         </div>
 
         <div style="position:relative; z-index:1; margin-bottom:32px; display:flex; flex-direction:column; gap:24px;">
@@ -3057,6 +3060,9 @@
           <div class="wb-subtitle">Lore &amp; Context Injection.</div>
         </div>
         <button class="wb-new-btn" onclick="WBModule.openEditor(null)">+ 新建</button>
+	        <button class="wb-new-btn" onclick="WBModule.exportEntries()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); margin-left:6px;">⬇ 导出</button>
+	        <button class="wb-new-btn" onclick="document.getElementById('wb-json-import').click()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); margin-left:6px;">⬆ 导入</button>
+	        <input type="file" id="wb-json-import" accept=".json" style="display:none;" onchange="WBModule.importEntries(this)">
       </div>
     </div>
 
@@ -3986,6 +3992,7 @@ setTimeout(renderMcpUI,2000);
     <span class="lt-together-label">🎵 一起听</span>
     <div class="lt-together-line"></div>
     <img class="lt-avatar" id="lt-avatar-user" src="" alt="我">
+   <button class="lt-close-btn" onclick="ListenTogether.hide()" title="关闭"><i class="ph ph-x"></i></button>
   </div>
   <!-- 播放器主体 -->
   <div class="lt-player-body collapsed" id="lt-player-body">

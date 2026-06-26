@@ -44,6 +44,11 @@ window.ListenTogether.toggle = function() { var b = document.getElementById('ms-
 window.ListenTogether.prev = function() { var b = document.getElementById('ms-fp-prev'); if (b) b.click(); };
 window.ListenTogether.next = function() { var b = document.getElementById('ms-fp-next'); if (b) b.click(); };
 window.ListenTogether.toggleMode = function() { var b = document.getElementById('ms-mode-btn'); if (b) b.click(); };
+window.ListenTogether.hide = function() {
+  var el = document.getElementById('lt-floating-player');
+  if (el) { el.classList.remove('active'); el.style.display = 'none'; }
+  window.ListenTogether.stopSync();
+};
 window.ListenTogether.showPlayer = function() {
   var el = document.getElementById('lt-floating-player');
   if (el) { el.classList.add('active'); el.style.display = 'flex'; }
@@ -62,6 +67,16 @@ window.ListenTogether._updateUI = function() {
   var d = document.getElementById('lt-mini-disc'); if (d && s.cover) d.style.backgroundImage = 'url(' + s.cover + ')';
   if (d) { if (state.isPlaying) d.classList.add('playing'); else d.classList.remove('playing'); }
   var p = document.getElementById('lt-icon-play'); if (p) p.className = 'ph ' + (state.isPlaying ? 'ph-pause' : 'ph-play');
+  // 同步播放模式图标
+  var m = document.getElementById('lt-icon-mode');
+  if (m) {
+    var originMode = document.getElementById('ms-mode-btn');
+    if (originMode) {
+      var cls = originMode.className.split(' ');
+      var icon = cls.find(function(c) { return c.startsWith('ph-repeat') || c.startsWith('ph-shuffle'); }) || 'ph-repeat';
+      m.className = 'ph ' + icon;
+    }
+  }
   var ad = document.getElementById('ms-audio'), f = document.getElementById('lt-progress-fill');
   if (ad && f && ad.duration) f.style.width = (ad.currentTime / ad.duration * 100) + '%';
 };
@@ -97,20 +112,43 @@ window.ListenTogether.setAvatars = async function() {
     u.src = avatarUrl || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80';
   }
 };
-// 拖动 + 折叠
+// 拖动 + 折叠 (支持鼠标 & 触屏)
 (function() {
   setTimeout(function() {
     var player = document.getElementById('lt-floating-player');
     if (!player || player.dataset.dragOk) return;
     player.dataset.dragOk = '1';
     var dragging, sx, sy, ox, oy;
-    player.addEventListener('mousedown', function(e) {
-      if (e.target.closest && e.target.closest('button')) return;
-      dragging = true; sx = e.clientX; sy = e.clientY;
+
+    function startDrag(e) {
+      if (e.target.closest && (e.target.closest('button') || e.target.closest('.lt-close-btn'))) return;
+      dragging = true;
+      var p = e.touches ? e.touches[0] : e;
+      sx = p.clientX; sy = p.clientY;
       var r = player.getBoundingClientRect(); ox = r.left; oy = r.top;
-    });
-    document.addEventListener('mousemove', function(e) { if (!dragging) return; player.style.right = 'auto'; player.style.left = (ox + e.clientX - sx) + 'px'; player.style.top = (oy + e.clientY - sy) + 'px'; });
-    document.addEventListener('mouseup', function() { dragging = false; });
+      player.style.cursor = 'grabbing';
+    }
+    function moveDrag(e) {
+      if (!dragging) return;
+      e.preventDefault();
+      var p = e.touches ? e.touches[0] : e;
+      player.style.right = 'auto';
+      player.style.left = (ox + p.clientX - sx) + 'px';
+      player.style.top  = (oy + p.clientY - sy) + 'px';
+    }
+    function stopDrag() {
+      if (!dragging) return;
+      dragging = false;
+      player.style.cursor = '';
+    }
+
+    player.addEventListener('mousedown', startDrag);
+    player.addEventListener('touchstart', startDrag, { passive: false });
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('touchmove', moveDrag, { passive: false });
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+
     var disc = document.getElementById('lt-collapsed-view');
     if (disc) disc.addEventListener('click', function() { var b = document.getElementById('lt-player-body'); if (b) b.classList.toggle('collapsed'); });
   }, 2000);
@@ -3779,6 +3817,58 @@ function deleteEntry() {
     onEnter, setFilter, openEditor, closeEditor, saveEntry, deleteEntry,
     toggleEntry, toggleRegexHint, toggleCS, newCategory,
     _selectCat, _toggleChar, _closeModal,
+    exportEntries: async function() {
+      try {
+        const all = await DB.worldInfo.getAll();
+        const json = JSON.stringify(all, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = 'worldbook-export-' + new Date().toISOString().slice(0,10) + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        if (typeof Toast !== 'undefined') Toast.show('世界书已导出 (' + all.length + ' 条词条)');
+      } catch(e) {
+        console.error(e);
+        if (typeof Toast !== 'undefined') Toast.show('导出失败');
+      }
+    },
+    importEntries: async function(input) {
+      const file = input.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) throw new Error('格式错误：需要 JSON 数组');
+        let added = 0, updated = 0;
+        for (const entry of data) {
+          if (!entry.title && !entry.content) continue;
+          const existing = _entries.find(e => e.id === entry.id);
+          if (existing) {
+            Object.assign(existing, entry);
+            await DB.worldInfo.put(existing);
+            updated++;
+          } else {
+            const newEntry = { ...entry };
+            if (!newEntry.id) newEntry.id = Date.now() + Math.random();
+            await DB.worldInfo.put(newEntry);
+            _entries.push(newEntry);
+            added++;
+          }
+        }
+        try { _entries = await DB.worldInfo.getAll(); } catch(e) {}
+        _rebuildFilterBar();
+        _renderList();
+        if (typeof Toast !== 'undefined') Toast.show('导入完成：新增 ' + added + ' 条，更新 ' + updated + ' 条');
+      } catch(e) {
+        console.error(e);
+        if (typeof Toast !== 'undefined') Toast.show('导入失败：' + (e.message || '格式错误'));
+      }
+      input.value = '';
+    },
     getMatchingEntries, toggleAlwaysOn,
     // 🎭 群像专用：返回所有标记了「群像注入」且已启用的词条
     getGroupEntries: function() {
@@ -7098,7 +7188,73 @@ const EmoteModule = (() => {
     }));
   }
 
-return { init, open, close, toggleDict, addDict, confirmAddDict, toggleGlobal, toggleCharBind, deleteDict, batchImport, triggerFileImport, handleFileImport, getActiveEmotes, getUrlByKeyword, pick, toggleEditMode, toggleSelect, deleteSelected, getAllEmotes, getDicts };
+return { init, open, close, toggleDict, addDict, confirmAddDict, toggleGlobal, toggleCharBind, deleteDict, batchImport, triggerFileImport, handleFileImport, getActiveEmotes, getUrlByKeyword, pick, toggleEditMode, toggleSelect, deleteSelected, exportDicts: function() {
+      try {
+        const data = _dicts.map(d => ({
+          name: d.name,
+          isGlobal: d.isGlobal,
+          boundChars: d.boundChars || [],
+          items: (d.items || []).map(it => ({ k: it.k, v: it.v }))
+        }));
+        const json = JSON.stringify(data, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = 'emotes-export-' + new Date().toISOString().slice(0,10) + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        const total = data.reduce((s, d) => s + d.items.length, 0);
+        if (typeof Toast !== 'undefined') Toast.show('表情包已导出 (' + data.length + ' 个字典, ' + total + ' 张表情)');
+      } catch(e) {
+        console.error(e);
+        if (typeof Toast !== 'undefined') Toast.show('导出失败');
+      }
+    },
+    importDicts: async function(input) {
+      const file = input.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) throw new Error('格式错误：需要 JSON 数组');
+        let addedDicts = 0, addedItems = 0;
+        for (const d of data) {
+          if (!d.name || !Array.isArray(d.items)) continue;
+          const existing = _dicts.find(x => x.name === d.name);
+          if (existing) {
+            const existingKeys = new Set(existing.items.map(it => it.k));
+            for (const item of d.items) {
+              if (!existingKeys.has(item.k)) {
+                existing.items.push(item);
+                addedItems++;
+              }
+            }
+          } else {
+            const newDict = {
+              id: 'd_' + Date.now() + Math.random().toString(36).substr(2,6),
+              name: d.name,
+              isGlobal: d.isGlobal !== false,
+              boundChars: d.boundChars || [],
+              items: d.items.map(it => ({ k: it.k, v: it.v }))
+            };
+            _dicts.push(newDict);
+            addedDicts++;
+            addedItems += newDict.items.length;
+          }
+        }
+        await _save();
+        await _render();
+        if (typeof Toast !== 'undefined') Toast.show('导入完成：新增 ' + addedDicts + ' 个字典，' + addedItems + ' 张表情');
+      } catch(e) {
+        console.error(e);
+        if (typeof Toast !== 'undefined') Toast.show('导入失败：' + (e.message || '格式错误'));
+      }
+      input.value = '';
+    },
+    getAllEmotes, getDicts };
 })();
 
 // ============================================================
@@ -11215,9 +11371,15 @@ function _renderImgPreviewBar() {
         feed.appendChild(div);
       }
       
-      const row = _buildBubble(msg);
       const currSenderId = String(msg.fakeUserId ? ('fu:' + msg.fakeUserId) : (msg.senderId || msg.role));
-      
+
+      // 群聊回复对象追踪
+      if (_isGroup && lastSenderId && lastSenderId !== currSenderId && !isTimeSplit && msg.role !== 'system_ticket' && !msg.recalled) {
+        msg.__replyToName = _resolveSenderName(lastSenderId);
+      }
+
+      const row = _buildBubble(msg);
+
    // 👇 核心修复：加上 _isGroup
       if (_isGroup && !isTimeSplit && lastSenderId === currSenderId && msg.role !== 'system_ticket' && !msg.recalled) {
          row.classList.add('consecutive');
@@ -11257,8 +11419,14 @@ function _renderImgPreviewBar() {
         nodes.push(div);
       }
 
-      const row = _buildBubble(msg);
       const currSenderId = String(msg.fakeUserId ? ('fu:' + msg.fakeUserId) : (msg.senderId || msg.role));
+
+      // 群聊回复对象追踪（prepend 路径）
+      if (_isGroup && lastSenderId && lastSenderId !== currSenderId && !isTimeSplit && msg.role !== 'system_ticket') {
+        msg.__replyToName = _resolveSenderName(lastSenderId);
+      }
+
+      const row = _buildBubble(msg);
 
       // 👇 核心修复：加上 _isGroup
       if (_isGroup && !isTimeSplit && lastSenderId === currSenderId && msg.role !== 'system_ticket') {
@@ -11452,6 +11620,7 @@ function _renderImgPreviewBar() {
     row.dataset.msgId = msg.id;
 
     const senderNameHtml = (_isGroup && senderLabel) ? `<span class="cv-sender-name">${senderLabel}</span>` : '';
+    const replyToHtml = (_isGroup && msg.__replyToName) ? `<span class="cv-reply-to"><i class="ph ph-arrow-bend-up-right"></i> ${msg.__replyToName}</span>` : '';
     const isGhostBubble = !!(isUser && msg.fakeUserId);
     // 如果有头像 URL 用 img，没有时用首字母占位
     const avatarInner = avatarSrc
@@ -11563,7 +11732,7 @@ function _renderImgPreviewBar() {
       const hasTrans = !isUser && !!part.translation;
       const transClass = hasTrans ? ' translatable translate-open' : '';
       const transHtml  = hasTrans ? _buildTranslateHtml(part.translation) : '';
-      row.innerHTML = `${avatarHtml}<div class="cv-bubble${transClass}">${senderNameHtml}${quoteHtml}${_escHtml(_stripXhsTag(part.content))}${transHtml}</div>`;
+      row.innerHTML = `${avatarHtml}<div class="cv-bubble${transClass}">${replyToHtml}${senderNameHtml}${quoteHtml}${_escHtml(_stripXhsTag(part.content))}${transHtml}</div>`;
       return row;
     }
    
@@ -13825,13 +13994,18 @@ ${dialogueFlow.trim()}
   function _resolveSenderName(senderId) {
     if (senderId == null || senderId === '') return _gcMembers[0]?.name || '角色';
     const key = String(senderId);
+    // 0. 用户自己
+    if (key === 'user') return _persona?.name || '我';
     // 1. 直查 map（id→member）
     const sm = _gcMemberMap[key];
     if (sm) return sm.name;
     // 2. 遍历成员列表（类型兼容）
     const byId = _gcMembers.find(m => String(m.id) === key);
     if (byId) return byId.name;
-    // 3. 也许 senderId 本身就是角色名字
+    // 3. 分身/冒充者
+    const ghost = _ghostUserMap[key];
+    if (ghost) return ghost.name;
+    // 4. 也许 senderId 本身就是角色名字
     const byName = _gcMembers.find(m => m.name === key);
     if (byName) return byName.name;
     return '角色';
