@@ -327,14 +327,14 @@ const MusicModule = (() => {
       /* =========================================
          桌面悬浮播放器皮肤样式 (全局)
          ========================================= */
-      #ms-floating-widget { position: fixed; z-index: 9999; top: 100px; left: 50%; transform: translateX(-50%); cursor: grab; user-select: none; touch-action: none; transition: transform 0.1s; }
+      #ms-floating-widget { position: fixed; z-index: 9999; top: 100px; left: 50%; transform: translateX(-50%); cursor: grab; user-select: none; touch-action: none; }
       #ms-floating-widget:active { cursor: grabbing; }
-      #ms-floating-widget.dragging { transform: translateX(-50%) scale(0.97) rotate(-1deg); }
-      
+      #ms-floating-widget.dragging { transform: translateX(-50%) scale(0.97) rotate(-1deg); transition: none; }
+
       .ms-player-card { position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
       .ms-player-card .p-btn { background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: opacity 0.2s, transform 0.1s; }
       .ms-player-card .p-btn:active { transform: scale(0.85); }
-      .ms-player-card .close-btn { position: absolute; z-index: 10; }
+      .ms-player-card .close-btn { position: absolute; z-index: 10; min-width: 32px; min-height: 32px; }
 
       /* 风格 A: The Wash Label (修复版) */
 .ms-style-label { width: 260px; background: #FDFDFB; color: #1A1A1A; padding: 25px 20px; border-radius: 1px; }
@@ -1137,9 +1137,10 @@ const MusicModule = (() => {
     // 挂载到 body (Main OS 桌面)
     document.body.appendChild(_floatingWidget);
 
-    // 绑定内部播放器控制
-    _floatingWidget.querySelector('#ms-fw-close').onclick = (e) => {
+    // 绑定内部播放器控制 —— 同时监听 click 和 touchend 确保移动端可靠关闭
+    const handleClose = (e) => {
       e.stopPropagation();
+      e.preventDefault();
       _floatingWidget.remove();
       _floatingWidget = null;
       const audio = _$('ms-audio');
@@ -1147,47 +1148,48 @@ const MusicModule = (() => {
       _isPlaying = false;
       _updatePlayUI();
     };
-    
+    const closeBtn = _floatingWidget.querySelector('#ms-fw-close');
+    closeBtn.addEventListener('click', handleClose);
+    closeBtn.addEventListener('touchend', handleClose);
+
     _floatingWidget.querySelector('#ms-fw-prev').onclick = (e) => { e.stopPropagation(); _prevSong(); };
     _floatingWidget.querySelector('#ms-fw-next').onclick = (e) => { e.stopPropagation(); _nextSong(); };
     _floatingWidget.querySelector('#ms-fw-play').onclick = (e) => { e.stopPropagation(); _togglePlay(); };
 
-    // 绑定拖拽逻辑
+    // 使用 Pointer Events 统一鼠标/触摸拖拽，setPointerCapture 保证手指移出元素也能追踪
     let isDragging = false, startX, startY, currentX = 0, currentY = 0;
-    
+
     const dragStart = (e) => {
       if (e.target.closest('.p-btn')) return;
       isDragging = true;
       _floatingWidget.classList.add('dragging');
-      const touch = e.type.includes('mouse') ? e : e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
+      _floatingWidget.style.transition = 'none';
+      startX = e.clientX;
+      startY = e.clientY;
+      if (_floatingWidget.setPointerCapture) _floatingWidget.setPointerCapture(e.pointerId);
     };
-    
+
     const dragMove = (e) => {
       if (!isDragging) return;
       e.preventDefault();
-      const touch = e.type.includes('mouse') ? e : e.touches[0];
-      const dx = touch.clientX - startX;
-      const dy = touch.clientY - startY;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
       _floatingWidget.style.transform = `translateX(-50%) translate(${currentX + dx}px, ${currentY + dy}px)`;
     };
-    
+
     const dragEnd = (e) => {
       if (!isDragging) return;
       isDragging = false;
       _floatingWidget.classList.remove('dragging');
-      const touch = e.type.includes('mouse') ? e : e.changedTouches[0];
-      currentX += touch.clientX - startX;
-      currentY += touch.clientY - startY;
+      _floatingWidget.style.transition = '';
+      currentX += e.clientX - startX;
+      currentY += e.clientY - startY;
     };
 
-    _floatingWidget.addEventListener('mousedown', dragStart);
-    _floatingWidget.addEventListener('touchstart', dragStart, { passive: false });
-    document.addEventListener('mousemove', dragMove);
-    document.addEventListener('touchmove', dragMove, { passive: false });
-    document.addEventListener('mouseup', dragEnd);
-    document.addEventListener('touchend', dragEnd);
+    _floatingWidget.addEventListener('pointerdown', dragStart);
+    _floatingWidget.addEventListener('pointermove', dragMove);
+    _floatingWidget.addEventListener('pointerup', dragEnd);
+    _floatingWidget.addEventListener('pointercancel', dragEnd);
   };
 
   // ── API 请求 ──
@@ -2331,14 +2333,29 @@ if (fwLabelNum) {
     return null;
   }
 
+  async function searchCloud(keyword, limit) {
+    limit = limit || 15;
+    try {
+      const data = await _api(`/search?keywords=${encodeURIComponent(keyword)}&limit=${limit}`);
+      return (data.result?.songs || []).map(s => ({
+        id: s.id,
+        title: s.name,
+        artist: (s.artists || []).map(a => a.name).join(' / ') || '',
+        cover: (s.album?.picUrl) || (s.album?.artist?.img1v1Url) || '',
+        album: s.album?.name || '',
+        isCloud: true
+      }));
+    } catch(e) { return []; }
+  }
+
   function getCurrentState() {
     const song = (_currentIdx >= 0 && _currentPlaylist.length > _currentIdx) ? _currentPlaylist[_currentIdx] : null;
     return { isPlaying: _isPlaying, song: song, lyrics: _lyrics ||[] };
   }
 
-  return { 
-    open, close, _navTo, 
+  return {
+    open, close, _navTo,
     // 暴露给外部的接口
-    silentInit, getExposedPlaylists, getExposedSongs, playExposedSong, searchAndPlayCloud, getCurrentState 
+    silentInit, getExposedPlaylists, getExposedSongs, playExposedSong, searchAndPlayCloud, searchCloud, getCurrentState
   };
 })();

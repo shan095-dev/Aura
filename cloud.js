@@ -173,7 +173,7 @@ const CloudModule = (() => {
             </div>
           </div>
 
-          <!-- 🌟 新增：诊断日志入口 -->
+                              <!-- 🌟 新增：诊断日志入口 -->
           <div style="margin-top: 40px; margin-bottom: 20px; text-align: center;">
             <button class="btn-outline" style="border:none; font-size:0.65rem; font-family:'Space Mono', monospace; color:var(--s-text-secondary); text-decoration:underline;" onclick="CloudModule.openLogs()">
               <i class="ph-light ph-terminal"></i> 打开系统诊断日志 (Debug Logs)
@@ -287,6 +287,7 @@ const CloudModule = (() => {
       const savedXhsUrl = await DB.settings.get('xhs-edge-url');
       const xhsInput = document.getElementById('xhs-edge-url');
       if (xhsInput && savedXhsUrl) xhsInput.value = savedXhsUrl;
+
       
       const autoToggle = document.getElementById('cloud-auto-backup');
       if (autoToggle) {
@@ -354,7 +355,7 @@ const CloudModule = (() => {
     if (typeof Toast !== 'undefined') Toast.show('节点配置已保存 ✦');
   }
 
-  // 🌟 保存小红书解析函数地址（存于 DB.settings，前端 XhsShare 模块会读取）
+    // 🌟 保存小红书解析函数地址（存于 DB.settings，前端 XhsShare 模块会读取）
   async function saveXhsUrl() {
     try {
       const url = (document.getElementById('xhs-edge-url').value || '').trim().replace(/\/$/, '');

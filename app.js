@@ -1,5 +1,188 @@
 'use strict';
 
+window.ListenTogether = window.ListenTogether || {};
+window.ListenTogether.openCrate = async function() {
+  var m = document.getElementById('cv-music-modal');
+  if (m) m.classList.add('active');
+  var inp = document.getElementById('cv-music-search-input'); if (inp) inp.value = '';
+  try { if (typeof MusicModule !== 'undefined' && MusicModule.silentInit) await MusicModule.silentInit(); } catch(e) {}
+  var list = document.getElementById('cv-music-list');
+  if (!list) return;
+  if (typeof MusicModule === 'undefined' || !MusicModule.getExposedPlaylists) {
+    list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">音乐模块未加载</div>';
+    return;
+  }
+  list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">加载歌单...</div>';
+  try {
+    var pls = await MusicModule.getExposedPlaylists();
+    if (!pls || !pls.length) { list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">暂无歌单</div>'; return; }
+    window._ltPlaylists = pls;
+    list.innerHTML = pls.map(function(pl, i) {
+      var cover = pl.coverImgUrl || pl.cover || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=80&q=60';
+      return '<div class=\"cv-music-item\" onclick=\"window._ltOpenPlaylist(' + i + ')\"><img class=\"cv-music-item-cover\" src=\"' + cover + '\" onerror=\"this.style.display=\\\'none\\\'\"><div class=\"cv-music-item-info\"><div class=\"cv-music-item-title\">' + (pl.name || '歌单') + '</div><div class=\"cv-music-item-artist\">' + (pl.isLocal ? '本地' : '云端') + '</div></div></div>';
+    }).join('');
+  } catch(e) { list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">加载失败</div>'; }
+};
+window.ListenTogether.closeCrate = function() { var m = document.getElementById('cv-music-modal'); if (m) m.classList.remove('active'); };
+window.ListenTogether.search = async function() {
+  var inp = document.getElementById('cv-music-search-input'); var kw = (inp && inp.value || '').trim();
+  if (!kw) { window.ListenTogether.openCrate(); return; }
+  var list = document.getElementById('cv-music-list'); if (!list) return;
+  list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">搜索中...</div>';
+  try {
+    if (typeof MusicModule !== 'undefined' && MusicModule.silentInit) await MusicModule.silentInit();
+    var results = await MusicModule.searchCloud(kw, 15);
+    if (!results || !results.length) { list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">没有找到</div>'; return; }
+    window._ltLastSearchResults = results;
+    list.innerHTML = results.map(function(s) {
+      var cover = s.cover || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=80&q=60';
+      return '<div class=\"cv-music-item\" onclick=\"window._ltPlayCloud(\'' + s.id + '\')\"><img class=\"cv-music-item-cover\" src=\"' + cover + '\"><div class=\"cv-music-item-info\"><div class=\"cv-music-item-title\">' + (s.title || '') + '</div><div class=\"cv-music-item-artist\">' + (s.artist || '') + '</div></div></div>';
+    }).join('');
+  } catch(e) { list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">搜索失败</div>'; }
+};
+window.ListenTogether.toggle = function() { var b = document.getElementById('ms-fp-play') || document.getElementById('ms-mp-play'); if (b) b.click(); };
+window.ListenTogether.prev = function() { var b = document.getElementById('ms-fp-prev'); if (b) b.click(); };
+window.ListenTogether.next = function() { var b = document.getElementById('ms-fp-next'); if (b) b.click(); };
+window.ListenTogether.toggleMode = function() { var b = document.getElementById('ms-mode-btn'); if (b) b.click(); };
+window.ListenTogether.hide = function() {
+  var el = document.getElementById('lt-floating-player');
+  if (el) { el.classList.remove('active'); el.style.display = 'none'; }
+  window.ListenTogether.stopSync();
+};
+window.ListenTogether.showPlayer = function() {
+  var el = document.getElementById('lt-floating-player');
+  if (el) { el.classList.add('active'); el.style.display = 'flex'; }
+  var body = document.getElementById('lt-player-body');
+  if (body) body.classList.remove('collapsed');
+  window.ListenTogether._updateUI();
+  window.ListenTogether.setAvatars();
+  window.ListenTogether.startSync();
+};
+window.ListenTogether._updateUI = function() {
+  var state = typeof MusicModule !== 'undefined' ? MusicModule.getCurrentState() : null;
+  if (!state || !state.song) return;
+  var s = state.song;
+  var t = document.getElementById('lt-track-title'); if (t) t.textContent = s.title;
+  var a = document.getElementById('lt-track-artist'); if (a) a.textContent = s.artist;
+  var d = document.getElementById('lt-mini-disc'); if (d && s.cover) d.style.backgroundImage = 'url(' + s.cover + ')';
+  if (d) { if (state.isPlaying) d.classList.add('playing'); else d.classList.remove('playing'); }
+  var p = document.getElementById('lt-icon-play'); if (p) p.className = 'ph ' + (state.isPlaying ? 'ph-pause' : 'ph-play');
+  // 同步播放模式图标
+  var m = document.getElementById('lt-icon-mode');
+  if (m) {
+    var originMode = document.getElementById('ms-mode-btn');
+    if (originMode) {
+      var cls = originMode.className.split(' ');
+      var icon = cls.find(function(c) { return c.startsWith('ph-repeat') || c.startsWith('ph-shuffle'); }) || 'ph-repeat';
+      m.className = 'ph ' + icon;
+    }
+  }
+  var ad = document.getElementById('ms-audio'), f = document.getElementById('lt-progress-fill');
+  if (ad && f && ad.duration) f.style.width = (ad.currentTime / ad.duration * 100) + '%';
+};
+window.ListenTogether.startSync = function() {
+  if (window.ListenTogether._syncTimer) clearInterval(window.ListenTogether._syncTimer);
+  window.ListenTogether._syncTimer = setInterval(function() { window.ListenTogether._updateUI(); }, 1000);
+};
+window.ListenTogether.stopSync = function() {
+  if (window.ListenTogether._syncTimer) { clearInterval(window.ListenTogether._syncTimer); window.ListenTogether._syncTimer = null; }
+};
+window.ListenTogether.setAvatars = async function() {
+  var c = document.getElementById('lt-avatar-char'), u = document.getElementById('lt-avatar-user');
+  // 角色头像
+  if (c) {
+    var h = document.getElementById('cv-header-avatar');
+    if (h && h.src && h.src.indexOf('data:image') < 0 && h.src.indexOf('unsplash') < 0) c.src = h.src;
+    else c.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80';
+  }
+  // 用户头像 — 从 DB 中读取
+  if (u) {
+    var avatarUrl = '';
+    try {
+      var profile = await DB.settings.get('global-profile').catch(function(){}) || await DB.settings.get('forum-profile').catch(function(){}) || {};
+      if (profile.avatarKey && typeof Assets !== 'undefined') {
+        avatarUrl = await Assets.getUrl(profile.avatarKey).catch(function(){ return ''; }) || '';
+      }
+    } catch(e) {}
+    // fallback: 尝试直接从 DOM 读取
+    if (!avatarUrl) {
+      var f = document.getElementById('fm-user-avatar');
+      if (f && f.src && f.src.indexOf('unsplash') < 0 && f.src.indexOf('svg') < 0) avatarUrl = f.src;
+    }
+    u.src = avatarUrl || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80';
+  }
+};
+// 拖动 + 折叠 (支持鼠标 & 触屏)
+(function() {
+  setTimeout(function() {
+    var player = document.getElementById('lt-floating-player');
+    if (!player || player.dataset.dragOk) return;
+    player.dataset.dragOk = '1';
+    var dragging, sx, sy, ox, oy;
+
+    function startDrag(e) {
+      if (e.target.closest && (e.target.closest('button') || e.target.closest('.lt-close-btn'))) return;
+      dragging = true;
+      var p = e.touches ? e.touches[0] : e;
+      sx = p.clientX; sy = p.clientY;
+      var r = player.getBoundingClientRect(); ox = r.left; oy = r.top;
+      player.style.cursor = 'grabbing';
+    }
+    function moveDrag(e) {
+      if (!dragging) return;
+      e.preventDefault();
+      var p = e.touches ? e.touches[0] : e;
+      player.style.right = 'auto';
+      player.style.left = (ox + p.clientX - sx) + 'px';
+      player.style.top  = (oy + p.clientY - sy) + 'px';
+    }
+    function stopDrag() {
+      if (!dragging) return;
+      dragging = false;
+      player.style.cursor = '';
+    }
+
+    player.addEventListener('mousedown', startDrag);
+    player.addEventListener('touchstart', startDrag, { passive: false });
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('touchmove', moveDrag, { passive: false });
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+
+    var disc = document.getElementById('lt-collapsed-view');
+    if (disc) disc.addEventListener('click', function() { var b = document.getElementById('lt-player-body'); if (b) b.classList.toggle('collapsed'); });
+  }, 2000);
+})();
+// 辅助函数
+window._ltOpenPlaylist = async function(idx) {
+  var pl = (window._ltPlaylists || [])[idx]; if (!pl) return;
+  var list = document.getElementById('cv-music-list'); if (!list) return;
+  list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">加载歌曲...</div>';
+  try {
+    var songs = await MusicModule.getExposedSongs(pl);
+    if (!songs || !songs.length) { list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">歌单为空</div>'; return; }
+    window._ltLastSearchResults = songs.map(function(s) { return { ...s, _pl: pl, _plSongs: songs }; });
+    list.innerHTML = '<div class=\"cv-music-item\" onclick=\"window.ListenTogether.openCrate()\" style=\"color:rgba(255,255,255,0.4);font-size:0.7rem;\"><i class=\"ph ph-arrow-left\" style=\"margin-right:8px;\"></i>返回</div>' + songs.map(function(s, i) {
+      var cover = s.cover || pl.coverImgUrl || pl.cover || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=80&q=60';
+      return '<div class=\"cv-music-item\" onclick=\"window._ltPlayLocal(' + i + ')\"><img class=\"cv-music-item-cover\" src=\"' + cover + '\"><div class=\"cv-music-item-info\"><div class=\"cv-music-item-title\">' + (s.title || '') + '</div><div class=\"cv-music-item-artist\">' + (s.artist || '') + '</div></div></div>';
+    }).join('');
+  } catch(e) { list.innerHTML = '<div style=\"text-align:center;color:rgba(255,255,255,0.3);padding:20px;\">加载失败</div>'; }
+};
+window._ltPlayLocal = async function(idx) {
+  var s = (window._ltLastSearchResults || [])[idx]; if (!s) return;
+  window.ListenTogether.closeCrate();
+  try { await MusicModule.playExposedSong(s, s._plSongs, s._pl); } catch(e) { try { await MusicModule.searchAndPlayCloud(s.title + ' ' + s.artist); } catch(e2) {} }
+  if (typeof Toast !== 'undefined') Toast.show('正在播放...');
+  setTimeout(function() { window.ListenTogether.showPlayer(); }, 600);
+};
+window._ltPlayCloud = async function(songId) {
+  var s = (window._ltLastSearchResults || []).find(function(x) { return String(x.id) === String(songId); }); if (!s) return;
+  window.ListenTogether.closeCrate();
+  try { await MusicModule.searchAndPlayCloud(s.title + ' ' + s.artist); } catch(e) {}
+  if (typeof Toast !== 'undefined') Toast.show('正在播放...');
+  setTimeout(function() { window.ListenTogether.showPlayer(); }, 600);
+};
+
 // ============================================================
 // Supabase 登录守卫 & 鉴权模块 (完全内联、PWA友善)
 // ============================================================
@@ -3280,6 +3463,8 @@ if (cleaned.length !== _categories.length) {
       document.getElementById('wb-scope-lifestyle').checked = false;
       document.getElementById('wb-scope-diary').checked = false;
       document.getElementById('wb-scope-novel').checked = false;
+      document.getElementById('wb-scope-taobao').checked = false;
+      document.getElementById('wb-scope-eleme').checked = false;
       _editorCatId   = 'default';
       _editorCharIds = [];
     } else {
@@ -3302,6 +3487,8 @@ if (cleaned.length !== _categories.length) {
       document.getElementById('wb-scope-lifestyle').checked = scope.includes('lifestyle');
       document.getElementById('wb-scope-diary').checked = scope.includes('diary');
       document.getElementById('wb-scope-novel').checked = scope.includes('novel');
+      document.getElementById('wb-scope-taobao').checked = scope.includes('taobao');
+      document.getElementById('wb-scope-eleme').checked = scope.includes('eleme');
       _editorCatId   = e.categoryId || 'default';
       _editorCharIds = Array.isArray(e.characterIds) ? [...e.characterIds] : [];
     }
@@ -3334,6 +3521,8 @@ if (cleaned.length !== _categories.length) {
      if (document.getElementById('wb-scope-lifestyle')?.checked) scope.push('lifestyle');
      if (document.getElementById('wb-scope-diary')?.checked) scope.push('diary');
      if (document.getElementById('wb-scope-novel')?.checked) scope.push('novel');
+     if (document.getElementById('wb-scope-taobao')?.checked) scope.push('taobao');
+     if (document.getElementById('wb-scope-eleme')?.checked) scope.push('eleme');
 
     const data = {
       name,
@@ -9419,6 +9608,7 @@ const GhostUserModule = (() => {
 })();
 
 // ============================================================
+
 // ConvModule — 聊天页核心
 // ============================================================
 const ConvModule = (() => {
@@ -9674,9 +9864,10 @@ const ConvModule = (() => {
     const input   = document.getElementById('cv-input');
     const btnUser = document.getElementById('cv-btn-user');
     const btnAi   = document.getElementById('cv-btn-ai');
-    const btnPlus = document.getElementById('cv-btn-plus');
-    const footer  = document.getElementById('cv-footer');
-    const apiNode = document.getElementById('cv-btn-api-node');
+    const btnPlus  = document.getElementById('cv-btn-plus');
+    const btnMusic = document.getElementById('cv-btn-music');
+    const footer   = document.getElementById('cv-footer');
+    const apiNode  = document.getElementById('cv-btn-api-node');
 
     // 🌟 新增：群聊顶部头像点击更换逻辑
     const headerAvatar = document.getElementById('cv-header-avatar');
@@ -9820,6 +10011,13 @@ const ConvModule = (() => {
       e.stopPropagation();
       footer.classList.toggle('expanded');
     });
+
+    if (btnMusic) {
+      btnMusic.addEventListener('click', e => {
+        e.stopPropagation();
+        if (typeof ListenTogether !== 'undefined') ListenTogether.openCrate();
+      });
+    }
 
     // 点击空白收起面板
     document.getElementById('conv-screen').addEventListener('click', e => {
@@ -11373,9 +11571,8 @@ function _renderImgPreviewBar() {
           const fd = part.data;
           const typeStr = fd.type === 'event' ? 'WORLD EVENT' : (fd.type === 'treehole' ? 'CLASSIFIED SIGNAL' : 'SQUARE POST');
           const icon = fd.type === 'event' ? 'ph-warning-circle' : (fd.type === 'treehole' ? 'ph-lock-key' : 'ph-users');
-          // 巧妙清洗大模型生成的标题换行符，并采用独立标签渲染
           const titleHtml = fd.title ? `<div class="cv-fs-title">${_escHtml(fd.title.replace(/\n/g, ' '))}</div>` : '';
-          
+
           const cardHtml = `
               <div class="cv-forum-share">
                   <div class="cv-fs-type"><i class="ph-fill ${icon}"></i> ${typeStr}</div>
@@ -11383,15 +11580,22 @@ function _renderImgPreviewBar() {
                   <div class="cv-fs-content">${_escHtml(fd.content)}</div>
                   ${fd.topComment ? `<div class="cv-fs-comment"><i class="ph-fill ph-chat-circle-dots"></i> <span>${_escHtml(fd.topComment)}</span></div>` : ''}
               </div>`;
-              
-          // 根据你在哪个代码块，如果是单独 part 则用 row.innerHTML；如果在 map 里，直接 return cardHtml
-          if (typeof row !== 'undefined') {
-              row.innerHTML = `${avatarHtml}${cardHtml}`;
+
+          if (typeof row !== 'undefined') {              row.innerHTML = `${avatarHtml}${cardHtml}`;
               return row;
           } else {
               return cardHtml;
           }
         }
+      if (part.type === 'listen_together') {
+        const cardHtml = _buildListenTogetherHtml(part, msg.id);
+        if (typeof row !== 'undefined') {
+          row.innerHTML = avatarHtml + cardHtml;
+          return row;
+        } else {
+          return cardHtml;
+        }
+      }
       // text（可能带 quoteRef）
       const quoteHtml = part.quoteRef ? _buildQuoteRefHtml(part.quoteRef) : '';
       const hasTrans = !isUser && !!part.translation;
@@ -11436,6 +11640,10 @@ function _renderImgPreviewBar() {
       // 🌟 小红书帖子卡片
       if (part.type === 'xhs_share') {
           return window.XhsShare ? XhsShare.buildCardHtml(part.data) : '';
+      }
+      // 🎵 一起听卡片
+      if (part.type === 'listen_together') {
+          return _buildListenTogetherHtml(part, msg.id);
       }
 
   const quoteHtml = part.quoteRef ? _buildQuoteRefHtml(part.quoteRef) : '';
@@ -12128,7 +12336,16 @@ function _renderImgPreviewBar() {
      } catch(e) {}
      // 关闭时间感知时，不注入基于现实时间差的“距离上次 X 小时”提示
      if (!gcTimePerceptionOn) timeGapPrompt = '';
-     let systemPrompt = _buildGroupSystemPromptAll(gcMeta, histMsgs, worldBookBlock, timeGapPrompt, crossWindowMsgs, schedulesMap, gcTimePerceptionOn);
+     let musicCtxGc = '';
+     try {
+       if (typeof MusicModule !== 'undefined') {
+         const mState = MusicModule.getCurrentState();
+         if (mState && mState.song && mState.isPlaying) {
+           musicCtxGc = '# 正在一起听音乐 (Listen Together)\n当前播放：' + mState.song.title + ' - ' + mState.song.artist + '\n【重要】群成员正在一起听这首歌。请结合歌曲氛围自然评论，听到好听的可以夸、听到奇怪的可以吐槽。可用 [PLAY:关键词] 推荐歌曲。\n';
+         }
+       }
+     } catch(e) {}
+     let systemPrompt = _buildGroupSystemPromptAll(gcMeta, histMsgs, worldBookBlock, timeGapPrompt, crossWindowMsgs, schedulesMap, gcTimePerceptionOn, musicCtxGc);
 
      // 🌙 记忆库 P0:群聊召回 — 取群内全体成员的相关记忆,拼到 system prompt 尾部
      if (window.MemoryRAG && await MemoryRAG.isEnabled()) {
@@ -12753,8 +12970,21 @@ function _renderImgPreviewBar() {
         if (nvCfg && NovelModule.isPaidImgEngine(nvCfg)) isFreeEngine = false;
       } catch(e) {}
 
-      // 🌟 修改参数传递 (追加 isFreeEngine)
-      const systemPrompt = _buildSystemPrompt(histMsgs, novelImgOnForPrompt, worldBookBlock, timePerceptionOn, timeGapPrompt, memorySummary, crossWindowMsgs, scheduleContext, isFreeEngine);
+      // 🎵 一起听上下文
+      let musicContext = '';
+      try {
+        if (typeof MusicModule !== 'undefined') {
+          const mState = MusicModule.getCurrentState();
+          if (mState && mState.song && mState.isPlaying) {
+            musicContext = '# 正在一起听音乐 (Listen Together)\n当前播放：' + mState.song.title + ' - ' + mState.song.artist + '\n' +
+              (mState.lyrics && mState.lyrics.length ? '当前歌词片段：' + mState.lyrics.slice(Math.max(0,mState._currentLyricIdx||0), (mState._currentLyricIdx||0)+4).map(function(l){return l.text;}).join(' / ') + '\n' : '') +
+              '【重要】你们正在一起听这首歌。请结合歌曲的氛围、歌词或情绪，自然地评论或者吐槽这首歌。就像真实的网易云一起听功能一样，听到好听的歌可以夸、听到奇怪的歌可以吐槽、听到伤感的歌可以共情。如果用户想换歌，你可以用 [PLAY:关键词] 来推荐你想听的歌曲。\n';
+          }
+        }
+      } catch(e) {}
+
+      // 🌟 修改参数传递 (追加 isFreeEngine + musicContext)
+      const systemPrompt = _buildSystemPrompt(histMsgs, novelImgOnForPrompt, worldBookBlock, timePerceptionOn, timeGapPrompt, memorySummary, crossWindowMsgs, scheduleContext, isFreeEngine, musicContext);
 
      const apiMessages  = await _buildApiMessages(histMsgs, activeApi, currentRound);
       
@@ -12882,6 +13112,8 @@ function _renderImgPreviewBar() {
         const postImgMatch = !isRecall && !isAcceptXfer && !rejectXferMatch && !audioMatch && !xferMatch && !emoteMatch && !quoteMatch && !isCall && src.match(/^\[POST_IMG\s*[:：]\s*([\s\S]+?)\s*[:：]\s*([\s\S]+?)\]\s*$/i);
         const htmlMatch    = !isRecall && !isAcceptXfer && !rejectXferMatch && !audioMatch && !xferMatch && !emoteMatch && !quoteMatch && !isCall && !postMatch && !postImgMatch && src.match(/^\[HTML\]([\s\S]+?)\[\/HTML\]$/i);
         const locMatch      = !isRecall && !isAcceptXfer && !rejectXferMatch && !audioMatch && !xferMatch && !emoteMatch && !quoteMatch && src.match(/^\[LOCATION\s*[:：]\s*(.+?)\]\s*$/i);
+        const playMatch     = !isRecall && !isAcceptXfer && !rejectXferMatch && !audioMatch && !xferMatch && !emoteMatch && !quoteMatch && !locMatch && src.match(/^\[PLAY\s*[:：]\s*(.+?)\]\s*$/i);
+        const toolMatch     = !isRecall && !isAcceptXfer && !rejectXferMatch && !audioMatch && !xferMatch && !emoteMatch && !quoteMatch && !locMatch && !playMatch && src.match(/^\[TOOL\s*[:：]\s*(\w+)\s*[:：]\s*(\{[\s\S]*\})\]\s*$/i);
         const avatarMatch   = !isRecall && !isAcceptXfer && !rejectXferMatch && !audioMatch && !xferMatch && !emoteMatch && !quoteMatch && src.match(/^\[SET_AVATAR:(.+)\]$/);
 
        let msgRole        = 'assistant'; // 默认是普通助手消息
@@ -13011,6 +13243,67 @@ function _renderImgPreviewBar() {
             lastState.timestamp = Date.now();
             await DB.settings.set(stateKey, lastState);
           } catch(e) {}
+          } else if (playMatch) {
+          const playKw = playMatch[1].trim();
+          msgParts = [{ type: 'text', content: '🎵 为你点了一首歌：' + playKw + '，看看悬浮窗~' }];
+          displayContent = '🎵 为你点了一首歌：' + playKw;
+          (async () => {
+            try {
+              if (typeof MusicModule !== 'undefined') {
+                if (typeof MusicModule.silentInit === 'function') await MusicModule.silentInit();
+                const song = await MusicModule.searchAndPlayCloud(playKw);
+                if (song) {
+                  if (typeof ListenTogether !== 'undefined') {
+                    ListenTogether.showPlayer();
+                    ListenTogether.setAvatars();
+                    ListenTogether.startSync();
+                  }
+                  const charId = sessionCharId;
+                  if (charId) {
+                    const part = { type: 'listen_together', action: 'now_playing', song: { title: song.title, artist: song.artist, cover: song.cover, isCloud: true }, isPlaying: true };
+                    const msg = { charId: charId, role: 'assistant', parts: [part], content: '[一起听] ' + song.title + ' - ' + song.artist, timestamp: Date.now(), status: 'sent', recalled: false, recallContent: '', recallThought: '' };
+                    const msgId = await DB.messages.add(msg);
+                    msg.id = msgId;
+                    if (_charId === charId) { _totalMsgs++; _offset++; _appendBubble(msg); _scrollToBottom(); }
+                  }
+                }
+              }
+            } catch(e) { console.warn('[PLAY]', e); }
+          })();
+          } else if (toolMatch) {
+          var toolName = toolMatch[1].trim();
+          var toolArgs = {};
+          try { toolArgs = JSON.parse(toolMatch[2]); } catch(e) { toolArgs = {}; }
+          msgParts = [{ type: 'text', content: '🔧 调用工具: ' + toolName + '...' }];
+          displayContent = '🔧 调用工具: ' + toolName;
+          (async () => {
+            try {
+              if (typeof McpModule !== 'undefined') {
+                var result = await McpModule.callToolAny(toolName, toolArgs);
+                var resultStr = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+                if (resultStr.length > 2000) resultStr = resultStr.slice(0, 2000) + '...(已截断)';
+                // 把工具结果作为新的用户消息注入，触发 AI 继续回复
+                var toolResultMsg = {
+                  charId: sessionCharId,
+                  role: 'user',
+                  parts: [{ type: 'text', content: '[TOOL RESULT for ' + toolName + ']\n' + resultStr }],
+                  content: '[TOOL RESULT for ' + toolName + ']\n' + resultStr,
+                  timestamp: Date.now(),
+                  status: 'tool_result',
+                  recalled: false, recallContent: '', recallThought: ''
+                };
+                var trId = await DB.messages.add(toolResultMsg);
+                toolResultMsg.id = trId;
+                if (_charId === sessionCharId) {
+                  _totalMsgs++; _offset++;
+                  _appendBubble(toolResultMsg);
+                  _scrollToBottom();
+                  // 自动触发 AI 基于工具结果继续回复
+                  setTimeout(function() { _triggerAI(false); }, 500);
+                }
+              }
+            } catch(e) { console.warn('[TOOL]', e); }
+          })();
           } else if (isCall) {
           msgParts = [{ type: 'text', content: '[发起了视讯通话邀请]' }];
           displayContent = '[发起了视讯通话邀请]';
@@ -13583,7 +13876,7 @@ ${dialogueFlow.trim()}
   }
 
   // ── 群聊专用：一次性组装所有角色的 System Prompt ──
-  function _buildGroupSystemPromptAll(gcMeta, histMsgs, worldBookBlock, timeGapPrompt, crossWindowMsgs =[], schedulesMap = {}, timePerceptionOn = true) {
+  function _buildGroupSystemPromptAll(gcMeta, histMsgs, worldBookBlock, timeGapPrompt, crossWindowMsgs =[], schedulesMap = {}, timePerceptionOn = true, musicContext = '') {
     const userBg = _persona ? `用户的名字是${_persona.name}${_persona.bio ? '，个人简介/签名：' + _persona.bio : ''}${_persona.backstory ? '\n背景：' + _persona.backstory : ''}` : '';
 
     // 时间感知：开启注入真实时间；关闭则不暴露现实时间（仅保留模糊的语言/时差铁律）
@@ -13822,6 +14115,8 @@ ${emoteBlock}
 以上高级行为（引用、撤回、语音、红包、表情包等）可以在同一轮群聊中自由组合，用 ||| 分隔不同气泡即可。
 高级行为标签必须保持机器可识别：标签只能出现在气泡开头！
 
+${musicContext}
+
 现在，请同时扮演群里的所有活人，开始展现你们真实的群聊生态！记住每条消息都要带 [角色名]: 前缀。${_detectOverusedBehaviors(histMsgs)}`;
 
   }
@@ -13900,7 +14195,7 @@ ${emoteBlock}
     return `\n# 🚨 当前行为冷却指令（最高优先级，立即执行）\n${warnings.join('\n')}\n`;
   }
 
-function _buildSystemPrompt(histMsgs, novelImgOn = false, worldBookBlock = '', timePerceptionOn = true, timeGapPrompt = '', memorySummary = '', crossWindowMsgs =[], scheduleContext = '', isFreeEngine = false) {
+function _buildSystemPrompt(histMsgs, novelImgOn = false, worldBookBlock = '', timePerceptionOn = true, timeGapPrompt = '', memorySummary = '', crossWindowMsgs =[], scheduleContext = '', isFreeEngine = false, musicContext = '') {
     let timeCtx = '';
     if (timePerceptionOn) {
        const now = new Date();
@@ -14158,6 +14453,10 @@ ${emoteBlock}
 **示例：**
 [QUOTE:今天特别累]听到你说累，我第一反应就是想让你把头靠过来。
 ⚠️【引用 + 外语注意】：[QUOTE:...] 方括号里只放被引用的原话本身，**不要**在方括号内塞中文翻译括号。若你的回复正文是外语，中文翻译括号要写在方括号**外面**的回复正文里，例如：[QUOTE:I miss you]Me too.（我也是。）——绝不能写成 [QUOTE:I miss you（我想你）]。
+
+${musicContext}
+
+${typeof McpModule !== 'undefined' ? McpModule.getToolsForPrompt() : ''}
 
 现在，请作为【${charName}】，绝对禁止任何动作描写和心理活动。开始你的表演。${_detectOverusedBehaviors(histMsgs)}`;
   }
@@ -16771,6 +17070,35 @@ if (action === 'quote') {
     const latDir = lat >= 0 ? 'N' : 'S';
     const lngDir = lng >= 0 ? 'E' : 'W';
     return `${Math.abs(lat)}° ${latDir}, ${Math.abs(lng)}° ${lngDir}`;
+  }
+
+  function _buildListenTogetherHtml(part, msgId) {
+    const song = part.song || {};
+    const cover = song.cover || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=200&q=80';
+    const title = song.title || '未知歌曲';
+    const artist = song.artist || '未知艺术家';
+    const isPlaying = part.isPlaying !== false;
+    const action = part.action || 'now_playing';
+    const headerLabel = action === 'invite' ? 'LISTEN TOGETHER' : 'NOW PLAYING';
+    return '<div class="cv-listen-card" id="cv-listen-'+msgId+'" data-msg-id="'+msgId+'">'
+      +'<div class="cv-listen-header"><i class="ph-fill ph-vinyl-record"></i><span>'+headerLabel+'</span></div>'
+      +'<div class="cv-listen-body">'
+        +'<div class="cv-listen-cover-wrap">'
+          +'<img src="'+cover+'" class="cv-listen-cover-img'+(isPlaying?' playing':'')+'" alt="'+title+'">'
+          +'<div class="cv-listen-cover-center"></div>'
+        +'</div>'
+        +'<div class="cv-listen-info">'
+          +'<div class="cv-listen-title">'+title+'</div>'
+          +'<div class="cv-listen-artist">'+artist+'</div>'
+          +'<div class="cv-listen-status"><span class="dot"></span> '+(isPlaying?'正在播放':'已暂停')+'</div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="cv-listen-controls">'
+        +'<button class="cv-listen-ctrl" onclick="ListenTogether.prev()" title="上一首"><i class="ph ph-skip-back"></i></button>'
+        +'<button class="cv-listen-ctrl play-btn" id="cv-listen-play-'+msgId+'" onclick="ListenTogether.toggle()" title="播放/暂停"><i class="ph '+(isPlaying?'ph-pause':'ph-play')+'"></i></button>'
+        +'<button class="cv-listen-ctrl" onclick="ListenTogether.next()" title="下一首"><i class="ph ph-skip-forward"></i></button>'
+      +'</div>'
+    +'</div>';
   }
 
   function _buildLocHtml(part, msgId, role) {

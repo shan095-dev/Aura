@@ -97,6 +97,14 @@ const SubjectsModule = (() => {
         #subjects-screen .dots-icon { font-size: 14px; color: #888; }
         #subjects-screen .bottom-pill { margin: 40px auto 0; background: linear-gradient(90deg, #fff 0%, #888 100%); height: 4px; width: 120px; border-radius: 2px; display: flex; justify-content: space-between; align-items: center; padding: 0 4px; }
         #subjects-screen .bottom-pill::before, #subjects-screen .bottom-pill::after { content: ''; width: 4px; height: 4px; background: var(--archive-bg); border-radius: 50%; }
+        /* 模式切换按钮 */
+        .subjects-mode-toggle { display:flex; gap:8px; }
+        .subjects-mode-btn { padding:5px 14px; border-radius:100px; border:0.5px solid rgba(0,0,0,0.15); background:transparent; font-size:0.7rem; cursor:pointer; color:#666; transition:0.2s; font-family:inherit; }
+        .subjects-mode-btn.active { background:#1a3a50; color:#fff; border-color:#1a3a50; }
+        /* 反向查手机面板 */
+        #view-reverse-dash .rev-loading { text-align:center; padding:60px 20px; color:#888; font-size:0.8rem; }
+        #view-reverse-dash .rev-loading i { font-size:1.5rem; animation:spin 1s linear infinite; display:block; margin-bottom:12px; }
+        @keyframes spin { to { transform:rotate(360deg); } }
 
         /* ================= 视图 1：主页 Dashboard ================= */
         #subjects-screen #view-dashboard {
@@ -898,7 +906,11 @@ const SubjectsModule = (() => {
                 <div class="hero-section">
                     <i class="ph-fill ph-sparkle hero-icon"></i>
                     <h1 class="hero-title">subjects</h1>
-                    <div class="hero-subtitle">data extracted • archive</div>
+                    <div class="hero-subtitle" id="subjects-hero-sub">data extracted • archive</div>
+                    <div class="subjects-mode-toggle" style="margin-top:12px;">
+                      <button class="subjects-mode-btn active" id="btn-mode-check" onclick="SubjectsModule._switchMode('check')">🔍 查角色手机</button>
+                      <button class="subjects-mode-btn" id="btn-mode-reverse" onclick="SubjectsModule._switchMode('reverse')">👁️ 角色查我</button>
+                    </div>
                 </div>
 
                 <div class="grid-container" id="subjects-grid-container">
@@ -1057,6 +1069,78 @@ const SubjectsModule = (() => {
                             <div class="barcode-text">CUSTOMER COPY</div>
                         </div>
                     </div> 
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 视图：角色查我手机 Reverse Dashboard ================= -->
+        <div id="view-reverse-dash" class="page-view">
+            <div class="dash-container">
+                <div class="dash-header">
+                    <div class="dash-btn-back" onclick="SubjectsModule.openArchive()"><i class="ph ph-arrow-left"></i> Return</div>
+                    <div class="dash-status" style="display:flex;align-items:center;gap:8px;">
+                        <span style="color:#D93A3A;font-weight:600;font-size:0.7rem;">⚠ 正在被查看</span>
+                        <img id="rev-dash-char-avatar" style="width:22px;height:22px;border-radius:50%;object-fit:cover;">
+                        <span id="rev-dash-char-name" style="font-weight:600;font-size:0.75rem;"></span>
+                    </div>
+                </div>
+
+                <div class="moodboard">
+                    <svg class="svg-doodles">
+                        <ellipse cx="200" cy="80" rx="90" ry="60" class="stroke-hand" stroke-dasharray="3 6" opacity="0.2"/>
+                        <path d="M 50 150 Q 120 130 180 170" class="stroke-hand" opacity="0.3"/>
+                    </svg>
+
+                    <div class="photo-card">
+                        <div class="tape"></div>
+                        <img src="" alt="User" class="photo-img" id="rev-dash-user-avatar">
+                    </div>
+                    <div class="name-typography">
+                        <div class="name-en" id="rev-dash-name-en">MY DEVICE</div>
+                        <div class="name-cn" id="rev-dash-name-cn">被翻阅中</div>
+                    </div>
+
+                    <!-- 浏览器搜索 -->
+                    <div class="widget-search" id="rev-widget-search">
+                        <i class="ph ph-magnifying-glass" style="font-size:14px;font-weight:bold;"></i>
+                        <div class="search-input" id="rev-dash-search">...</div>
+                        <div style="background:#eee;padding:4px;border-radius:50%;"><i class="ph ph-x" style="font-size:8px;"></i></div>
+                    </div>
+
+                    <!-- 聊天统计 -->
+                    <div class="widget-chat" style="cursor:default;">
+                        <div class="mod-title">Messages <span class="cn">常联系人</span></div>
+                        <div style="position:relative;">
+                            <div class="bubble-bg"></div>
+                            <div class="bubble-main" id="rev-dash-chats" style="font-size:0.65rem;line-height:1.5;">...</div>
+                        </div>
+                    </div>
+
+                    <!-- 屏幕时间 -->
+                    <div class="widget-time" style="cursor:default;">
+                        <div class="mod-title">Screen Time <span class="cn">使用频率</span></div>
+                        <div class="time-big" id="rev-dash-time">0<span>h</span> 0<span>m</span></div>
+                        <svg class="line-chart" viewBox="0 0 100 30" preserveAspectRatio="none"><path d="M0 25 L20 20 L40 28 L60 10 L80 15 L100 5" fill="none" stroke="var(--text-dark)" stroke-width="2"/></svg>
+                    </div>
+
+                    <!-- 备忘录 -->
+                    <div class="widget-notes" style="cursor:default;">
+                        <div class="mod-title" style="justify-content:flex-end;">Notes <span class="cn">备忘录</span></div>
+                        <div class="notes-paper"><div class="handwriting" id="rev-dash-notes">...</div></div>
+                    </div>
+
+                    <!-- 角色吐槽 -->
+                    <div class="widget-cart" style="cursor:default;">
+                        <div class="cart-left">
+                            <div class="mod-title" style="margin-bottom:2px;">Comment <span class="cn">角色吐槽</span></div>
+                            <div class="cart-desc" id="rev-dash-comment" style="font-style:italic;">...</div>
+                        </div>
+                        <div class="cart-divider"></div>
+                        <div class="cart-right">
+                            <div class="stamp-paid" style="background:#D93A3A;color:#fff;">SEEN</div>
+                            <div class="barcode-small">!!!</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2386,6 +2470,18 @@ const data = JSON.parse(cleaned.substring(start, end + 1));
         _switchView('view-care', 'transparent');
     }
 
+    // 🌟 模式切换
+    let _isReverseMode = false;
+    function _switchMode(mode) {
+        _isReverseMode = (mode === 'reverse');
+        document.getElementById('btn-mode-check').classList.toggle('active', !_isReverseMode);
+        document.getElementById('btn-mode-reverse').classList.toggle('active', _isReverseMode);
+        document.getElementById('subjects-hero-sub').innerText = _isReverseMode
+            ? 'character inspects you • reverse'
+            : 'data extracted • archive';
+        _loadRealCharacters();
+    }
+
     // 🌟 加载真实的角色列表
     async function _loadRealCharacters() {
         try {
@@ -2406,18 +2502,23 @@ const data = JSON.parse(cleaned.substring(start, end + 1));
                 else avatarUrl = await Assets.getUrl(`char-avatar-${c.id}`).catch(() => avatarUrl) || avatarUrl;
 
                 const no = String(i + 1).padStart(2, '0');
-                const pinyin = c.name.toUpperCase(); 
+                const pinyin = c.name.toUpperCase();
                 const type = c.mbti ? c.mbti.toLowerCase() : 'ai node';
 
                 const nameLen = c.name.length;
                 const sigSize = nameLen <= 4 ? 34 : nameLen <= 6 ? 26 : nameLen <= 8 ? 20 : 15;
-                const signatureHtml = pinyin 
+                const signatureHtml = pinyin
                     ? `<div class="pinyin-tag">${pinyin}</div><div class="card-signature" style="font-size:${sigSize}px">${c.name}</div>`
                     : `<div class="card-signature" style="font-size:${sigSize}px">${c.name}</div>`;
 
+                const clickAction = _isReverseMode
+                    ? `SubjectsModule.openReverseDashboard('${c.id}')`
+                    : `SubjectsModule.openDashboard('${c.id}')`;
+                const topBar = _isReverseMode ? 'i n s p e c t s  y o u' : 's u b j e c t s i u s e';
+
                 html += `
-                    <div class="sub-card" onclick="SubjectsModule.openDashboard('${c.id}')">
-                        <div class="card-top-bar">s u b j e c t s i u s e</div>
+                    <div class="sub-card" onclick="${clickAction}">
+                        <div class="card-top-bar">${topBar}</div>
                         <div class="img-wrapper">
                             <img src="${avatarUrl}" alt="${c.name}" class="card-img">
                             <div class="card-number">${no}</div>
@@ -2426,7 +2527,7 @@ const data = JSON.parse(cleaned.substring(start, end + 1));
                             ${signatureHtml}
                             <div class="card-footer">
                                 <span class="card-type">${type}</span>
-                                <i class="ph ph-dots-three-vertical dots-icon"></i>
+                                <i class="ph ${_isReverseMode ? 'ph-eye' : 'ph-dots-three-vertical'} dots-icon"></i>
                             </div>
                         </div>
                     </div>
@@ -2436,6 +2537,113 @@ const data = JSON.parse(cleaned.substring(start, end + 1));
         } catch(e) {
             console.error(e);
         }
+    }
+
+    // 🌟 反向查手机：角色检查用户手机（丰富版：AI 生成多模块数据）
+    async function openReverseDashboard(charId) {
+        _activeSubjectId = null;
+        const char = await DB.characters.get(Number(charId)).catch(() => null);
+        if (!char) { Toast.show && Toast.show('角色不存在'); return; }
+
+        let charAvatarUrl = '';
+        try { charAvatarUrl = await Assets.getUrl(`char-avatar-${charId}`).catch(() => '') || ''; } catch(e) {}
+        // 用户头像
+        let userAvatarUrl = '';
+        try {
+            const persona = ((typeof PersonaModule !== 'undefined' ? PersonaModule.getAll() : []) || [])[0];
+            if (persona && persona.imgKey) userAvatarUrl = await Assets.getUrl(persona.imgKey).catch(() => '') || '';
+        } catch(e) {}
+
+        document.getElementById('rev-dash-char-avatar').src = charAvatarUrl || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=100';
+        document.getElementById('rev-dash-char-name').innerText = char.name + ' 正在翻阅…';
+        document.getElementById('rev-dash-user-avatar').src = userAvatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200';
+        document.getElementById('rev-dash-name-en').innerText = 'MY DEVICE';
+        document.getElementById('rev-dash-name-cn').innerText = '被翻阅中';
+        document.getElementById('rev-dash-search').innerText = '...';
+        document.getElementById('rev-dash-chats').innerText = '...';
+        document.getElementById('rev-dash-time').innerHTML = '0<span>h</span> 0<span>m</span>';
+        document.getElementById('rev-dash-notes').innerText = '...';
+        document.getElementById('rev-dash-comment').innerText = '...';
+        _switchView('view-reverse-dash', 'var(--bg-light)');
+
+        // ── 收集真实用户数据 ──
+        let realData = { chatStats: [], totalMsgs: 0, charNames: {}, schedule: '', worldBookCount: 0 };
+        try {
+            const allChars = await DB.characters.getAll().catch(() => []);
+            allChars.forEach(c => { realData.charNames[String(c.id)] = c.name; });
+            const msgs = await DB.messages.getAll().catch(() => []);
+            realData.totalMsgs = msgs.length;
+            const counts = {};
+            msgs.forEach(m => {
+                if (m.role === 'assistant') { const cid = String(m.charId || ''); if (cid) counts[cid] = (counts[cid] || 0) + 1; }
+            });
+            realData.chatStats = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            if (typeof LifestyleModule !== 'undefined') {
+                try { realData.schedule = (await LifestyleModule.getPromptContext(charId) || '').replace(/\n/g, ' ').substring(0, 150); } catch(e) {}
+            }
+            try { const wbs = await DB.worldInfo.getAll().catch(() => []); realData.worldBookCount = wbs.length; } catch(e) {}
+        } catch(e) {}
+
+        // ── AI 生成虚拟手机数据 ──
+        const activeApi = await DB.api.getActive().catch(() => null);
+        const personaName = (typeof PersonaModule !== 'undefined' ? (PersonaModule.getAll() || [])[0]?.name : null) || '用户';
+        const chatSummary = realData.chatStats.map(([cid, n]) => `${realData.charNames[cid] || '?'}(${n}条)`).join('、') || '无';
+        const prompt = `你是一个手机数据生成器。用户 "${personaName}" 正在被角色 "${char.name}"（人设：${(char.persona || '无').substring(0, 300)}）偷偷查看手机。
+
+以下是 "${personaName}" 的真实使用数据：
+- 总消息数：${realData.totalMsgs}
+- 常联系人：${chatSummary}
+- 日程：${realData.schedule || '无'}
+- 世界书条目：${realData.worldBookCount}
+
+请根据以上真实数据，生成一份 "${personaName}" 的手机内容摘要。用 JSON 格式返回，不要任何额外文字：
+{
+  "search": "最近一条浏览器搜索记录（中文，8-15字）",
+  "chats": "常联系人和频率的自然语言描述（中文，20-40字，基于上面的常联系人数据）",
+  "screenTime": "屏幕使用时长描述，如'3h 12m'或'5h 48m'（基于消息数合理推测）",
+  "notes": "一条备忘录内容（中文，10-20字，可能是提醒或随手记）",
+  "comment": "${char.name}看到这些内容后心里的第一反应（用${char.name}的第一人称，符合其性格，中文，15-30字）"
+}`;
+
+        try {
+            if (activeApi) {
+                const response = await ApiHelper.chatCompletion(activeApi, [{ role: 'user', content: prompt }]);
+                const json = response.replace(/```json|```/g, '').trim();
+                const start = json.indexOf('{'), end = json.lastIndexOf('}');
+                if (start >= 0 && end > start) {
+                    const data = JSON.parse(json.substring(start, end + 1));
+                    document.getElementById('rev-dash-search').innerText = data.search || '无记录';
+                    document.getElementById('rev-dash-chats').innerText = data.chats || chatSummary;
+                    const stMatch = (data.screenTime || '').match(/(\d+)[hH].*?(\d+)[mM]/);
+                    if (stMatch) {
+                        document.getElementById('rev-dash-time').innerHTML = `${stMatch[1]}<span>h</span> ${stMatch[2]}<span>m</span>`;
+                    } else {
+                        document.getElementById('rev-dash-time').innerHTML = (data.screenTime || '2h 30m').replace(/h/,'<span>h</span> ').replace(/m/,'<span>m</span>');
+                    }
+                    document.getElementById('rev-dash-notes').innerText = data.notes || '今天也要开心';
+                    document.getElementById('rev-dash-comment').innerText = `「${data.comment || '...'}」`;
+                    // 更新角色名
+                    document.getElementById('rev-dash-name-cn').innerText = `${char.name} 正在看`;
+                } else {
+                    _fillFallbackData(realData, chatSummary);
+                }
+            } else {
+                _fillFallbackData(realData, chatSummary);
+            }
+        } catch(e) {
+            console.warn('[ReverseDash] AI gen failed, using fallback', e);
+            _fillFallbackData(realData, chatSummary);
+        }
+    }
+
+    function _fillFallbackData(realData, chatSummary) {
+        document.getElementById('rev-dash-search').innerText = '今天的天气怎么样';
+        document.getElementById('rev-dash-chats').innerText = chatSummary || '暂无聊天记录';
+        const h = Math.floor(realData.totalMsgs / 50) || 1;
+        const m = Math.floor(Math.random() * 60);
+        document.getElementById('rev-dash-time').innerHTML = `${h}<span>h</span> ${m}<span>m</span>`;
+        document.getElementById('rev-dash-notes').innerText = '记得多喝水';
+        document.getElementById('rev-dash-comment').innerText = '「原来你每天都在聊这些啊…」';
     }
 
     // ============================================================
@@ -2458,14 +2666,15 @@ const data = JSON.parse(cleaned.substring(start, end + 1));
 
     return {
         open, close,
-        openArchive, openDashboard, openReceipt, closeReceipt, 
+        openArchive, openDashboard, openReceipt, closeReceipt,
         openBrowserLogs, openModal, closeModal,
         openMusic, playTrack,
         openInterceptList, openInterceptDetail, toggleDecode,
-        openTimeFragments, openNotes, toggleNotesDict, 
+        openTimeFragments, openNotes, toggleNotesDict,
         openRecommend, toggleRecommendCard,
         openMailApp, openMailDetail, closeMailDetail,
-        openCare,refreshData
+        openCare,refreshData,
+        _switchMode, openReverseDashboard
     };
 
 })();
