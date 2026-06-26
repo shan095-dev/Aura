@@ -2331,14 +2331,29 @@ if (fwLabelNum) {
     return null;
   }
 
+  async function searchCloud(keyword, limit) {
+    limit = limit || 15;
+    try {
+      const data = await _api(`/search?keywords=${encodeURIComponent(keyword)}&limit=${limit}`);
+      return (data.result?.songs || []).map(s => ({
+        id: s.id,
+        title: s.name,
+        artist: (s.artists || []).map(a => a.name).join(' / ') || '',
+        cover: (s.album?.picUrl) || (s.album?.artist?.img1v1Url) || '',
+        album: s.album?.name || '',
+        isCloud: true
+      }));
+    } catch(e) { return []; }
+  }
+
   function getCurrentState() {
     const song = (_currentIdx >= 0 && _currentPlaylist.length > _currentIdx) ? _currentPlaylist[_currentIdx] : null;
     return { isPlaying: _isPlaying, song: song, lyrics: _lyrics ||[] };
   }
 
-  return { 
-    open, close, _navTo, 
+  return {
+    open, close, _navTo,
     // 暴露给外部的接口
-    silentInit, getExposedPlaylists, getExposedSongs, playExposedSong, searchAndPlayCloud, getCurrentState 
+    silentInit, getExposedPlaylists, getExposedSongs, playExposedSong, searchAndPlayCloud, searchCloud, getCurrentState
   };
 })();

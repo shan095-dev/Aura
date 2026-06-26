@@ -1082,14 +1082,20 @@ const ForumModule = (() => {
         if (!post) return;
 
         const activeApi = await DB.api.getActive().catch(()=>null);
-        if (!activeApi) return; 
+        if (!activeApi) return;
+
+        let imgDesc = '';
+        if (post.type === 'event' && post.imageKey) {
+            imgDesc = await _getImageDesc(post.imageKey, activeApi);
+        }
 
         const chars = await DB.characters.getAll().catch(()=>[]);
         const charProfiles = chars.map(c => `[ID:${c.id}] 姓名:${c.name} | 人设:${c.persona}`).join('\n');
 
         const isAnon = post.type === 'treehole';
-        const postAuthorText = isAnon ? "匿名者(CLASSIFIED)" : `实名用户(${post.author})`;
-        const contentText = post.type === 'event' ? `【标题】${post.title}\n【正文】${post.desc}` : `【内容】${post.content}`;
+        var postAuthorChar = isAnon ? null : chars.find(function(c) { return c.name === post.author; });
+        var postAuthorText = isAnon ? "匿名者(CLASSIFIED)" : (postAuthorChar ? '熟人角色：' + postAuthorChar.name : '实名用户(' + post.author + ')');
+        var contentText = post.type === 'event' ? '【标题】' + post.title + '\n【正文】' + post.desc : '【内容】' + post.content;
 
         const visibleComments = post.comments.filter(c => c.timestamp <= Date.now());
         const contextStr = visibleComments.map(c => `${c.author}: ${c.text}`).join('\n');
@@ -1098,7 +1104,7 @@ const ForumModule = (() => {
 【背景信息】：
 原帖作者：${postAuthorText}
 原帖内容：\n${contentText}
-
+${imgDesc ? `【附带图片画面描述】：${imgDesc}\n` : ''}
 【当前评论区历史】：
 ${contextStr || '暂无'}
 
@@ -1122,8 +1128,9 @@ ${charProfiles || '无'}
 【你的推演任务】：
 1. 必须生成 ${replyToName ? '1条被回复者的回应，可外加 1~2 条吃瓜群众的跟帖' : '1~3 条群像跟帖（熟人或路人均可，视风向而定）'}。
 2. 匿名帖(树洞)中大家都不知道玩家真实身份；实名帖中，熟人能够认出玩家。
-3. 文风：极度逼真、口语化、年轻人网感，拒绝AI长篇大论说教，单条评论尽量简短。
-4. 【重点】如果是回复玩家，请在文本里加上 "回复 @${userComment.author}: " 作为前缀，或者在话语中体现出对玩家的回应。
+3. 如果原帖是某个角色发的，其他角色要像真实朋友圈一样去互动（吐槽/关心/调侃）。
+4. 文风：极度逼真、口语化、年轻人网感，拒绝AI长篇大论说教，单条评论尽量简短。
+5. 【重点】如果是回复玩家，请在文本里加上 "回复 @${userComment.author}: " 作为前缀，或者在话语中体现出对玩家的回应。
 
 【返回格式】（必须严格为 JSON，绝不输出其他废话）：
 {
@@ -1233,8 +1240,19 @@ ${charProfiles || '无'}
 3. 其他角色评论时，只能就事论事，表现出吃瓜、共情或吐槽的路人态度。`;
             }
         } else {
-            authorText = post.type === 'event' ? "SYSTEM_NEWS (系统大事件通报)" : `实名用户(${post.author})`;
-            anonContextRule = `【实名动态】：这是实名发布的内容，所有人均知晓发帖人是谁。如果是熟人，请正常互动。`;
+            // 判断发帖人是否是熟人角色
+            var postAuthorChar = chars.find(function(c) { return c.name === post.author; });
+            if (postAuthorChar) {
+              authorText = '熟人角色：' + postAuthorChar.name + ' (ID:' + postAuthorChar.id + ')';
+              anonContextRule = '【角色发帖】：这是熟人 ' + postAuthorChar.name + ' 发的动态！\n' +
+                '1. 其他熟人角色应该像真实朋友圈一样互动：点赞、吐槽、关心、调侃皆可。\n' +
+                '2. 熟人之间可以直接 @对方名字 回复，像真实朋友圈评论一样。\n' +
+                '3. ' + postAuthorChar.name + ' 本人【绝对不要】评论自己的帖子（输出 [IGNORE]）。\n' +
+                '4. 路人 NPC 也可以参与评论。';
+            } else {
+              authorText = post.type === 'event' ? "SYSTEM_NEWS (系统大事件通报)" : '实名用户(' + post.author + ')';
+              anonContextRule = '【实名动态】：这是实名发布的内容，所有人均知晓发帖人是谁。如果是熟人，请正常互动。';
+            }
         }
 
         const contentText = post.type === 'event' ? `【标题】${post.title}\n【正文】${post.desc}` : `【内容】${post.content}`;

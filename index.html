@@ -16,6 +16,7 @@
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="music.js"></script>
+<script src="mcp.js"></script>
 <script src="chill-meet-bundle.js"></script>
 <script src="diary.js"></script>
 <script src="forum.js"></script>
@@ -1239,6 +1240,17 @@
             <button class="btn-outline" style="margin-bottom:0; border-style:dashed; flex:1; padding:12px 0; font-size:0.7rem; color:#D32F2F; border-color:rgba(211,47,47,0.4);" onclick="AgentModule.forceForumPost('event')">测事件</button>
           </div>
        </div>
+       <!-- MCP Server 管理 -->
+       <div class="form-section">
+         <div class="section-title">MCP 工具服务器 / MCP Servers</div>
+         <div style="font-size:0.65rem;color:#888;margin-bottom:10px;">连接 MCP Server 让 AI 角色能调用真实工具（搜索、浏览器、文件等）</div>
+         <div id="mcp-server-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;"></div>
+         <div style="display:flex;gap:6px;">
+           <input type="text" id="mcp-server-name" placeholder="名称" style="flex:1;padding:8px 12px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.12);font-size:0.75rem;">
+           <input type="text" id="mcp-server-url" placeholder="http://localhost:3000/mcp" style="flex:2;padding:8px 12px;border-radius:8px;border:0.5px solid rgba(0,0,0,0.12);font-size:0.75rem;">
+           <button class="btn-outline" style="margin:0;padding:8px 16px;font-size:0.7rem;" onclick="McpModule.addServer(document.getElementById('mcp-server-name').value.trim(),document.getElementById('mcp-server-url').value.trim()).then(function(){renderMcpUI()})">添加</button>
+         </div>
+       </div>
       </div>
     </div>
   </div><!-- #settings-screen -->
@@ -1903,13 +1915,12 @@
       <div class="cv-footer-base">
         <button class="cv-func-btn" id="cv-btn-plus"><i class="ph-thin ph-plus cv-plus-icon"></i></button>
         <button class="cv-func-btn" id="cv-btn-emote" title="表情包" onclick="ConvModule._toggleChatEmotePicker(event)"><i class="ph-thin ph-smiley"></i></button>
+        <button class="cv-func-btn" id="cv-btn-music" title="一起听" onclick="ListenTogether.openCrate()"><i class="ph-thin ph-music-notes"></i></button>
         <div class="cv-input-area">
           <textarea id="cv-input" rows="1" placeholder="Type a message..."></textarea>
         </div>
-        <div class="cv-action-capsule">
-          <button class="cv-btn-user" id="cv-btn-user" title="上屏不触发AI"><i class="ph ph-arrow-up"></i></button>
-          <button class="cv-btn-ai"   id="cv-btn-ai"   title="触发AI回复"><i class="ph-fill ph-sparkle"></i></button>
-        </div>
+        <button class="cv-func-btn" id="cv-btn-user" title="上屏不触发AI"><i class="ph ph-arrow-up"></i></button>
+        <button class="cv-func-btn" id="cv-btn-ai"   title="触发AI回复"><i class="ph-fill ph-sparkle"></i></button>
       </div>
     </footer>
 
@@ -3263,6 +3274,30 @@
                   <div class="wb-thumb"></div>
                 </label>
               </div>
+              <!-- 桃宝注入开关 -->
+              <div class="wb-scope-item" style="margin-top: 12px;">
+                <div>
+                  <div class="wb-scope-label">桃宝注入 TAOBAO</div>
+                  <div class="wb-scope-sub">AI 生成桃宝商品时参考此词条，创作符合世界观的商品</div>
+                </div>
+                <label class="wb-toggle">
+                  <input type="checkbox" id="wb-scope-taobao">
+                  <div class="wb-track"></div>
+                  <div class="wb-thumb"></div>
+                </label>
+              </div>
+              <!-- 饿了么注入开关 -->
+              <div class="wb-scope-item" style="margin-top: 12px;">
+                <div>
+                  <div class="wb-scope-label">饿了么注入 ELEME</div>
+                  <div class="wb-scope-sub">AI 生成饿了么美食时参考此词条，创作符合世界观的食品</div>
+                </div>
+                <label class="wb-toggle">
+                  <input type="checkbox" id="wb-scope-eleme">
+                  <div class="wb-track"></div>
+                  <div class="wb-thumb"></div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -3719,6 +3754,22 @@
 </div>
       
 </div><!-- .device -->
+
+<!-- 🎵 一起听选歌弹窗（移到 .device 外，避免 transform 截断 fixed 定位）-->
+<div id="cv-music-modal" onclick="ListenTogether.closeCrate()">
+  <div class="cv-music-panel" onclick="event.stopPropagation()">
+    <div class="cv-music-title">🎵 一起听 · 选一首歌</div>
+    <div class="cv-music-search">
+      <input type="text" id="cv-music-search-input" placeholder="搜索网易云歌曲，留空浏览本地歌单..." onkeydown="if(event.key==='Enter')ListenTogether.search()">
+      <button onclick="ListenTogether.search()">搜索</button>
+    </div>
+    <div class="cv-music-list" id="cv-music-list">
+      <div style="text-align:center;color:rgba(255,255,255,0.3);padding:20px;">输入关键词搜索，或点击下方加载歌单</div>
+    </div>
+    <button class="cv-music-close" onclick="ListenTogether.closeCrate()">关闭</button>
+  </div>
+</div>
+
   <script src="app.js?v=2"></script>
 
 <!-- ── Global FAB 悬浮球 ── -->
@@ -3794,6 +3845,23 @@ var em=document.getElementById('icon-eleme');if(em)em.addEventListener('click',f
 });
 try{TaobaoModule.init();}catch(e){}
 try{ElemeModule.init();}catch(e){}
+
+// MCP 设置 UI 渲染
+function renderMcpUI(){
+  var list=document.getElementById('mcp-server-list');
+  if(!list)return;
+  var servers=typeof McpModule!=='undefined'?McpModule.listServers():[];
+  if(!servers.length){list.innerHTML='<div style="color:#aaa;font-size:0.7rem;text-align:center;padding:10px;">暂无 MCP Server</div>';return;}
+  list.innerHTML=servers.map(function(s){
+    var status=s.connected?'<span style="color:#4caf50;">● 已连接</span>':'<span style="color:#f44336;">● 未连接</span>';
+    var toolCount=s.tools?s.tools.length:0;
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(0,0,0,0.02);border-radius:10px;border:0.5px solid rgba(0,0,0,0.05);">'
+      +'<div><b style="font-size:0.78rem;">'+s.name+'</b> <span style="font-size:0.6rem;color:#888;">'+s.url+'</span><br><span style="font-size:0.6rem;">'+status+' · '+toolCount+' 工具</span></div>'
+      +'<button onclick="McpModule.removeServer(\''+s.id+'\');renderMcpUI()" style="border:none;background:none;color:#f44336;cursor:pointer;font-size:0.8rem;">×</button>'
+      +'</div>';
+  }).join('');
+}
+setTimeout(renderMcpUI,2000);
 </script>
 
 <!-- ==================== 桃宝 ==================== -->
@@ -3907,6 +3975,42 @@ try{ElemeModule.init();}catch(e){}
     </div>
   </div>
   <div class="em-modal-bg" id="em-char-picker" style="display:none" onclick="ElemeModule._cancelPicker()"><div onclick="event.stopPropagation()" style="padding:20px"></div></div>
+</div>
+
+<!-- ==================== 悬浮一起听播放器 ==================== -->
+<div id="lt-floating-player">
+  <!-- 双头像行 -->
+  <div class="lt-avatars-bar" id="lt-avatars-bar">
+    <img class="lt-avatar" id="lt-avatar-char" src="" alt="角色">
+    <div class="lt-together-line"></div>
+    <span class="lt-together-label">🎵 一起听</span>
+    <div class="lt-together-line"></div>
+    <img class="lt-avatar" id="lt-avatar-user" src="" alt="我">
+  </div>
+  <!-- 播放器主体 -->
+  <div class="lt-player-body collapsed" id="lt-player-body">
+    <!-- 折叠态 -->
+    <div class="lt-collapsed-view" id="lt-collapsed-view">
+      <div class="lt-mini-disc" id="lt-mini-disc"></div>
+    </div>
+    <!-- 展开态 -->
+    <div class="lt-expanded-view" id="lt-expanded-view">
+      <div class="lt-track-info">
+        <div class="lt-track-title" id="lt-track-title">未播放</div>
+        <div class="lt-track-artist" id="lt-track-artist">—</div>
+      </div>
+      <div class="lt-progress-wrap" id="lt-progress-wrap">
+        <div class="lt-progress-fill" id="lt-progress-fill"></div>
+      </div>
+      <div class="lt-controls">
+        <button class="lt-ctrl-btn" onclick="ListenTogether.toggleMode()" title="播放模式"><i class="ph ph-repeat" id="lt-icon-mode"></i></button>
+        <button class="lt-ctrl-btn" onclick="ListenTogether.prev()" title="上一首"><i class="ph ph-skip-back"></i></button>
+        <button class="lt-ctrl-btn lt-play-btn" onclick="ListenTogether.toggle()" title="播放/暂停"><i class="ph ph-play" id="lt-icon-play"></i></button>
+        <button class="lt-ctrl-btn" onclick="ListenTogether.next()" title="下一首"><i class="ph ph-skip-forward"></i></button>
+        <button class="lt-ctrl-btn" onclick="ListenTogether.openCrate()" title="选歌"><i class="ph ph-list"></i></button>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>
