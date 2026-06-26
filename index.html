@@ -28,6 +28,7 @@
 <script src="subjects.js"></script>
 <script src="editorial.js"></script>
 <script src="couple.js"></script>
+<script src="game.js"></script>
 <script src="group-story.js"></script>
 <script src="story-status.js"></script>
 <script src="updater.js"></script>
@@ -387,7 +388,7 @@
     <div class="dock-wrapper" id="dock-wrapper">
       <div class="dock">
         <div class="dock-item active-dot" onclick="toggleDock(event)"><i class="ph-fill ph-house"></i></div>
-        <div class="dock-item" onclick="Router.go('forum')"><i class="ph-fill ph-magnifying-glass"></i></div>
+        <div class="dock-item" id="dock-forum-btn" onclick="window.openForum()"><i class="ph-fill ph-magnifying-glass"></i></div>
         <div class="dock-item" onclick="Router.go('chat')"><i class="ph-fill ph-chat-circle-dots"></i></div>
         <div class="dock-item" id="dock-character"><i class="ph-fill ph-user"></i></div>
       </div>
@@ -1894,6 +1895,16 @@
               <div class="cv-pc-top"><span class="cv-pc-idx">N°.07</span><i class="ph-thin ph-map-pin"></i></div>
               <div class="cv-pc-bottom"><span class="cv-pc-en">Location</span><span class="cv-pc-cn">地理坐标</span></div>
             </div>
+            <div class="cv-panel-card cv-pc-wide" id="cv-btn-listen-together">
+              <div class="cv-pc-top"><span class="cv-pc-idx">N°.08</span><i class="ph-thin ph-music-notes"></i></div>
+              <div class="cv-pc-bottom"><span class="cv-pc-en">Listen Together</span><span class="cv-pc-cn">一起听</span></div>
+              <i class="ph-fill ph-vinyl-record cv-card-wm"></i>
+            </div>
+            <div class="cv-panel-card cv-pc-wide" id="cv-btn-mini-game">
+              <div class="cv-pc-top"><span class="cv-pc-idx">N°.09</span><i class="ph-thin ph-game-controller"></i></div>
+              <div class="cv-pc-bottom"><span class="cv-pc-en">Mini Games</span><span class="cv-pc-cn">小游戏</span></div>
+              <i class="ph-fill ph-puzzle-piece cv-card-wm"></i>
+            </div>
           </div>
 
         </div>
@@ -1915,7 +1926,6 @@
       <div class="cv-footer-base">
         <button class="cv-func-btn" id="cv-btn-plus"><i class="ph-thin ph-plus cv-plus-icon"></i></button>
         <button class="cv-func-btn" id="cv-btn-emote" title="表情包" onclick="ConvModule._toggleChatEmotePicker(event)"><i class="ph-thin ph-smiley"></i></button>
-        <button class="cv-func-btn" id="cv-btn-music" title="一起听" onclick="ListenTogether.openCrate()"><i class="ph-thin ph-music-notes"></i></button>
         <div class="cv-input-area">
           <textarea id="cv-input" rows="1" placeholder="Type a message..."></textarea>
         </div>

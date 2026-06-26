@@ -469,7 +469,14 @@ const MusicModule = (() => {
                 <div class="ms-dropdown-item" id="ms-btn-go-ui">
                   <i class="ph ph-palette"></i> 皮肤
                 </div>
+                <div class="ms-dropdown-item" id="ms-btn-export-pl">
+                  <i class="ph ph-download-simple"></i> 导出歌单
+                </div>
+                <div class="ms-dropdown-item" id="ms-btn-import-pl">
+                  <i class="ph ph-upload-simple"></i> 导入歌单
+                </div>
               </div>
+              <input type="file" id="ms-file-import-pl" accept=".json" style="display:none">
             </div>
 
             <!-- BACK 按钮 -->
@@ -1963,6 +1970,106 @@ if (fwLabelNum) {
         if (activeCard) activeCard.classList.add('active');
       }
       _navTo('ms-ui-view');
+    };
+
+    // ── 导出歌单 ──
+    _$('ms-btn-export-pl').onclick = async () => {
+      if(dropMenu) dropMenu.classList.remove('active');
+      try {
+        await _ensureDB();
+        const playlists = await MusicDB.getAll('playlists');
+        if (!playlists || !playlists.length) {
+          if (typeof Toast !== 'undefined') Toast.show('没有歌单可导出');
+          return;
+        }
+        // 为每首歌附上歌词文本
+        const exportData = await Promise.all(playlists.map(async pl => {
+          const songs = await Promise.all((pl.songs || []).map(async s => {
+            const song = { id: s.id, title: s.title, artist: s.artist, cover: s.cover, isUrl: !!s.isUrl, hasLrc: !!s.hasLrc };
+            if (s.isUrl && s.url) song.url = s.url;
+            if (s.hasLrc) {
+              try {
+                const lrcData = await MusicDB.get('lyrics', s.lrcId || `lrc_${s.id}`);
+                if (lrcData?.text) song.lrcText = lrcData.text;
+              } catch(e) {}
+            }
+            return song;
+          }));
+          return { id: pl.id, name: pl.name, titleEn: pl.titleEn, cover: pl.cover, count: pl.count, isLocal: pl.isLocal, songs };
+        }));
+        const json = JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), playlists: exportData }, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'aura-playlists-' + new Date().toISOString().slice(0,10) + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        if (typeof Toast !== 'undefined') Toast.show(`已导出 ${exportData.length} 个歌单`);
+      } catch(e) {
+        console.error('[MusicModule] 导出失败:', e);
+        if (typeof Toast !== 'undefined') Toast.show('导出失败');
+      }
+    };
+
+    // ── 导入歌单 ──
+    _$('ms-btn-import-pl').onclick = () => {
+      if(dropMenu) dropMenu.classList.remove('active');
+      _$('ms-file-import-pl').click();
+    };
+
+    _$('ms-file-import-pl').onchange = async e => {
+      const file = e.target.files[0];
+      e.target.value = '';
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!data.playlists || !Array.isArray(data.playlists)) {
+          if (typeof Toast !== 'undefined') Toast.show('无效的歌单文件');
+          return;
+        }
+        await _ensureDB();
+        let importedCount = 0;
+        for (const pl of data.playlists) {
+          // 确保 ID 不冲突
+          const existing = await MusicDB.get('playlists', pl.id);
+          const newPl = {
+            id: existing ? 'imp_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) : pl.id,
+            name: pl.name || 'Imported',
+            titleEn: pl.titleEn || 'IMPORTED',
+            cover: pl.cover || _DEFAULT_COVER,
+            count: (pl.songs || []).length,
+            songs: (pl.songs || []).map(s => ({
+              id: s.id || 'imp_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+              title: s.title || 'Unknown',
+              artist: s.artist || (s.isUrl ? 'URL' : 'Local'),
+              cover: s.cover || pl.cover || _DEFAULT_COVER,
+              url: s.url || undefined,
+              hasLrc: !!s.lrcText,
+              lrcId: s.lrcText ? ('lrc_' + s.id) : null,
+              isCloud: false,
+              isUrl: !!s.isUrl
+            })),
+            isLocal: true
+          };
+          await MusicDB.put('playlists', newPl);
+          // 导入歌词
+          for (const s of (pl.songs || [])) {
+            if (s.lrcText) {
+              try { await MusicDB.put('lyrics', { id: 'lrc_' + s.id, songId: s.id, text: s.lrcText }); } catch(e) {}
+            }
+          }
+          importedCount++;
+        }
+        // 刷新
+        await _loadPlaylistsFromDB();
+        _renderLocalPlaylists();
+        if (typeof Toast !== 'undefined') Toast.show(`已导入 ${importedCount} 个歌单`);
+      } catch(e) {
+        console.error('[MusicModule] 导入失败:', e);
+        if (typeof Toast !== 'undefined') Toast.show('导入失败，请检查文件格式');
+      }
     };
 
     _$('ms-btn-ui-back').onclick = _navBack;

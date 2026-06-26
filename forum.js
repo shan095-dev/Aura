@@ -851,10 +851,10 @@ const ForumModule = (() => {
         const activeApi = await DB.api.getActive().catch(()=>null);
         if (!activeApi) return;
         const chars = await DB.characters.getAll().catch(()=>[]);
-        const prompt = \`[系统任务：朋友圈点赞后的连锁反应]
-帖子「\${post.content || post.title || post.desc}」刚刚被 \${_forumProfile.name} 点赞了。
+        const prompt = `[系统任务：朋友圈点赞后的连锁反应]
+帖子「${post.content || post.title || post.desc}」刚刚被 ${_forumProfile.name} 点赞了。
 请 1~2 个熟人角色（如果有的话）也来点赞，并在评论区留下简短互动。
-【返回格式】JSON: { "likes": ["角色名1"], "comments": [{"author":"名字","text":"评论"}] }\`;
+【返回格式】JSON: { "likes": ["角色名1"], "comments": [{"author":"名字","text":"评论"}] }`;
         try {
             const response = await ApiHelper.chatCompletion(activeApi,[{ role: 'user', content: prompt }]);
             const cleaned = response.replace(/\`\`\`json|\`\`\`/g, '').trim();

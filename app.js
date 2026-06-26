@@ -3980,12 +3980,12 @@ const CharacterModule = (() => {
     const qaEl = document.getElementById('char-detail-qa');
     qaEl.innerHTML = '';
     (ai.qna || []).forEach(item => {
-      qaEl.innerHTML += `
+      qaEl.insertAdjacentHTML('beforeend', `
         <div class="char-qa">
           <div class="char-qa-q">${item.q}</div>
           <div class="char-qa-a">${item.a}</div>
         </div>
-      `;
+      `);
     });
 
     showView('detail');
@@ -5234,7 +5234,7 @@ const VaultApp = (() => {
       const isReverse = index % 2 !== 0;
       const shortName = frag.charName.substring(0, 3);
       const delay = (index * 0.08).toFixed(2);
-      listEl.innerHTML += `
+      listEl.insertAdjacentHTML('beforeend', `
         <div class="vt-frag-item ${isReverse ? 'reverse' : ''}" style="animation-delay:${delay}s">
           <div class="vt-tag">
             <div class="vt-tag-foil"></div>
@@ -5248,7 +5248,7 @@ const VaultApp = (() => {
               <button class="vt-c-del" onclick="VaultApp.removeFragment('${frag.id}')" title="移除"><i class="ph ph-x"></i></button>
             </div>
           </div>
-        </div>`;
+        </div>`);
     });
   }
 
@@ -5423,7 +5423,7 @@ const WalletApp = (() => {
     wallet.transactions.forEach(tx => {
       const statusClass = tx.status === 'SETTLED' ? 'settled' : 'pending';
       const amountClass = tx.type === 'in' ? 'in' : 'out';
-      listEl.innerHTML += `
+      listEl.insertAdjacentHTML('beforeend', `
         <div class="wl-tx-item">
           <div class="wl-tx-top">
             <span class="wl-tx-id">${tx.txId}</span>
@@ -5443,7 +5443,7 @@ const WalletApp = (() => {
             <span class="wl-tx-channel">CH: ${tx.channel}</span>
           </div>
         </div>
-      `;
+      `);
     });
   }
 
@@ -9983,7 +9983,6 @@ const ConvModule = (() => {
     const btnUser = document.getElementById('cv-btn-user');
     const btnAi   = document.getElementById('cv-btn-ai');
     const btnPlus  = document.getElementById('cv-btn-plus');
-    const btnMusic = document.getElementById('cv-btn-music');
     const footer   = document.getElementById('cv-footer');
     const apiNode  = document.getElementById('cv-btn-api-node');
 
@@ -10031,26 +10030,30 @@ const ConvModule = (() => {
     input.addEventListener('click', () => { forceScrollToBottom(); if(NotificationModule.requestPermission) NotificationModule.requestPermission(); });
 
  // 输入框自适应 & 表情包【智能模糊联想】
+    var _inputRaf = 0;
     input.addEventListener('input', function() {
-      // 1. 自适应高度与最大高度限制，防止移动端键盘剪贴板粘贴导致频繁重绘卡死
-      const oldHeight = this.style.height;
-      this.style.height = '44px';
-      
-      if (this.scrollHeight > 120) {
-          this.style.height = '120px';
-          this.style.overflowY = 'auto';
-      } else if (this.scrollHeight > 44) {
-          this.style.height = this.scrollHeight + 'px';
-          this.style.overflowY = 'hidden';
-      } else {
-          this.style.height = '44px';
-          this.style.overflowY = 'hidden';
-      }
-      
-      if (!this.value) {
-          this.style.height = '44px';
-          this.style.overflowY = 'hidden';
-      }
+      // 1. 自适应高度 — 用 rAF 批量执行避免每次按键触发强制同步布局
+      var self = this;
+      if (_inputRaf) cancelAnimationFrame(_inputRaf);
+      _inputRaf = requestAnimationFrame(function() {
+        self.style.height = '44px';
+        var sh = self.scrollHeight;
+        if (sh > 120) {
+          self.style.height = '120px';
+          self.style.overflowY = 'auto';
+        } else if (sh > 44) {
+          self.style.height = sh + 'px';
+          self.style.overflowY = 'hidden';
+        } else {
+          self.style.height = '44px';
+          self.style.overflowY = 'hidden';
+        }
+        if (!self.value) {
+          self.style.height = '44px';
+          self.style.overflowY = 'hidden';
+        }
+        _inputRaf = 0;
+      });
       
       const heightChanged = (oldHeight !== this.style.height);
 
@@ -10177,9 +10180,33 @@ const ConvModule = (() => {
       btnLocation._boundLocBtn = true;
       btnLocation.addEventListener('click', e => {
         e.stopPropagation();
-        if (_isGroup) return; // 🌟 群聊中直接拦截
+        if (_isGroup) return;
         footer.classList.remove('expanded');
         setTimeout(() => ConvModule.openLocModal(), 200);
+      });
+    }
+
+    // 🌟 一起听 放入加号面板
+    const btnListenTogether = document.getElementById('cv-btn-listen-together');
+    if (btnListenTogether && !btnListenTogether._boundListenBtn) {
+      btnListenTogether._boundListenBtn = true;
+      btnListenTogether.addEventListener('click', e => {
+        e.stopPropagation();
+        footer.classList.remove('expanded');
+        if (typeof ListenTogether !== 'undefined') ListenTogether.openCrate();
+      });
+    }
+
+    // 🌟 小游戏 放入加号面板
+    const btnMiniGame = document.getElementById('cv-btn-mini-game');
+    if (btnMiniGame && !btnMiniGame._boundGameBtn) {
+      btnMiniGame._boundGameBtn = true;
+      btnMiniGame.addEventListener('click', e => {
+        e.stopPropagation();
+        footer.classList.remove('expanded');
+        const chatId = document.getElementById('conv-screen')?.dataset?.cvCharId;
+        const isGroup = chatId ? chatId.startsWith('gc_') : false;
+        if (typeof GameModule !== 'undefined') GameModule.open({ chatId, isGroup });
       });
     }
 
@@ -10577,7 +10604,7 @@ const ConvModule = (() => {
       });
       
       document.getElementById('cv-call-record-overlay').classList.add('active');
-      setTimeout(() => { listEl.scrollTop = 0; }, 50);
+      requestAnimationFrame(() => { listEl.scrollTop = 0; });
 
     } catch (e) {
       console.error(e);
@@ -12544,7 +12571,7 @@ function _renderImgPreviewBar() {
 
       console.groupCollapsed(`[AI Payload] ✦ 群聊【${gcMeta.name}】完整上下文 ↴`);
       console.log('%c【System Prompt】', 'color:#9c2b2b;font-weight:bold;', '\n' + systemPrompt);
-      console.log('%c【Messages】', 'color:#2d6a4a;font-weight:bold;', JSON.parse(JSON.stringify(apiMessages)));
+      console.log('%c【Messages】', 'color:#2d6a4a;font-weight:bold;', (typeof structuredClone!=='undefined'?structuredClone(apiMessages):apiMessages));
       console.groupEnd();
 
     if (typeof KeepAliveModule !== 'undefined') KeepAliveModule.start(); // 开启保活
@@ -13139,7 +13166,7 @@ function _renderImgPreviewBar() {
       // 🖨️ [DEBUG] 华丽折叠版：打印完整上下文与系统提示词
       console.groupCollapsed(`[AI Payload] ✦ 发送给【${sessionCharName}】的完整上下文 ↴`);
       console.log("%c【System Prompt 系统指令】", "color:#9c2b2b; font-weight:bold;", "\n" + systemPrompt);
-      console.log("%c【History Messages 历史消息】", "color:#2d6a4a; font-weight:bold;", JSON.parse(JSON.stringify(apiMessages)));
+      console.log("%c【History Messages 历史消息】", "color:#2d6a4a; font-weight:bold;", (typeof structuredClone!=='undefined'?structuredClone(apiMessages):apiMessages));
       console.groupEnd();
 
     // ===========================
@@ -20477,7 +20504,7 @@ const storyMsgs = rawStoryMsgs;
 
             console.groupCollapsed(`[StoryChat] 🎬 发送给导演的剧本指令`);
             console.log("%c【System Prompt】", "color:#9c2b2b; font-weight:bold;", "\n" + systemPrompt);
-            console.log("%c【Messages】", "color:#2d6a4a; font-weight:bold;", JSON.parse(JSON.stringify(apiMessages)));
+            console.log("%c【Messages】", "color:#2d6a4a; font-weight:bold;", (typeof structuredClone!=='undefined'?structuredClone(apiMessages):apiMessages));
             console.groupEnd();
 
            const response = await ApiHelper.chatCompletion(activeApi,[
@@ -20611,7 +20638,7 @@ const storyMsgs = rawStoryMsgs;
             
             console.groupCollapsed(`[StoryChat] 🎬 发送给导演的剧本指令`);
             console.log("%c【System Prompt】", "color:#9c2b2b; font-weight:bold;", "\n" + systemPrompt);
-            console.log("%c【Messages】", "color:#2d6a4a; font-weight:bold;", JSON.parse(JSON.stringify(apiMessages)));
+            console.log("%c【Messages】", "color:#2d6a4a; font-weight:bold;", (typeof structuredClone!=='undefined'?structuredClone(apiMessages):apiMessages));
             console.groupEnd();
 
            const response = await ApiHelper.chatCompletion(activeApi,[
@@ -20746,7 +20773,7 @@ const storyMsgs = rawStoryMsgs;
 
     function _scrollToBottom() {
         const stream = document.getElementById('sc-chat-container');
-        if (stream) setTimeout(() => stream.scrollTo({ top: stream.scrollHeight, behavior: 'smooth' }), 50);
+        if (stream) requestAnimationFrame(() => stream.scrollTo({ top: stream.scrollHeight, behavior: 'smooth' }));
     }
     
     function _applyColorsToDOM() {
