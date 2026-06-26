@@ -4785,19 +4785,21 @@ const FeedModule = (() => {
 
   async function _sendEmoteComment(pid, url, keyword) {
     const p = _posts.find(x => x.id === pid); if (!p) return;
+    // 判断是否楼中楼
+    let replyTargetName = _replyState[pid], targetCommentText = '', targetCharId = null, isReply = false;
+    if (replyTargetName) {
+      const tc = [...(p.comments || [])].reverse().find(c => c.authorName === replyTargetName);
+      if (tc) { targetCommentText = tc.text; targetCharId = tc.authorId; isReply = true; }
+    } else { targetCharId = p.authorId; }
+    const displayText = replyTargetName ? `回复 ${replyTargetName}：[表情包:${keyword}]` : `[表情包:${keyword}]`;
     p.comments = p.comments || [];
-    p.comments.push({
-      id: Date.now(),
-      authorId: 'user_main',
-      authorName: _myProfile.name || 'User',
-      text: `[表情包:${keyword}]`,
-      imgUrl: url,
-      imgKeyword: keyword
-    });
+    p.comments.push({ id: Date.now(), authorId: 'user_main', authorName: _myProfile.name || 'User', text: displayText, imgUrl: url, imgKeyword: keyword });
     await DB.feed.put(p);
-    p.commentOpen = true;
-    _closeEmotePicker();
-    renderFeed();
+    p.commentOpen = true; _replyState[pid] = null; _closeEmotePicker(); renderFeed();
+    // 唤醒 AI 回复
+    if (targetCharId && targetCharId !== 'user_main') {
+      document.dispatchEvent(new CustomEvent('agent:userCommented', { detail: { postId: p.id, targetCharId, postText: p.text || '[图片]', isReply, targetCommentText, userText: `[表情包:${keyword}]` } }));
+    }
   }
 
   // --- 发动态 Modal ---
@@ -17008,6 +17010,8 @@ const AgentModule = (() => {
         await _batchEvaluateNewPost(task.data);
       } else if (task.type === 'PUBLISH_COMMENT') {
         await _publishComment(task.data);
+      } else if (task.type === 'CROSS_INTERACT') {
+        await _handleCrossInteract(task.data);
       }
     }
 
@@ -17348,6 +17352,18 @@ ${charListText}
         delayMultiplier++;
       }
 
+      // 交叉互动：等所有角色评论发布后，让他们互相回复
+      if (delayMultiplier > 0) {
+        var crossDelay = Date.now() + (_cfg.reactionDelay * 1000) + (delayMultiplier * 8000) + 15000;
+        _taskQueue.push({
+          id: 'task_cross_' + postId + '_0',
+          type: 'CROSS_INTERACT',
+          executeAt: crossDelay,
+          data: { postId: postId, round: 0, maxRounds: 2 }
+        });
+        console.log('[Agent] 已排期交叉互动，' + delayMultiplier + ' 个角色评论后将互相回复');
+      }
+
     } catch (e) {
       console.error('[Agent-Batch] 批量刷动态任务失败', e);
     }
@@ -17432,6 +17448,68 @@ ${charListText}
       console.error('[Agent-Publish] 错峰发送评论失败', e);
     }
   }
+
+  // 交叉互动：角色之间互相回复朋友圈评论
+  async function _handleCrossInteract({ postId, round, maxRounds }) {
+    try {
+      if (round >= maxRounds) { console.log('[Agent-Cross] 已达最大轮次', maxRounds); return; }
+      const activeApi = await DB.api.getActive().catch(function() { return null; });
+      if (!activeApi) return;
+      const feedPosts = await DB.feed.getAll();
+      const post = feedPosts.find(function(p) { return p.id === postId; });
+      if (!post) return;
+      const comments = post.comments || [];
+      const charComments = comments.filter(function(c) { return c.authorId !== 'user_main'; });
+      if (charComments.length < 2) { console.log('[Agent-Cross] 角色评论不足2条，跳过'); return; }
+      const chars = await DB.characters.getAll().catch(function() { return []; });
+      const charMap = new Map(chars.map(function(c) { return [String(c.id), c]; }));
+      const commentSummary = charComments.map(function(c) { var ch = charMap.get(String(c.authorId)); return '[' + (ch ? ch.name : c.authorName) + ']: "' + c.text + '"'; }).join('\n');
+      const postText = post.text || '[仅分享了图片]';
+      let charContexts = '';
+      for (var i = 0; i < charComments.length; i++) {
+        var cc = charComments[i];
+        var ch = charMap.get(String(cc.authorId));
+        if (!ch) continue;
+        var recentMsgs = await DB.messages.getPage(String(ch.id), 0, 5).catch(function() { return []; });
+        var historyStr = recentMsgs.reverse().filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }).map(function(m) { var txt = (m.parts || []).map(function(p) { return p.content || p.text || ''; }).join('') || m.content; return (m.role === 'user' ? '用户' : ch.name) + ': ' + txt; }).join(' | ');
+        charContexts += '[ID: ' + ch.id + '] ' + ch.name + '\n人设: ' + ch.persona + '\n近期记忆: ' + (historyStr || '无') + '\n---\n';
+      }
+      var prompt = '[后台调度：朋友圈交叉互动 第' + (round + 1) + '轮]\n\n动态内容：' + postText + '\n\n已有评论：\n' + commentSummary + '\n\n角色档案：\n' + charContexts + '\n【任务】：模拟真实社交平台，角色看到彼此评论后可能回复/附和/调侃/反驳。每个角色最多回复1条。不想回复填"[IGNORE]"。\n\n返回JSON：{"角色ID":{"targetCommentId":评论ID,"text":"回复内容"}} 或 {"角色ID":"[IGNORE]"}';
+      var response = await ApiHelper.chatCompletion(activeApi, [{ role: 'user', content: prompt }]);
+      var cleaned = response.replace(/```json|```/g, '').trim();
+      var start = cleaned.indexOf('{'), end = cleaned.lastIndexOf('}');
+      if (start === -1 || end === -1) { console.warn('[Agent-Cross] JSON解析失败'); return; }
+      var results = JSON.parse(cleaned.substring(start, end + 1));
+      var newCount = 0, dIdx = 0;
+      for (var cid in results) {
+        if (!Object.prototype.hasOwnProperty.call(results, cid)) continue;
+        var rd = results[cid];
+        if (!rd || rd === '[IGNORE]') continue;
+        if (typeof rd !== 'object' || !rd.text) continue;
+        var ch2 = charMap.get(String(cid));
+        if (!ch2) continue;
+        var tc = comments.find(function(c) { return c.id === rd.targetCommentId; });
+        var rn = tc ? (charMap.get(String(tc.authorId)) ? charMap.get(String(tc.authorId)).name : tc.authorName) : '';
+        var ct = String(rd.text).trim().replace(/\[?\s*语音消息\s*\d{1,2}:\d{2}\s*\]?/g, '').replace(/\[?\s*voice\s*message\s*\d{1,2}:\d{2}\s*\]?/gi, '').trim();
+        if (!ct) continue;
+        var nc = { id: Date.now() + Math.floor(Math.random() * 1000) + dIdx, authorId: cid, authorName: ch2.name, text: rn ? '回复 ' + rn + '：' + ct : ct };
+        post.comments.push(nc);
+        await DB.feed.put(post);
+        console.log('[Agent-Cross]', ch2.name, '回复了', rn || '动态', ':', ct);
+        var av = await Assets.getUrl('char-avatar-' + cid).catch(function() { return ''; });
+        if (typeof NotificationModule !== 'undefined') NotificationModule.show({ charId: cid, name: ch2.name, msg: '在朋友圈互动: ' + ct, avatar: av, type: 'feed' });
+        await DB.messages.add({ charId: String(cid), role: 'system_ticket', parts: [{ type: 'system_ticket', action: 'cross_interacted', postText: postText, replyText: ct, postId: postId }], content: '[在朋友圈互动]', timestamp: Date.now() });
+        newCount++; dIdx++;
+      }
+      if (typeof FeedModule !== 'undefined') FeedModule.refresh();
+      if (newCount > 0 && round + 1 < maxRounds) {
+        var nd = Date.now() + (dIdx * 12000) + 20000;
+        _taskQueue.push({ id: 'task_cross_' + postId + '_' + (round + 1), type: 'CROSS_INTERACT', executeAt: nd, data: { postId: postId, round: round + 1, maxRounds: maxRounds } });
+        console.log('[Agent-Cross] 第' + (round + 1) + '轮产生了' + newCount + '条互动，已排期下一轮');
+      }
+    } catch (e) { console.error('[Agent-Cross] 失败', e); }
+  }
+
 
 async function _checkOfflineMessages(nowTime) {
     try {

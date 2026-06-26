@@ -355,7 +355,15 @@
     <div class="icon-cell" id="icon-dream">
     <div class="icon-box" data-icon-id="16"><i class="ph ph-moon-stars"></i></div>
     <span class="icon-label">梦境</span>
-</div>
+    </div>
+    <div class="icon-cell" id="icon-taobao">
+    <div class="icon-box" data-icon-id="17"><i class="ph ph-shopping-cart"></i></div>
+    <span class="icon-label">淘宝</span>
+    </div>
+    <div class="icon-cell" id="icon-eleme">
+    <div class="icon-box" data-icon-id="18"><i class="ph ph-bowl-food"></i></div>
+    <span class="icon-label">饿了么</span>
+    </div>
       </div>
     </div>
   </div>
@@ -562,7 +570,7 @@
         <div class="input-wrapper">
           <label class="label-text">语速 / SPEED</label>
           <div class="slider-row">
-            <input type="range" id="mm-speed" class="styled-slider" min="0.5" max="2.0" step="0.1" value="1.0"
+            <input type="range" id="mm-speed" class="styled-slider" min="0.5" max="2.0" step="0.01" value="1.0"
               oninput="document.getElementById('mm-speed-val').textContent=parseFloat(this.value).toFixed(1)">
             <span class="slider-val" id="mm-speed-val">1.0</span>
           </div>
@@ -614,7 +622,7 @@
         <div class="input-wrapper">
           <label class="label-text">稳定性 / STABILITY</label>
           <div class="slider-row">
-            <input type="range" id="el-stability" class="styled-slider" min="0" max="1.0" step="0.05" value="0.5"
+            <input type="range" id="el-stability" class="styled-slider" min="0" max="1.0" step="0.01" value="0.5"
               oninput="document.getElementById('el-stability-val').textContent=parseFloat(this.value).toFixed(2)">
             <span class="slider-val" id="el-stability-val">0.50</span>
           </div>
@@ -622,7 +630,7 @@
         <div class="input-wrapper">
           <label class="label-text">相似度 / SIMILARITY</label>
           <div class="slider-row">
-            <input type="range" id="el-similarity" class="styled-slider" min="0" max="1.0" step="0.05" value="0.75"
+            <input type="range" id="el-similarity" class="styled-slider" min="0" max="1.0" step="0.01" value="0.75"
               oninput="document.getElementById('el-similarity-val').textContent=parseFloat(this.value).toFixed(2)">
             <span class="slider-val" id="el-similarity-val">0.75</span>
           </div>
@@ -630,7 +638,7 @@
         <div class="input-wrapper">
           <label class="label-text">风格夸张 / STYLE</label>
           <div class="slider-row">
-            <input type="range" id="el-style" class="styled-slider" min="0" max="1.0" step="0.05" value="0"
+            <input type="range" id="el-style" class="styled-slider" min="0" max="1.0" step="0.01" value="0"
               oninput="document.getElementById('el-style-val').textContent=parseFloat(this.value).toFixed(2)">
             <span class="slider-val" id="el-style-val">0.00</span>
           </div>
@@ -638,7 +646,7 @@
         <div class="input-wrapper">
           <label class="label-text">语速 / SPEED</label>
           <div class="slider-row">
-            <input type="range" id="el-speed" class="styled-slider" min="0.7" max="1.2" step="0.05" value="1.0"
+            <input type="range" id="el-speed" class="styled-slider" min="0.7" max="1.2" step="0.01" value="1.0"
               oninput="document.getElementById('el-speed-val').textContent=parseFloat(this.value).toFixed(2)">
             <span class="slider-val" id="el-speed-val">1.0</span>
           </div>
@@ -680,7 +688,7 @@
         <div class="input-wrapper">
           <label class="label-text">语速 / SPEED</label>
           <div class="slider-row">
-            <input type="range" id="mo-speed" class="styled-slider" min="0.25" max="4.0" step="0.05" value="1.0"
+            <input type="range" id="mo-speed" class="styled-slider" min="0.25" max="4.0" step="0.01" value="1.0"
               oninput="document.getElementById('mo-speed-val').textContent=parseFloat(this.value).toFixed(2)">
             <span class="slider-val" id="mo-speed-val">1.00</span>
           </div>
@@ -3775,6 +3783,131 @@ if ('serviceWorker' in navigator) {
   }).catch(err => console.warn('[PWA] SW 注册失败:', err));
 }
 </script>
+
+
+<script src="taobao.js"></script>
+<script src="eleme.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+var tb=document.getElementById('icon-taobao');if(tb)tb.addEventListener('click',function(){if(typeof TaobaoModule!=='undefined')TaobaoModule.open()});
+var em=document.getElementById('icon-eleme');if(em)em.addEventListener('click',function(){if(typeof ElemeModule!=='undefined')ElemeModule.open()});
+});
+try{TaobaoModule.init();}catch(e){}
+try{ElemeModule.init();}catch(e){}
+</script>
+
+<!-- ==================== 桃宝 ==================== -->
+<div class="tb-overlay" id="tb-overlay">
+  <div class="tb-container">
+    <div class="tb-header">
+      <button class="tb-back" onclick="TaobaoModule.close()"><i class="ph ph-arrow-left"></i></button>
+      <span class="tb-header-title">桃宝</span>
+      <div style="display:flex;gap:6px;margin-left:auto">
+        <button class="tb-hdr-btn" onclick="TaobaoModule.clearAll()" title="清空">🗑</button>
+        <button class="tb-hdr-btn" onclick="TaobaoModule._openAddChoice()" title="添加">+</button>
+      </div>
+    </div>
+    <div class="tb-tabs-bar">
+      <button class="tb-tab on" onclick="TaobaoModule._switchTab('home')">首页</button>
+      <button class="tb-tab" onclick="TaobaoModule._switchTab('cart')">购物车<span class="tb-badge" id="tb-cart-count">0</span></button>
+      <button class="tb-tab" onclick="TaobaoModule._switchTab('orders')">订单</button>
+    </div>
+    <div class="tb-view" id="tb-home-view">
+      <div class="tb-search-row">
+        <input type="search" id="tb-search-input" placeholder="搜一搜，AI为你创造好物！" onkeydown="if(event.key==='Enter')TaobaoModule.aiGenerate(this.value)">
+        <button onclick="TaobaoModule.aiGenerate(document.getElementById('tb-search-input').value)">搜索</button>
+        <button onclick="TaobaoModule.aiGenerate('')" title="AI随机生成" style="background:#f0f0f0;color:#333">✨</button>
+      </div>
+      <div class="tb-cat-bar" id="tb-cat-bar"></div>
+      <div class="tb-product-grid" id="tb-product-grid"></div>
+    </div>
+    <div class="tb-view" id="tb-cart-view" style="display:none">
+      <div class="tb-cart-list" id="tb-cart-list"></div>
+      <div class="tb-cart-footer" id="tb-cart-footer" style="display:none">
+        <span>合计 <b id="tb-cart-total">¥0</b></span>
+        <div style="display:flex;gap:6px"><button class="tb-btn-self" onclick="TaobaoModule.checkout()">💰 结算</button><button class="tb-btn-char" onclick="TaobaoModule.sendToChar()">🎁 让角色清空</button></div>
+      </div>
+    </div>
+    <div class="tb-view" id="tb-orders-view" style="display:none"><div class="tb-orders-list" id="tb-orders-list"></div></div>
+  </div>
+  <div class="tb-modal-bg" id="tb-add-choice" style="display:none" onclick="this.style.display='none'">
+    <div class="tb-modal-sm" onclick="event.stopPropagation()">
+      <div class="tb-modal-title">添加商品</div>
+      <button class="tb-modal-btn" onclick="document.getElementById('tb-add-choice').style.display='none';TaobaoModule._openEditor()">✏️ 手动添加</button>
+      <button class="tb-modal-btn" onclick="document.getElementById('tb-add-choice').style.display='none';TaobaoModule.aiGenerate('')">✨ AI随机生成</button>
+      <button class="tb-modal-btn" style="background:#eee" onclick="document.getElementById('tb-add-choice').style.display='none'">取消</button>
+    </div>
+  </div>
+  <div class="tb-modal-bg tb-editor-modal" id="tb-editor-modal">
+    <div class="tb-modal-md" onclick="event.stopPropagation()">
+      <div class="tb-modal-title" id="tb-editor-title">添加商品</div>
+      <div class="tb-form-group"><label>商品名称</label><input type="text" id="tb-e-name"></div>
+      <div class="tb-form-group"><label>价格 (元)</label><input type="number" id="tb-e-price" step="0.01"></div>
+      <div class="tb-form-group"><label>图片 URL (可选)</label><input type="text" id="tb-e-img" placeholder="留空由AI生成"></div>
+      <div class="tb-form-group"><label>分类 (可选)</label><input type="text" id="tb-e-cat" placeholder="如: 服饰, 数码..."></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="tb-modal-btn" style="background:#eee" onclick="TaobaoModule._closeEditor()">取消</button>
+        <button class="tb-modal-btn" style="background:#1a3a50;color:#fff;flex:2" onclick="TaobaoModule._saveProduct()">保存</button>
+      </div>
+    </div>
+  </div>
+  <div class="tb-modal-bg tb-detail-modal" id="tb-detail-modal" onclick="TaobaoModule._closeDetail()">
+    <div class="tb-modal-lg" onclick="event.stopPropagation()">
+      <button style="position:absolute;top:10px;right:10px;border:none;background:none;font-size:1.3rem;cursor:pointer" onclick="TaobaoModule._closeDetail()">×</button>
+      <div id="tb-detail-content"></div>
+    </div>
+  </div>
+  <div class="tb-modal-bg" id="tb-char-picker" style="display:none" onclick="TaobaoModule._cancelPicker()"><div onclick="event.stopPropagation()" style="padding:20px"></div></div>
+</div>
+
+<!-- ==================== 饿了么 ==================== -->
+<div class="em-overlay" id="em-overlay">
+  <div class="em-container">
+    <div class="em-header">
+      <button class="em-back" onclick="ElemeModule.close()"><i class="ph ph-arrow-left"></i></button>
+      <span class="em-title">饿了么</span>
+      <div style="display:flex;gap:6px;margin-left:auto">
+        <button class="em-hdr-btn" onclick="ElemeModule.clearAll()" title="清空">🗑</button>
+        <button class="em-hdr-btn" onclick="ElemeModule._openAddChoice()" title="添加">+</button>
+      </div>
+    </div>
+    <div class="em-search-row">
+      <input type="search" id="em-search-input" placeholder="想吃点什么？让AI帮你找！" onkeydown="if(event.key==='Enter')ElemeModule.aiSearch(this.value)">
+      <button onclick="ElemeModule.aiSearch(document.getElementById('em-search-input').value)">搜索</button>
+      <button onclick="ElemeModule.aiGenerate()" title="AI随机生成" style="background:#f0f0f0;color:#333">✨</button>
+    </div>
+    <div class="em-grid" id="em-food-grid"></div>
+    <div class="em-orders-section" id="em-orders-section"><div class="em-section-title">📋 点单记录</div><div class="em-orders-list" id="em-orders-list"></div></div>
+  </div>
+  <div class="em-modal-bg" id="em-add-choice" style="display:none" onclick="this.style.display='none'">
+    <div class="em-modal-sm" onclick="event.stopPropagation()">
+      <div class="em-modal-title">添加美食</div>
+      <button class="em-modal-btn" onclick="document.getElementById('em-add-choice').style.display='none';ElemeModule._openEditor()">✏️ 手动添加</button>
+      <button class="em-modal-btn" onclick="document.getElementById('em-add-choice').style.display='none';ElemeModule.aiGenerate()">✨ AI随机生成</button>
+      <button class="em-modal-btn" style="background:#eee" onclick="document.getElementById('em-add-choice').style.display='none'">取消</button>
+    </div>
+  </div>
+  <div class="em-modal-bg em-editor-modal" id="em-editor-modal">
+    <div class="em-modal-md" onclick="event.stopPropagation()">
+      <div class="em-modal-title" id="em-editor-title">添加美食</div>
+      <div class="em-form-group"><label>美食名称</label><input type="text" id="em-e-name"></div>
+      <div class="em-form-group"><label>价格 (元)</label><input type="number" id="em-e-price" step="0.01"></div>
+      <div class="em-form-group"><label>图片 URL (可选)</label><input type="text" id="em-e-img" placeholder="留空由AI生成"></div>
+      <div class="em-form-group"><label>店铺 (可选)</label><input type="text" id="em-e-shop" placeholder="如: 奈雪的茶"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="em-modal-btn" style="background:#eee" onclick="ElemeModule._closeEditor()">取消</button>
+        <button class="em-modal-btn" style="background:#ff6b35;color:#fff;flex:2" onclick="ElemeModule._saveFood()">保存</button>
+      </div>
+    </div>
+  </div>
+  <div class="em-modal-bg em-detail-modal" id="em-detail-modal" onclick="ElemeModule._closeDetail()">
+    <div class="em-modal-lg" onclick="event.stopPropagation()">
+      <button style="position:absolute;top:10px;right:10px;border:none;background:none;font-size:1.3rem;cursor:pointer" onclick="ElemeModule._closeDetail()">×</button>
+      <div id="em-detail-content"></div>
+    </div>
+  </div>
+  <div class="em-modal-bg" id="em-char-picker" style="display:none" onclick="ElemeModule._cancelPicker()"><div onclick="event.stopPropagation()" style="padding:20px"></div></div>
+</div>
 
 </body>
 </html>

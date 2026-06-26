@@ -142,6 +142,8 @@ const MusicModule = (() => {
       #music-root .ms-art-card:hover .ms-art-cover { filter:grayscale(0%); transform:scale(1.05); }
       #music-root .ms-art-edit-btn { position:absolute; bottom:5px; right:5px; background:rgba(0,0,0,0.7); width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.9rem; backdrop-filter:blur(2px); }
       #music-root .ms-art-edit-btn:active { background:#fff; color:#000; }
+      #music-root .ms-art-del-btn { position:absolute; top:5px; right:5px; background:rgba(0,0,0,0.7); width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); font-size:0.85rem; backdrop-filter:blur(2px); transition:all 0.2s; }
+      #music-root .ms-art-del-btn:active { background:rgba(220,60,60,0.9); color:#fff; }
       #music-root .ms-art-info { flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:2px 0; }
       #music-root .ms-art-top { display:flex; justify-content:space-between; align-items:flex-start; }
       #music-root .ms-art-num { font-family:var(--ms-font-en); font-size:0.9rem; color:rgba(255,255,255,0.3); font-weight:700; }
@@ -335,23 +337,23 @@ const MusicModule = (() => {
       .ms-player-card .close-btn { position: absolute; z-index: 10; }
 
       /* 风格 A: The Wash Label (修复版) */
-.ms-style-label { width: 260px; background: #FDFDFB; color: #1a3a50; padding: 25px 20px; border-radius: 1px; }
+.ms-style-label { width: 260px; background: #FDFDFB; color: #1A1A1A; padding: 25px 20px; border-radius: 1px; }
 .ms-style-label::before { content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 1px dashed #D0D0D0; pointer-events: none; }
 .ms-style-label .close-btn { top: 12px; right: 12px; font-size: 14px; color: #999; }
 .ms-style-label .margiela-numbers { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 3px; text-align: center; color: #B0B0B0; margin-bottom: 25px; line-height: 1.8; }
-.ms-style-label .margiela-numbers span.active { display: inline-flex; justify-content: center; align-items: center; width: 16px; height: 16px; border: 1px solid #1a3a50; border-radius: 50%; color: #1a3a50; transform: translateY(1px); }
+.ms-style-label .margiela-numbers span.active { display: inline-flex; justify-content: center; align-items: center; width: 16px; height: 16px; border: 1px solid #1A1A1A; border-radius: 50%; color: #1A1A1A; transform: translateY(1px); }
 .ms-style-label .song-title { font-family: 'Bodoni Moda', serif; font-size: 18px; text-align: center; margin-bottom: 25px; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ms-style-label .controls { display: flex; justify-content: center; gap: 30px; position: relative; z-index: 2; }
-.ms-style-label .p-btn { font-size: 20px; color: #1a3a50; }
+.ms-style-label .p-btn { font-size: 20px; color: #1A1A1A; }
 
       /* 风格 B: Thermal Receipt */
-      .ms-style-receipt { width: 240px; background: #FDF1F5; color: #1e3d54; padding: 30px 20px 20px 20px; mask-image: radial-gradient(circle at 4px 0px, transparent 4px, black 4.5px); mask-size: 12px 100%; mask-position: top; -webkit-mask-image: radial-gradient(circle at 4px 0px, transparent 4px, black 4.5px); -webkit-mask-size: 12px 100%; -webkit-mask-position: top; }
+      .ms-style-receipt { width: 240px; background: #FDF1F5; color: #2B2829; padding: 30px 20px 20px 20px; mask-image: radial-gradient(circle at 4px 0px, transparent 4px, black 4.5px); mask-size: 12px 100%; mask-position: top; -webkit-mask-image: radial-gradient(circle at 4px 0px, transparent 4px, black 4.5px); -webkit-mask-size: 12px 100%; -webkit-mask-position: top; }
       .ms-style-receipt .close-btn { top: 15px; right: 15px; font-size: 16px; }
       .ms-style-receipt .receipt-header { font-family: 'Courier Prime', monospace; font-size: 10px; text-align: center; text-transform: uppercase; border-bottom: 1px dashed #CFAEB8; padding-bottom: 15px; margin-bottom: 20px; }
-      .ms-style-receipt .barcode { width: 100%; height: 40px; margin-bottom: 15px; opacity: 0.8; background: repeating-linear-gradient(to right, #1e3d54, #1e3d54 2px, transparent 2px, transparent 4px, #1e3d54 4px, #1e3d54 5px, transparent 5px, transparent 8px, #1e3d54 8px, #1e3d54 12px, transparent 12px, transparent 14px); }
+      .ms-style-receipt .barcode { width: 100%; height: 40px; margin-bottom: 15px; opacity: 0.8; background: repeating-linear-gradient(to right, #2B2829, #2B2829 2px, transparent 2px, transparent 4px, #2B2829 4px, #2B2829 5px, transparent 5px, transparent 8px, #2B2829 8px, #2B2829 12px, transparent 12px, transparent 14px); }
       .ms-style-receipt .song-title { font-family: 'Courier Prime', monospace; font-size: 15px; font-weight: bold; text-align: center; margin-bottom: 20px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .ms-style-receipt .controls { display: flex; justify-content: space-between; padding: 0 10px; }
-      .ms-style-receipt .p-btn { font-size: 24px; color: #1e3d54; }
+      .ms-style-receipt .p-btn { font-size: 24px; color: #2B2829; }
 
       /* 风格 C: Y2K Chrome */
       .ms-style-chrome { width: 270px; background: linear-gradient(135deg, #E6E6E6 0%, #FFFFFF 20%, #B3B3B3 50%, #E6E6E6 80%, #8C8C8C 100%); border-radius: 8px; padding: 20px; box-shadow: inset 2px 2px 3px rgba(255,255,255,0.8), inset -2px -2px 5px rgba(0,0,0,0.3); border: 1px solid #A0A0A0; }
@@ -374,15 +376,15 @@ const MusicModule = (() => {
 .ms-style-cassette .p-btn { font-size: 18px; color: #fff; }
 
       /* 风格 E: Hangtag */
-      .ms-style-hangtag { width: 170px; background: #ECEAE4; color: #1a3a50; padding: 65px 20px 20px 20px; border-radius: 2px; }
+      .ms-style-hangtag { width: 170px; background: #ECEAE4; color: #1A1A1A; padding: 65px 20px 20px 20px; border-radius: 2px; }
       .ms-style-hangtag .hangtag-string { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 20px; height: 60px; border: 2px solid #222; border-bottom: none; border-radius: 10px 10px 0 0; z-index: -1; pointer-events: none; }
       .ms-style-hangtag::before { content: ''; position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 16px; height: 16px; border-radius: 50%; background: #111; border: 3px solid #C5C2BA; box-shadow: inset 1px 1px 5px rgba(0,0,0,0.9); z-index: 2; }
       .ms-style-hangtag .close-btn { top: -15px; right: -15px; font-size: 14px; color: #000; background: #fff; width: 24px; height: 24px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
       .ms-style-hangtag .brand-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 5px; }
       .ms-style-hangtag .song-title { font-family: 'Bodoni Moda', serif; font-size: 18px; font-style: italic; text-align: center; margin: 15px 0 20px; line-height: 1.1; word-wrap: break-word; }
-      .ms-style-hangtag .mini-barcode { width: 100%; height: 15px; background: repeating-linear-gradient(to right, #1a3a50, #1a3a50 2px, transparent 2px, transparent 3px, #1a3a50 3px, #1a3a50 4px, transparent 4px, transparent 6px, #1a3a50 6px, #1a3a50 8px, transparent 8px, transparent 9px); margin-bottom: 25px; opacity: 0.8; }
+      .ms-style-hangtag .mini-barcode { width: 100%; height: 15px; background: repeating-linear-gradient(to right, #1A1A1A, #1A1A1A 2px, transparent 2px, transparent 3px, #1A1A1A 3px, #1A1A1A 4px, transparent 4px, transparent 6px, #1A1A1A 6px, #1A1A1A 8px, transparent 8px, transparent 9px); margin-bottom: 25px; opacity: 0.8; }
       .ms-style-hangtag .controls { display: flex; justify-content: space-between; align-items: center; padding: 0 5px; }
-      .ms-style-hangtag .p-btn { font-size: 20px; color: #1a3a50; }
+      .ms-style-hangtag .p-btn { font-size: 20px; color: #1A1A1A; }
       
       /* UI 选择页 - 专属展示台背景 */
       #ms-ui-view .ms-ui-grid { display: flex; flex-direction: column; gap: 30px; padding: 20px 25px 60px; align-items: center; }
@@ -935,6 +937,31 @@ const MusicModule = (() => {
     if (typeof Toast !== 'undefined') Toast.show('歌词已删除');
   }
 
+  async function _deletePlaylist(pl) {
+    // 级联删除：清理歌单内所有歌曲的音频和歌词
+    for (const song of (pl.songs || [])) {
+      try { await MusicDB.del('audio', song.id); } catch(e) {}
+      try { await MusicDB.del('lyrics', song.lrcId || `lrc_${song.id}`); } catch(e) {}
+      if (_blobCache.has(song.id)) { URL.revokeObjectURL(_blobCache.get(song.id)); _blobCache.delete(song.id); }
+    }
+    // 从 IndexedDB 删除歌单记录
+    try { await MusicDB.del('playlists', pl.id); } catch(e) { console.warn('[MusicModule] 删除歌单记录失败:', e); }
+    // 从内存数组移除
+    _localPlaylists = _localPlaylists.filter(p => p.id !== pl.id);
+    // 如果当前正在播放该歌单里的歌，停止播放
+    if (_currentPlaylistObj?.id === pl.id) {
+      const audio = _$('ms-audio');
+      if (audio) { audio.pause(); audio.src = ''; }
+      _isPlaying = false;
+      _currentPlaylist = [];
+      _currentPlaylistObj = null;
+      _currentIdx = -1;
+      _updatePlayUI();
+    }
+    _renderLocalPlaylists();
+    if (typeof Toast !== 'undefined') Toast.show('歌单已删除');
+  }
+
   // ================================================================
   // 智能 LRC 文件名匹配
   // ================================================================
@@ -1337,6 +1364,7 @@ const MusicModule = (() => {
       el.innerHTML = `
         <div class="ms-art-cover-wrap">
           <div class="ms-art-cover" id="ms-lpl-cover-${i}" style="background-image:url('${pl.cover}')"></div>
+          ${pl.id !== 'l1' ? `<div class="ms-art-del-btn" id="ms-lpl-del-${i}" title="删除歌单"><i class="ph ph-trash"></i></div>` : ''}
           <div class="ms-art-edit-btn" id="ms-lpl-edit-${i}"><i class="ph ph-camera"></i></div>
         </div>
         <div class="ms-art-info">
@@ -1350,6 +1378,11 @@ const MusicModule = (() => {
           </div>
         </div>`;
       el.onclick = () => _openSongList(pl);
+      const delBtn = el.querySelector(`#ms-lpl-del-${i}`);
+      if (delBtn) delBtn.onclick = e => {
+        e.stopPropagation();
+        if (confirm(`确认删除歌单「${pl.name}」？\n歌单内所有歌曲将一并删除。`)) _deletePlaylist(pl);
+      };
       el.querySelector(`#ms-lpl-edit-${i}`).onclick = e => {
         e.stopPropagation();
         _uploadImgTargetId = `ms-lpl-cover-${i}`;
