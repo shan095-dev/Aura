@@ -10133,13 +10133,6 @@ const ConvModule = (() => {
       footer.classList.toggle('expanded');
     });
 
-    if (btnMusic) {
-      btnMusic.addEventListener('click', e => {
-        e.stopPropagation();
-        if (typeof ListenTogether !== 'undefined') ListenTogether.openCrate();
-      });
-    }
-
     // 点击空白收起面板
     document.getElementById('conv-screen').addEventListener('click', e => {
       if (footer.classList.contains('expanded')) {
