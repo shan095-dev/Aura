@@ -1354,8 +1354,8 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-msg-time { position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:0.55rem;color:#888;white-space:nowrap; }
 
 /* Bubbles */
-#conv-screen .cv-bubble { max-width:75%;width:fit-content;padding:8px 12px;border-radius:14px;font-size:0.85rem;line-height:1.4;border:0.5px solid #1a3a50;position:relative;z-index:1;word-break:break-word; }
-#conv-screen .cv-msg-row.ai  .cv-bubble { background:rgba(255,255,255,0.78);color:#1a3a50;border-color:rgba(200,235,250,0.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px); }
+#conv-screen .cv-bubble { max-width:75%;width:fit-content;padding:8px 12px;border-radius:14px;font-size:0.85rem;line-height:1.4;border:0.5px solid rgba(18,18,18,0.08);position:relative;z-index:1;word-break:break-word; }
+#conv-screen .cv-msg-row.ai  .cv-bubble { background:rgba(255,255,255,0.78);color:#1a3a50;border-color:rgba(18,18,18,0.08);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px); }
 #conv-screen .cv-msg-row.user .cv-bubble { background:#fff;color:#1a3a50;box-shadow:0 4px 10px rgba(0,0,0,0.02); }
 /* ── HTML 自定义交互组件 ── */
 #conv-screen .cv-html-widget {
@@ -1395,6 +1395,9 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-bubble.typing-capsule { background:transparent!important;border:1px solid #1a3a50!important;border-radius:100px!important;padding:8px 14px!important;display:flex;align-items:center;gap:8px;box-shadow:none!important;color:#1a3a50!important; }
 #conv-screen .cv-ticking { font-size:1rem;color:#1a3a50;animation:cv-tick-spin 1.2s steps(6) infinite; }
 @keyframes cv-tick-spin { from{transform:rotate(0deg);}to{transform:rotate(360deg);} }
+
+/* ── 隐藏顶部头像模式 ── */
+#conv-screen.no-avatar .cv-header-avatar { display: none !important; }
 /* 生图等待占位（与打字胶囊同系） */
 #conv-screen .cv-novel-pending .cv-novel-pending-wrap { max-width:260px;padding:10px 14px;border-radius:18px;border:1px dashed rgba(18,18,18,0.22);background:rgba(255,255,255,0.92);box-shadow:0 2px 12px rgba(0,0,0,0.04);display:flex;flex-direction:column;gap:6px; }
 #conv-screen .cv-novel-pending .cv-novel-pending-line { display:flex;align-items:center;gap:8px;font-size:0.9rem;color:#1a3a50;font-weight:500; }
@@ -4523,12 +4526,12 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
 .screen{background:rgba(220,242,255,0.6) !important;backdrop-filter:blur(3px) !important;-webkit-backdrop-filter:blur(3px) !important;}
 
 /* 聊天气泡 - 对方 */
-#conv-screen .cv-bubble{background:rgba(255,255,255,0.75) !important;backdrop-filter:blur(2px) !important;-webkit-backdrop-filter:blur(2px) !important;border:1px solid rgba(255,255,255,0.7) !important;color:#1a3a50 !important;}
+#conv-screen .cv-bubble{background:rgba(255,255,255,0.75);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border:1px solid rgba(18,18,18,0.06);color:#1a3a50;}
 /* 聊天气泡 - 自己 */
-#conv-screen .cv-msg-row.user .cv-bubble{background:linear-gradient(135deg,rgba(168,216,240,0.75),rgba(140,200,230,0.65)) !important;border:1px solid rgba(200,235,250,0.6) !important;color:#1a3a50 !important;}
+#conv-screen .cv-msg-row.user .cv-bubble{background:#fff;border:1px solid rgba(18,18,18,0.08);color:#1a3a50;}
 
 /* 输入区 */
-#conv-screen .cv-footer{background:rgba(245,252,255,0.8) !important;backdrop-filter:blur(3px) !important;-webkit-backdrop-filter:blur(3px) !important;border-top:0.5px solid rgba(200,235,250,0.5) !important;}
+#conv-screen .cv-footer{background:rgba(245,252,255,0.8);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-top:0.5px solid rgba(18,18,18,0.06);}
 #conv-screen .cv-input{background:rgba(255,255,255,0.6) !important;border:1px solid rgba(200,235,250,0.5) !important;color:#1a3a50 !important;border-radius:20px !important;}
 #conv-screen .cv-input::placeholder{color:#8ab8cc !important;}
 

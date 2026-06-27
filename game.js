@@ -83,6 +83,13 @@ const GameModule = (() => {
       #game-root .gm-title-sm { font-family:var(--gm-font-en); font-size:1.1rem; letter-spacing:2px; font-weight:400; }
       #game-root .gm-text-sub { color:var(--gm-text-sub); font-size:0.8rem; font-weight:300; letter-spacing:1px; }
       #game-root .gm-ctx-badge { font-size:0.65rem; padding:4px 10px; border:1px solid var(--gm-border); border-radius:20px; color:var(--gm-text-sub); letter-spacing:1px; font-family:var(--gm-font-en); }
+      #game-root .gm-ctx-row { line-height:1.8; }
+      #game-root .gm-player-tag { display:inline-block; padding:2px 10px; margin:2px 4px; border:1px solid var(--gm-border); border-radius:14px; color:var(--gm-text-sub); cursor:pointer; font-size:0.7rem; transition:all 0.2s; }
+      #game-root .gm-player-tag.active { background:var(--gm-accent); color:#1a1a1a; border-color:var(--gm-accent); font-weight:600; }
+      #game-root .gm-player-tag:active { transform:scale(0.95); }
+      #game-root .gm-player-bar { display:flex; align-items:center; gap:6px; padding:8px 20px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+      #game-root .gm-player-bar-label { font-size:0.6rem; color:var(--gm-text-sub); letter-spacing:1px; flex-shrink:0; white-space:nowrap; }
+      #game-root .gm-player-bar .gm-player-tag { flex-shrink:0; white-space:nowrap; }
 
       /* 按钮 */
       #game-root .gm-btn-primary {
@@ -286,6 +293,7 @@ const GameModule = (() => {
           <span class="gm-title-en">Arcade</span>
           <span class="gm-ctx-badge" id="gm-ctx-badge">—</span>
         </div>
+        <div class="gm-ctx-row" id="gm-ctx-info" style="text-align:center;font-size:0.75rem;color:var(--gm-text-sub);padding:6px 20px 0;letter-spacing:1px;"></div>
         <div class="gm-lobby-scroll">
           <div class="gm-lobby-grid" id="gm-lobby-grid">
             <!-- 动态渲染 -->
@@ -302,6 +310,7 @@ const GameModule = (() => {
           <span class="gm-title-sm">Word Guess</span>
           <span class="gm-ctx-badge gm-ctx-badge" style="font-size:0.7rem;" id="gm-wg-round">ROUND 1</span>
         </div>
+        <div class="gm-player-bar" id="gm-wg-player-bar" style="display:none;"></div>
         <div style="padding:10px 20px 80px;">
           <div class="gm-wg-clue-card">
             <div class="gm-wg-clue-label">AI'S CLUES</div>
@@ -328,6 +337,7 @@ const GameModule = (() => {
           <span class="gm-title-sm">Turtle Soup</span>
           <span class="gm-ctx-badge" style="font-size:0.7rem;" id="gm-ts-q-count">Q:0</span>
         </div>
+        <div class="gm-player-bar" id="gm-ts-player-bar" style="display:none;"></div>
         <div style="padding:10px 20px 80px;">
           <div class="gm-ts-story-card">
             <div class="gm-ts-story-label">— THE MYSTERY —</div>
@@ -349,6 +359,7 @@ const GameModule = (() => {
           <span class="gm-title-sm">Truth or Dare</span>
           <span class="gm-ctx-badge" style="font-size:0.7rem;" id="gm-td-round">#1</span>
         </div>
+        <div class="gm-player-bar" id="gm-td-player-bar" style="display:none;"></div>
         <div style="padding:10px 20px 80px;display:flex;flex-direction:column;align-items:center;">
           <div class="gm-td-spin-area">
             <div class="gm-td-wheel" id="gm-td-wheel">
@@ -372,6 +383,7 @@ const GameModule = (() => {
           <span class="gm-title-sm">Draw & Guess</span>
           <span class="gm-ctx-badge" style="font-size:0.7rem;" id="gm-dg-round">ROUND 1</span>
         </div>
+        <div class="gm-player-bar" id="gm-dg-player-bar" style="display:none;"></div>
         <div style="padding:10px 20px 60px;">
           <div class="gm-dg-canvas-wrap" id="gm-dg-canvas-wrap">
             <canvas class="gm-dg-canvas" id="gm-dg-canvas"></canvas>
@@ -420,6 +432,11 @@ const GameModule = (() => {
   let _currentView = 'lobby';
   let _contextChatId = null;
   let _contextIsGroup = false;
+  let _contextCharName = '';       // 私聊：角色名
+  let _contextCharPersona = '';    // 私聊：角色人设
+  let _contextCharAvatar = '';     // 私聊：角色头像
+  let _contextGroupMembers = [];   // 群聊：[{ id, name }]
+  let _contextCurrentPlayer = null; // 群聊：当前玩家
 
   // 猜词状态
   let _wgWord = '';
@@ -534,14 +551,58 @@ const GameModule = (() => {
     };
   }
 
+  // ── 群聊切换玩家 ──
+  async function _switchPlayer(pid) {
+    const found = _contextGroupMembers.find(m => String(m.id) === String(pid));
+    if (found) {
+      _contextCurrentPlayer = found;
+      // 刷新所有可见的玩家选择栏
+      _refreshAllPlayerBars();
+      if (typeof Toast !== 'undefined') Toast.show('当前玩家：' + found.name);
+    }
+  }
+
+  // ── 角色感知的系统提示词 ──
+  function _charAwarePrompt(basePrompt) {
+    if (!_contextIsGroup && _contextCharName) {
+      return `你正在扮演「${_contextCharName}」与玩家玩游戏。\n角色人设：${_contextCharPersona || '一个有趣的朋友'}\n\n${basePrompt}\n\n请以「${_contextCharName}」的口吻回复，保持角色性格一致。`;
+    }
+    return basePrompt;
+  }
+
+  // ── 当前玩家名（群聊用）──
+  function _currentPlayerName() {
+    return _contextCurrentPlayer?.name || '玩家';
+  }
+
+  // ── 渲染玩家选择栏（群聊时在所有游戏页面顶部显示）──
+  function _renderPlayerBar(barId) {
+    if (!_contextIsGroup || !_contextGroupMembers.length) return;
+    const bar = document.getElementById(barId);
+    if (!bar) return;
+    bar.style.display = 'flex';
+    bar.innerHTML = '<span class="gm-player-bar-label">👥 谁在玩：</span>' +
+      _contextGroupMembers.map(m =>
+        `<span class="gm-player-tag${_contextCurrentPlayer?.id === m.id ? ' active' : ''}" data-pid="${m.id}" onclick="GameModule._switchPlayer('${m.id}')">${m.name}</span>`
+      ).join('');
+  }
+
+  // ── 刷新所有可见的玩家选择栏 ──
+  function _refreshAllPlayerBars() {
+    ['gm-wg-player-bar', 'gm-ts-player-bar', 'gm-td-player-bar', 'gm-dg-player-bar'].forEach(id => {
+      const bar = document.getElementById(id);
+      if (bar && bar.style.display !== 'none') _renderPlayerBar(id);
+    });
+  }
+
   // ================================================================
   // 游戏大厅
   // ================================================================
   const GAME_DEFS = [
-    { id: 'wordguess', icon: '🔤', name: 'Word Guess', desc: 'AI 给你三条线索，猜出那个词', cls: '' },
-    { id: 'turtlesoup', icon: '🐢', name: 'Turtle Soup', desc: '离奇故事谜题，提问还原真相', cls: '' },
-    { id: 'truthdare', icon: '🎭', name: 'Truth or Dare', desc: 'AI 出题，真心话还是大冒险？', cls: '' },
-    { id: 'drawguess', icon: '🎨', name: 'Draw & Guess', desc: '画出来让 AI 猜，看谁更懂', cls: '' },
+    { id: 'wordguess', icon: '🔤', name: 'Word Guess', desc: '三条线索猜词，与角色智力对决', cls: '' },
+    { id: 'turtlesoup', icon: '🐢', name: 'Turtle Soup', desc: '离奇谜题，向角色提问还原真相', cls: '' },
+    { id: 'truthdare', icon: '🎭', name: 'Truth or Dare', desc: '角色出题，真心话还是大冒险？', cls: '' },
+    { id: 'drawguess', icon: '🎨', name: 'Draw & Guess', desc: '画出来让大家猜，看谁更懂', cls: '' },
   ];
 
   function _renderLobby() {
@@ -569,9 +630,22 @@ const GameModule = (() => {
     // 渲染最近游戏
     _renderRecentGames();
 
-    // 上下文徽章
+    // 上下文：私聊 vs 群聊
     const badge = _$('gm-ctx-badge');
-    if (badge) badge.textContent = _contextIsGroup ? 'GROUP' : (_contextChatId ? 'CHAT' : '');
+    const ctxInfo = _$('gm-ctx-info');
+    if (_contextIsGroup) {
+      if (badge) badge.textContent = 'GROUP · ' + _contextGroupMembers.length + '人';
+      if (ctxInfo) ctxInfo.innerHTML = '<span style="font-size:0.6rem;color:var(--gm-text-sub);">点击名字加入游戏 ↓</span><br>' +
+        _contextGroupMembers.map(m =>
+          `<span class="gm-player-tag${_contextCurrentPlayer?.id === m.id ? ' active' : ''}" data-pid="${m.id}" onclick="GameModule._switchPlayer('${m.id}')">${m.name}</span>`
+        ).join(' ');
+    } else if (_contextCharName) {
+      if (badge) badge.textContent = 'VS';
+      if (ctxInfo) ctxInfo.textContent = '对手：' + _contextCharName;
+    } else {
+      if (badge) badge.textContent = '';
+      if (ctxInfo) ctxInfo.textContent = '';
+    }
   }
 
   async function _renderRecentGames() {
@@ -636,9 +710,11 @@ const GameModule = (() => {
     _$('gm-wg-correct').textContent = _wgCorrect;
     _$('gm-wg-total').textContent = _wgTotal;
     _$('gm-wg-clue').textContent = '正在生成线索...';
+    _renderPlayerBar('gm-wg-player-bar');
 
-    // 用 LLM 生成线索
-    const sysPrompt = `你是一个猜词游戏的主持人。你要让玩家猜一个词。这个词是：「${_wgWord}」。请给出 3 条线索来描述这个词，但线索中不能直接出现这个词本身。线索应该从模糊到具体。用中文回复，每条线索一行。`;
+    // 用 LLM 生成线索（私聊：角色出题；群聊：主持人出题）
+    const basePrompt = `你${_contextIsGroup ? '是一个猜词游戏的主持人' : ''}，要让玩家猜一个词。这个词是：「${_wgWord}」。请给出 3 条线索来描述这个词，但线索中不能直接出现这个词本身。线索应该从模糊到具体。用中文回复，每条线索一行。`;
+    const sysPrompt = _charAwarePrompt(basePrompt);
     const clueText = await _callLLM(sysPrompt, '请给出3条线索');
     _wgClues = clueText || `1. 这是一个常见的词语\n2. 它有${_wgWord.length}个字\n3. 与日常生活相关`;
     _$('gm-wg-clue').textContent = _wgClues;
@@ -663,13 +739,17 @@ const GameModule = (() => {
       _$('gm-wg-display').textContent = _wgWord;
       _$('gm-wg-clue').textContent = `🎉 猜对了！答案就是「${_wgWord}」`;
       _addWGHint(guess, true);
+      const playerName = _currentPlayerName();
       _saveRecord({
         gameType: 'wordguess', gameName: 'Word Guess',
         chatId: _contextChatId, isGroup: _contextIsGroup,
-        winner: 'player', detail: `猜中「${_wgWord}」，${_wgGuesses.length}次尝试`,
+        winner: 'player', playerName: playerName,
+        detail: `猜中「${_wgWord}」，${_wgGuesses.length}次尝试`,
         timestamp: Date.now()
       });
-      _showResult('🎉', 'YOU GOT IT!', `答案：${_wgWord}\n尝试次数：${_wgGuesses.length}`, () => _startWordGuess(), () => _switchView('gm-view-lobby'));
+      const whoText = _contextIsGroup ? `\n猜对者：${playerName}` : '';
+      const vsText = _contextCharName ? `\n对手：${_contextCharName}` : '';
+      _showResult('🎉', 'YOU GOT IT!', `答案：${_wgWord}\n尝试次数：${_wgGuesses.length}${vsText}${whoText}`, () => _startWordGuess(), () => _switchView('gm-view-lobby'));
     } else {
       _addWGHint(guess, false);
       input.value = '';
@@ -680,7 +760,8 @@ const GameModule = (() => {
     const container = _$('gm-wg-hints');
     const el = document.createElement('div');
     el.className = 'gm-wg-hint-item gm-fade-up';
-    el.innerHTML = `<span class="gm-wg-hint-icon ${correct ? 'correct' : 'wrong'}">${correct ? '✓' : '✗'}</span> ${guess}`;
+    const who = _contextIsGroup ? `<span style="font-size:0.6rem;color:var(--gm-accent);">${_currentPlayerName()}：</span>` : '';
+    el.innerHTML = `${who}<span class="gm-wg-hint-icon ${correct ? 'correct' : 'wrong'}">${correct ? '✓' : '✗'}</span> ${guess}`;
     container.appendChild(el);
     container.scrollTop = container.scrollHeight;
   }
@@ -726,6 +807,7 @@ const GameModule = (() => {
     _$('gm-ts-qa-list').innerHTML = '';
     _$('gm-ts-input').value = '';
     _$('gm-ts-q-count').textContent = 'Q:0';
+    _renderPlayerBar('gm-ts-player-bar');
   }
 
   async function _handleTSAsk() {
@@ -739,8 +821,9 @@ const GameModule = (() => {
     _addTSQA(question, 'question');
     input.value = '';
 
-    // 用 LLM 判断答案
-    const sysPrompt = `你是海龟汤的主持人。谜底真相是：「${_tsTruth}」\n\n玩家会向你提出关于这个故事的问题。你只能回答以下三种之一：\n- 「是」— 如果问题与真相一致\n- 「不是」— 如果问题与真相矛盾\n- 「与此无关」— 如果问题不影响核心真相的还原\n\n请只回复这三个选项之一，不要解释。`;
+    // 用 LLM 判断答案（私聊：角色来回答；群聊：主持人回答）
+    const basePrompt = `谜底真相是：「${_tsTruth}」\n\n玩家会向你提出关于这个故事的问题。你只能回答以下三种之一：\n- 「是」— 如果问题与真相一致\n- 「不是」— 如果问题与真相矛盾\n- 「与此无关」— 如果问题不影响核心真相的还原\n\n请只回复这三个选项之一，不要解释。`;
+    const sysPrompt = _charAwarePrompt(basePrompt);
     const answer = await _callLLM(sysPrompt, question);
     const cleanAnswer = (answer || '').trim();
     let answerClass = 'answer-irrelevant';
@@ -755,7 +838,8 @@ const GameModule = (() => {
     const el = document.createElement('div');
     el.className = `gm-ts-qa-item gm-fade-up ${cls}`;
     const prefix = cls === 'question' ? '❓ ' : (cls === 'answer-yes' ? '✅ ' : (cls === 'answer-no' ? '❌ ' : '➖ '));
-    el.textContent = prefix + text;
+    const who = (_contextIsGroup && cls === 'question') ? `<span style="font-size:0.6rem;color:var(--gm-accent);">${_currentPlayerName()}：</span>` : '';
+    el.innerHTML = who + prefix + text;
     container.appendChild(el);
     container.scrollTop = container.scrollHeight;
   }
@@ -771,17 +855,20 @@ const GameModule = (() => {
       const sysPrompt = `你是海龟汤的裁判。真正的真相是：「${_tsTruth}」\n\n玩家给出的推理是：「${story}」\n\n请判断玩家的推理是否基本正确（核心事实一致即可，不需要完全相同）。只回复 YES 或 NO，然后简述原因。`;
       const result = await _callLLM(sysPrompt, '请判断');
       const isCorrect = (result || '').toUpperCase().includes('YES');
+      const playerName = _currentPlayerName();
       _saveRecord({
         gameType: 'turtlesoup', gameName: 'Turtle Soup',
         chatId: _contextChatId, isGroup: _contextIsGroup,
-        winner: isCorrect ? 'player' : 'ai',
+        winner: isCorrect ? 'player' : 'ai', playerName: playerName,
         detail: `提问${_tsQCount}次，推理${isCorrect ? '正确' : '错误'}`,
         timestamp: Date.now()
       });
+      const whoText = _contextIsGroup ? `\n推理者：${playerName}` : '';
+      const vsText = _contextCharName ? `\n对手：${_contextCharName}` : '';
       _showResult(
         isCorrect ? '🎉' : '🐢',
         isCorrect ? '推理正确！' : '再想想...',
-        isCorrect ? `真相：${_tsTruth}` : `你的推理：${story}\n\n正确答案：${_tsTruth}`,
+        (isCorrect ? `真相：${_tsTruth}` : `你的推理：${story}\n\n正确答案：${_tsTruth}`) + vsText + whoText,
         () => _startTurtleSoup(),
         () => _switchView('gm-view-lobby')
       );
@@ -799,6 +886,7 @@ const GameModule = (() => {
     _$('gm-td-wheel-text').textContent = 'TAP TO\nSPIN';
     _$('gm-td-wheel').classList.remove('spinning');
     _$('gm-td-prompt').textContent = '生成题目中...';
+    _renderPlayerBar('gm-td-player-bar');
   }
 
   async function _handleTDSpin() {
@@ -810,11 +898,12 @@ const GameModule = (() => {
     const isTruth = Math.random() > 0.5;
     const type = isTruth ? 'TRUTH' : 'DARE';
 
-    // 用 LLM 生成题目
-    const sysPrompt = isTruth
-      ? '你是一个真心话大冒险游戏的主持人。请生成一个有趣的、有深度的"真心话"问题。问题应该适合朋友间玩，不能太冒犯，有创意。用中文回复，只回复问题本身。'
-      : '你是一个真心话大冒险游戏的主持人。请生成一个有趣的、安全可行的"大冒险"挑战。挑战应该适合在室内完成，有创意但不能危险或尴尬。用中文回复，只回复挑战内容本身。';
-
+    // 用 LLM 生成题目（私聊：角色出题；群聊：主持人生成）
+    const hostContext = _contextIsGroup ? `当前玩家是「${_currentPlayerName()}」` : '';
+    const basePrompt = isTruth
+      ? `你是一个真心话大冒险游戏的主持人。${hostContext}请生成一个有趣的、有深度的"真心话"问题。问题应该适合朋友间玩，不能太冒犯，有创意。用中文回复，只回复问题本身。`
+      : `你是一个真心话大冒险游戏的主持人。${hostContext}请生成一个有趣的、安全可行的"大冒险"挑战。挑战应该适合在室内完成，有创意但不能危险或尴尬。用中文回复，只回复挑战内容本身。`;
+    const sysPrompt = _charAwarePrompt(basePrompt);
     const prompt = await _callLLM(sysPrompt, '请出一道题');
 
     setTimeout(() => {
@@ -839,6 +928,7 @@ const GameModule = (() => {
     _$('gm-dg-input').value = '';
     _$('gm-dg-round').textContent = 'ROUND 1';
     _clearCanvas();
+    _renderPlayerBar('gm-dg-player-bar');
   }
 
   function _initCanvas() {
@@ -909,10 +999,12 @@ const GameModule = (() => {
       _saveRecord({
         gameType: 'drawguess', gameName: 'Draw & Guess',
         chatId: _contextChatId, isGroup: _contextIsGroup,
-        winner: 'player', detail: `猜中「${_dgWord}」`,
+        winner: 'player', playerName: _currentPlayerName(),
+        detail: `猜中「${_dgWord}」`,
         timestamp: Date.now()
       });
-      _showResult('🎨', '猜对了！', `答案：${_dgWord}`, () => { _startDrawGuess(); _initCanvas(); }, () => _switchView('gm-view-lobby'));
+      const vsText = _contextCharName ? `\n对手：${_contextCharName}` : '';
+      _showResult('🎨', '猜对了！', `答案：${_dgWord}${vsText}`, () => { _startDrawGuess(); _initCanvas(); }, () => _switchView('gm-view-lobby'));
     } else {
       if (typeof Toast !== 'undefined') Toast.show('不对哦，再试试！');
       input.value = '';
@@ -992,6 +1084,42 @@ const GameModule = (() => {
   async function open(opts = {}) {
     _contextChatId = opts.chatId || null;
     _contextIsGroup = opts.isGroup || false;
+    _contextCharName = '';
+    _contextCharPersona = '';
+    _contextCharAvatar = '';
+    _contextGroupMembers = [];
+    _contextCurrentPlayer = null;
+
+    // 加载角色上下文（私聊）
+    if (!_contextIsGroup && _contextChatId) {
+      try {
+        if (typeof DB !== 'undefined' && DB.characters) {
+          const char = await DB.characters.get(Number(_contextChatId));
+          if (char) {
+            _contextCharName = char.name || '';
+            _contextCharPersona = char.persona || '';
+          }
+        }
+      } catch(e) { console.warn('[GameModule] 加载角色信息失败:', e); }
+    }
+
+    // 加载群聊成员（群聊）
+    if (_contextIsGroup && _contextChatId && typeof GroupChatModule !== 'undefined') {
+      try {
+        const gc = GroupChatModule.get(_contextChatId);
+        if (gc?.members) {
+          for (const mid of gc.members) {
+            try {
+              const c = await DB.characters.get(Number(mid));
+              if (c) _contextGroupMembers.push({ id: String(mid), name: c.name || '角色' });
+            } catch(e) {}
+          }
+          if (_contextGroupMembers.length > 0) {
+            _contextCurrentPlayer = _contextGroupMembers[0];
+          }
+        }
+      } catch(e) { console.warn('[GameModule] 加载群聊成员失败:', e); }
+    }
 
     if (!_initialized) {
       _injectCSS();
@@ -1044,7 +1172,7 @@ const GameModule = (() => {
     </div>`;
   }
 
-  return { init, open, close, renderGameEmbed };
+  return { init, open, close, renderGameEmbed, _switchPlayer };
 })();
 
 // Dock 导航辅助：绕过 const 无法被内联 onclick 访问的坑

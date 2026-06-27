@@ -2517,17 +2517,21 @@ if (fwLabelNum) {
             titleEn: pl.titleEn || 'IMPORTED',
             cover: pl.cover || _DEFAULT_COVER,
             count: (pl.songs || []).length,
-            songs: (pl.songs || []).map(s => ({
-              id: s.id || 'imp_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-              title: s.title || 'Unknown',
-              artist: s.artist || (s.isUrl ? 'URL' : 'Local'),
-              cover: s.cover || pl.cover || _DEFAULT_COVER,
-              url: s.url || undefined,
-              hasLrc: !!s.lrcText,
-              lrcId: s.lrcText ? ('lrc_' + s.id) : null,
-              isCloud: false,
-              isUrl: !!s.isUrl
-            })),
+            songs: (pl.songs || []).map(s => {
+              const song = {
+                id: s.id || 'imp_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+                title: s.title || 'Unknown',
+                artist: s.artist || (s.isUrl ? 'URL' : 'Local'),
+                cover: s.cover || pl.cover || _DEFAULT_COVER,
+                hasLrc: !!s.lrcText,
+                lrcId: s.lrcText ? ('lrc_' + s.id) : null,
+                isCloud: false,
+                isUrl: !!s.isUrl
+              };
+              // 只有 URL 歌曲才附带 url 字段，避免 undefined 存入 IndexedDB 导致 DataCloneError
+              if (s.url) song.url = s.url;
+              return song;
+            }),
             isLocal: true
           };
           await MusicDB.put('playlists', newPl);
@@ -2545,7 +2549,8 @@ if (fwLabelNum) {
         if (typeof Toast !== 'undefined') Toast.show(`已导入 ${importedCount} 个歌单`);
       } catch(e) {
         console.error('[MusicModule] 导入失败:', e);
-        if (typeof Toast !== 'undefined') Toast.show('导入失败，请检查文件格式');
+        const errMsg = e?.message || String(e);
+        if (typeof Toast !== 'undefined') Toast.show('导入失败: ' + errMsg);
       }
     };
 

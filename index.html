@@ -1121,13 +1121,20 @@
           <button class="btn-ghost" onclick="SystemModule.deactivateFont()">恢复默认字体</button>
         </div>
 
-        <!-- 预留区域 -->
-        <div class="form-section" style="opacity:0.35;pointer-events:none;">
-          <div class="section-title">更多选项 / More &nbsp;<span style="font-size:0.6rem;letter-spacing:1px;">(即将推出)</span></div>
-          <div style="font-size:0.8rem;color:var(--s-text-secondary);padding:16px 0;line-height:2.2;">
-            动画速度 / Animation Speed<br>
-            布局密度 / Layout Density<br>
-            无障碍选项 / Accessibility
+        <!-- ── 系统 CSS 美化 ── -->
+        <div class="form-section">
+          <div class="section-title">系统美化 / System CSS</div>
+          <div class="sys-hint" style="margin-bottom:12px;">
+            自定义全局 CSS 样式。作用于整个系统界面（主页、设置页等），<b>不侵入聊天页面</b>。<br>
+            聊天页面有独立的 CSS 编辑器（聊天设置 → Identity & UI）。
+          </div>
+          <textarea id="sys-css-input" class="input-line" style="min-height:200px;resize:vertical;font-family:'Space Mono', monospace;font-size:0.72rem;padding:12px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.1);border-radius:8px;width:100%;" placeholder="/* 全局自定义 CSS */&#10;/* 修改主页背景 */&#10;#home-screen { background: #f0f0f5; }&#10;/* 修改标题颜色 */&#10;h1, h2, h3 { color: #333; }"></textarea>
+          <div style="display:flex;gap:10px;margin-top:14px;">
+            <button class="btn-outline" style="margin-bottom:0;flex:1;" onclick="SystemModule.applySystemCSS()">应用并保存</button>
+            <button class="btn-ghost" style="margin-bottom:0;flex:1;color:#D93A3A;" onclick="SystemModule.clearSystemCSS()">清除</button>
+          </div>
+          <div style="font-size:0.65rem;color:var(--s-text-secondary);margin-top:8px;letter-spacing:0.5px;">
+            <i class="ph ph-info"></i> 此 CSS 作用于全局，不会影响聊天页面。聊天页面美化请在聊天设置中单独配置。
           </div>
         </div>
 
@@ -2493,6 +2500,13 @@
               </div>
             </div>
           </div>
+          <div class="cv-set-item">
+            <div class="cv-si-info">
+              <span class="cv-si-label">隐藏顶部头像</span>
+              <span class="cv-si-sub">Hide Header Avatar</span>
+            </div>
+            <div class="cv-mag-toggle" id="cv-hide-avatar-toggle" onclick="ConvModule._toggleHideAvatar(this)"></div>
+          </div>
         </div>
 
         <!-- Cognition -->
@@ -2627,6 +2641,20 @@
             </div>
            <div class="cv-mag-toggle" id="cv-alias-toggle" onclick="ConvModule._toggleAlias(this)"></div>
           </div>
+          <div class="cv-set-item col">
+            <div class="cv-si-info">
+              <span class="cv-si-label">角色备注</span>
+              <span class="cv-si-sub">Custom Remark · 覆盖昵称与原名</span>
+            </div>
+            <div style="display:flex;gap:8px;width:100%;align-items:center;margin-top:6px;">
+              <input type="text" id="cv-char-remark-input"
+                style="flex:1;border:none;border-bottom:0.5px solid rgba(18,18,18,0.15);padding:6px 2px;font-size:0.85rem;background:transparent;outline:none;"
+                placeholder="为角色设置备注名"
+                oninput="ConvModule._onRemarkInput()">
+              <button id="cv-char-remark-clear" onclick="ConvModule._clearRemark()"
+                style="display:none;flex-shrink:0;padding:4px 12px;border:0.5px solid rgba(217,58,58,0.4);border-radius:16px;background:transparent;font-size:0.7rem;color:#D93A3A;cursor:pointer;">清除</button>
+            </div>
+          </div>
           <div class="cv-set-item">
             <div class="cv-si-info">
               <span class="cv-si-label">双语输出</span>
@@ -2653,7 +2681,7 @@
               <div class="cv-acc-body">
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                  <span style="font-family:'Space Mono',monospace;font-size:0.62rem;color:#888;">定制当前角色专属样式</span>
+                  <span style="font-family:'Space Mono',monospace;font-size:0.62rem;color:#888;">定制当前角色聊天页专属样式 · 仅作用于 #conv-screen</span>
                   <button onclick="event.stopPropagation(); ConvModule.copyDefaultCSS()" style="font-size:0.6rem;background:transparent;border:0.5px solid #1a3a50;padding:2px 8px;border-radius:4px;cursor:pointer;">复制默认源码</button>
                 </div>
                 

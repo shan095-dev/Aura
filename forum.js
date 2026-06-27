@@ -804,7 +804,7 @@ const ForumModule = (() => {
                             <div class="event-desc">${_escHtml(post.desc)}</div>
                         </div>
                         <div class="inner-interaction">
-                            <div class="int-btn" class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div>
+                            <div class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div>
                             <div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length} RESPONSES</div>
                             <!-- 👇 新增的分享按钮 -->
                             <div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i> SHARE</div>
@@ -818,11 +818,11 @@ const ForumModule = (() => {
         }  else if (post.type === 'square') {
             visualHTML = `<div class="square-visual"><div class="sq-header"><div class="sq-user"><img src="${avatarUrl}" class="sq-avatar"><div><div class="sq-name">${_escHtml(post.author)}</div><div class="sq-id">@${_escHtml(post.author.toLowerCase().replace(/\\s/g,'_'))}</div></div></div><div class="meta-data" style="color:var(--fm-fg-muted);"><i class="ph ph-wifi-high"></i> ONLINE</div></div><div class="sq-content">${_escHtml(post.content)}</div>${fakeImgHTML}<div class="sq-panel"><div class="meta-data" style="writing-mode: vertical-rl; transform: rotate(180deg);">FREQ</div><div class="waveform"></div><div class="sq-toggle"></div></div></div>`;
             // 👇 新增的分享按钮
-            interactionHTML = `<div class="interaction-bar"><div style="display:flex;gap:20px;"><div class="int-btn" class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div><div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length}</div><div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i></div></div><div class="int-btn" onclick="ForumModule.deletePost('${post.id}')"><i class="ph-thin ph-trash"></i></div></div>`;
+            interactionHTML = `<div class="interaction-bar"><div style="display:flex;gap:20px;"><div class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div><div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length}</div><div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i></div></div><div class="int-btn" onclick="ForumModule.deletePost('${post.id}')"><i class="ph-thin ph-trash"></i></div></div>`;
         } else if (post.type === 'treehole') {
             visualHTML = `<div class="treehole-visual"><div class="th-badge">CLASSIFIED</div><div class="meta-data" style="margin-bottom: 12px; border-bottom:1px solid var(--fm-line); padding-bottom:8px;"><i class="ph ph-lock-key"></i> ENCRYPTED_LOG // DECRYPT_ON_HOVER</div><div class="th-content">${_escHtml(post.content)}</div>${fakeImgHTML}</div>`;
             // 👇 新增的分享按钮
-            interactionHTML = `<div class="interaction-bar"><div style="display:flex;gap:20px;"><div class="int-btn" class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div><div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length}</div><div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i></div></div><div class="int-btn" onclick="ForumModule.deletePost('${post.id}')"><i class="ph-thin ph-trash"></i></div></div>`;
+            interactionHTML = `<div class="interaction-bar"><div style="display:flex;gap:20px;"><div class="int-btn${post.likes && post.likes.includes(_forumProfile.name) ? ' liked' : ''}" onclick="ForumModule.toggleLike('${post.id}')" id="fm-btn-like-${post.id}"><i class="ph ph-heart"></i> ${post.likes ? post.likes.length : 0}</div><div class="int-btn" onclick="ForumModule.toggleComments('${post.id}')" id="fm-btn-msg-${post.id}"><i class="ph ph-chat-centered-text"></i> ${post.comments.length}</div><div class="int-btn" onclick="ForumModule.openShareModal('${post.id}')"><i class="ph ph-share-network"></i></div></div><div class="int-btn" onclick="ForumModule.deletePost('${post.id}')"><i class="ph-thin ph-trash"></i></div></div>`;
         }
         return `<div class="post-card">${visualHTML}${interactionHTML}${renderCommentsHTML(post)}</div>`;
     }
@@ -854,6 +854,7 @@ const ForumModule = (() => {
         const prompt = `[系统任务：朋友圈点赞后的连锁反应]
 帖子「${post.content || post.title || post.desc}」刚刚被 ${_forumProfile.name} 点赞了。
 请 1~2 个熟人角色（如果有的话）也来点赞，并在评论区留下简短互动。
+回复特定人时用 "回复 @对方名字: " 开头。
 【返回格式】JSON: { "likes": ["角色名1"], "comments": [{"author":"名字","text":"评论"}] }`;
         try {
             const response = await ApiHelper.chatCompletion(activeApi,[{ role: 'user', content: prompt }]);
@@ -862,6 +863,7 @@ const ForumModule = (() => {
             if (start === -1 || end === -1) return;
             const result = JSON.parse(cleaned.substring(start, end + 1));
             if (result.likes) {
+                if (!Array.isArray(post.likes)) post.likes = [];
                 for (const name of result.likes) {
                     if (!post.likes.includes(name)) post.likes.push(name);
                 }
@@ -869,10 +871,27 @@ const ForumModule = (() => {
             if (result.comments) {
                 const now = Date.now();
                 for (const c of result.comments) {
-                    post.comments.push({ id: 'fc_' + Math.random().toString(36).substr(2,9), author: c.author, avatarKey: '', text: c.text, timestamp: now + Math.random()*5000, time: new Date().toTimeString().slice(0,5) });
+                    const char = chars.find(ch => ch.name === c.author);
+                    const comment = {
+                        id: 'fc_' + Math.random().toString(36).substr(2,9),
+                        author: c.author,
+                        avatarKey: char ? `char-avatar-${char.id}` : '',
+                        text: c.text,
+                        timestamp: now + Math.random()*5000,
+                        time: new Date().toTimeString().slice(0,5)
+                    };
+                    const replyTo = _extractReplyTo(c.text, chars);
+                    if (replyTo) comment.replyTo = replyTo;
+                    post.comments.push(comment);
                 }
             }
             await DB.forum.put(post);
+            // 同步内存
+            const memPost = _posts.find(p => p.id === postId);
+            if (memPost) {
+              memPost.likes = post.likes;
+              memPost.comments = post.comments;
+            }
             refreshFeed(true);
         } catch(e) { console.warn('[Forum] evaluatePostLike failed', e); }
     }
@@ -1133,6 +1152,20 @@ const ForumModule = (() => {
         }
     }
 
+    // ── 从评论文本中提取 @某人 的回复对象 ──
+    function _extractReplyTo(text, chars) {
+      // 匹配 "回复 @XXX" 、 "@XXX" 、 "回 @XXX" 等模式
+      let m = text.match(/(?:回复|回|to)\s*@([^\s:：,，]+)/i);
+      if (!m) m = text.match(/@([^\s:：,，]+)/);  // 兜底：任意 @name
+      if (m) {
+        const name = m[1].trim();
+        // 检查是否是已知角色
+        const char = chars.find(c => c.name === name);
+        if (char) return char.name;
+      }
+      return null;
+    }
+
     // 🌟 处理玩家发送评论后的【AI 盖楼与互动推演】
     async function evaluateUserComment(postId, userComment, replyToName) {
         const post = _posts.find(p => p.id === postId);
@@ -1183,11 +1216,11 @@ ${contextStr || '暂无'}
 ${charProfiles || '无'}
 
 【你的推演任务】：
-1. 必须生成 ${replyToName ? '1条被回复者的回应，可外加 1~2 条吃瓜群众的跟帖' : '1~3 条群像跟帖（熟人或路人均可，视风向而定）'}。
-2. 匿名帖(树洞)中大家都不知道玩家真实身份；实名帖中，熟人能够认出玩家。
-3. 如果原帖是某个角色发的，其他角色要像真实朋友圈一样去互动（吐槽/关心/调侃）。
-4. 文风：极度逼真、口语化、年轻人网感，拒绝AI长篇大论说教，单条评论尽量简短。
-5. 【重点】如果是回复玩家，请在文本里加上 "回复 @${userComment.author}: " 作为前缀，或者在话语中体现出对玩家的回应。
+1. 必须生成 ${replyToName ? '1条被回复者的回应，可外加 1~2 条吃瓜群众的跟帖' : '1~3 条群像跟帖'}。
+2. 🔥 角色之间要互动！熟人看到别人的评论要接话、吐槽、@对方——像真实朋友圈聊天。
+3. 文风：极度逼真、口语化、年轻人网感，每条1-2句话，拒绝长篇说教。
+4. 【重点】回复特定人时在文本开头加 "回复 @对方名字: " ！
+5. 1~2 个熟人角色顺手点赞。
 
 【返回格式】（必须严格为 JSON，绝不输出其他废话）：
 {
@@ -1196,7 +1229,8 @@ ${charProfiles || '无'}
       "author": "发言者名字",
       "text": "具体的评论内容"
     }
-  ]
+  ],
+  "likes": ["点赞的角色名1"]
 }`;
 
         try {
@@ -1218,7 +1252,10 @@ ${charProfiles || '无'}
                     if (!rep.author || !rep.text) continue;
                     const char = chars.find(c => c.name === rep.author);
                     let avatarKey = char ? `char-avatar-${char.id}` : ''; // 是系统角色就分配专有头像
-                    
+
+                    // 从文本中提取 @回复对象（优先用文本中的，其次用原始 replyToName）
+                    const textReplyTo = _extractReplyTo(rep.text, chars);
+
                     delayAcc += Math.floor(Math.random() * 8000) + 5000; // 5 ~ 13 秒的时间错峰，呈现真实打字涌入感
                     newComments.push({
                         id: 'fc_' + Math.random().toString(36).substr(2, 9),
@@ -1226,8 +1263,16 @@ ${charProfiles || '无'}
                         avatarKey: avatarKey,
                         text: rep.text,
                         timestamp: now + delayAcc,
-                        replyTo: replyToName || undefined
+                        replyTo: textReplyTo || replyToName || undefined
                     });
+                }
+            }
+
+            // 处理点赞
+            if (result.likes && Array.isArray(result.likes)) {
+                if (!Array.isArray(post.likes)) post.likes = [];
+                for (const name of result.likes) {
+                    if (!post.likes.includes(name)) post.likes.push(name);
                 }
             }
 
@@ -1238,6 +1283,12 @@ ${charProfiles || '无'}
                 });
                 post.comments = [...(post.comments || []), ...newComments];
                 await DB.forum.put(post);
+                // 同步到内存
+                const memPost2 = _posts.find(p => p.id === postId);
+                if (memPost2) {
+                  memPost2.comments = post.comments;
+                  memPost2.likes = post.likes;
+                }
                 console.log(`[Forum AI] 🎯 预埋了 ${newComments.length} 条针对玩家的盖楼回复！`);
             }
         } catch(e) {
@@ -1304,7 +1355,7 @@ ${charProfiles || '无'}
               authorText = '熟人角色：' + postAuthorChar.name + ' (ID:' + postAuthorChar.id + ')';
               anonContextRule = '【角色发帖】：这是熟人 ' + postAuthorChar.name + ' 发的动态！\n' +
                 '1. 其他熟人角色应该像真实朋友圈一样互动：点赞、吐槽、关心、调侃皆可。\n' +
-                '2. 熟人之间可以直接 @对方名字 回复，像真实朋友圈评论一样。\n' +
+                '2. 熟人之间必须用 "回复 @对方名字: " 开头来直接回复某个角色或发帖人，像真实朋友圈评论一样。\n' +
                 '3. ' + postAuthorChar.name + ' 本人【绝对不要】评论自己的帖子（输出 [IGNORE]）。\n' +
                 '4. 路人 NPC 也可以参与评论。';
             } else {
@@ -1327,19 +1378,22 @@ ${anonContextRule}
 ${charProfiles || '无'}
 
 【你的推演任务】：
-1. 熟人反应：基于上述【认知隔离铁律】，代入性格判断是否跟帖。如果不感兴趣、或者是自己发的匿名贴，请直接输出 "[IGNORE]"。
-2. 路人涌入：生成 8-10 条路人（NPC）跟帖。
-3. 点赞：1~3 个熟人角色请给这条动态点赞（返回角色名即可）。
-3. 路人名字要求：【必须像真实的网友ID】！例如：momo、已注销、熬夜冠军、西瓜碎碎冰、User_9527、J、无语子、睡不醒的猫 等等。混合中文、英文、数字，绝对不要全是一本正经的代号。
-4. 路人文风要求：【极度逼真的活人感】！
-   - 使用现代网络口语、年轻人冲浪习惯（如：绝了、蹲、拔草、笑死、yyds、太真实了、抱抱、吃瓜等）。
-   - 允许出现错别字、标点省略。
-   - 性格要多样：有理中客、有阴阳怪气挑刺的、有单纯发癫的、有暖心安慰的、还有彻底跑题歪楼的。
-   - 【绝对警告】：严禁书面语、严禁大段说教、严禁像AI一样总结陈词。每条评论最好控制在1-2句话！
+1. 熟人角色互动（最重要）：熟人之间必须像真实朋友圈一样互相聊天！
+   - 至少 2~3 个熟人要互相 @ 聊天（吐槽、调侃、接话、队形）。
+   - 用 "回复 @对方名字: " 开头来直接回复另一个角色的评论。
+   - 角色之间可以有互怼、开玩笑、起哄——这才是真实朋友圈！
+   - 不感兴趣的输出 "[IGNORE]"。
+2. 路人涌入：生成 5-7 条路人（NPC）跟帖。
+3. 点赞：2~4 个熟人角色请给这条动态点赞（返回角色名即可）。
+4. 路人名字要求：【必须像真实的网友ID】！例如：momo、已注销、熬夜冠军、西瓜碎碎冰、User_9527、J、无语子、睡不醒的猫 等等。
+5. 路人文风要求：【极度逼真的活人感】！
+   - 使用现代网络口语（绝了、蹲、笑死、yyds、吃瓜等）。允许错别字。
+   - 性格多样：理中客、阴阳怪气、发癫、暖心、歪楼都有。
+   - 【绝对警告】：严禁书面语、严禁大段说教！每条1-2句话！
 
-【返回格式】（必须严格为 JSON，绝不输出其他废话）：
+【返回格式】（必须严格为 JSON）：
 {
-  "chars": { "熟人ID": "评论内容", "熟人ID": "[IGNORE]" },
+  "chars": { "熟人ID": "回复 @某人: 评论内容", "熟人ID": "[IGNORE]" },
   "npcs":[
      { "name": "路人ID", "text": "评论内容" }
   ],
@@ -1362,15 +1416,21 @@ ${charProfiles || '无'}
             if (result.chars) {
                 for (const [cid, text] of Object.entries(result.chars)) {
                     if (text && !text.includes('[IGNORE]')) {
-                        const char = chars.find(c => String(c.id) === cid);
+                        // 先按 ID 查，再按名字兜底
+                        let char = chars.find(c => String(c.id) === cid);
+                        if (!char) char = chars.find(c => c.name === cid);
                         if (char) {
-                            newComments.push({
+                            const comment = {
                                 id: 'fc_' + Math.random().toString(36).substr(2, 9),
                                 author: char.name,
                                 avatarKey: `char-avatar-${char.id}`,
                                 text: text,
                                 timestamp: now + Math.floor(Math.random() * 80000) + 10000
-                            });
+                            };
+                            // 提取 @回复对象
+                            const replyTo = _extractReplyTo(text, chars);
+                            if (replyTo) comment.replyTo = replyTo;
+                            newComments.push(comment);
                         }
                     }
                 }
@@ -1406,7 +1466,10 @@ ${charProfiles || '无'}
             
             // 🌟 核心修复：同步更新当前内存，防止正好开着论坛界面时新评论显示脱节
             const memPost = _posts.find(p => p.id === postId);
-            if (memPost) memPost.comments = post.comments;
+            if (memPost) {
+              memPost.comments = post.comments;
+              memPost.likes = post.likes;
+            }
 
             console.log(`[Forum AI] 🎯 成功预埋了 ${newComments.length} 条时空错峰评论！`);
             
@@ -1555,21 +1618,41 @@ ${charProfiles || '无'}
                 worldViewStr = await getWorldViewContext();
             }
 
-            const prompt = `[系统任务：模拟论坛路人(NPC)发帖]
+            // 获取角色名单用于角色发帖
+            const chars = await DB.characters.getAll().catch(()=>[]);
+            const charList = chars.map(c => `[ID:${c.id}] ${c.name} — ${c.persona?.slice(0,50) || '无'}`).join('\n');
+
+            const prompt = `[系统任务：模拟论坛新帖（路人 + 角色混合）]
 当前时间：${_formatDate(Date.now())}
 ${worldViewStr ? `【当前世界观设定】：\n${worldViewStr}\n` : ''}
 
-【任务要求】：
-请生成 4 到 6 条全新的路人帖子，包含以下两种类型（请混合输出）：
-1. "event" (世界事件)：突发大事件，必须符合【当前世界观设定】，如果没有世界观就编造一些事件，需要比较生活化有网感。⚠️标题排版铁律：纯中文不超过5个字且每2-3个字必须加 \\n 换行，纯英文不超过3个单词且每个单词必须加 \\n 换行！
-2. "treehole" (匿名树洞)：匿名网友（如 momo, 已注销, 匿名用户, 熬夜冠军等）发的加密动态。文风要像真实的活人冲浪，随性、发泄情绪、吐槽、分享八卦或怪谈、有网络流行语。
+【已知角色档案】：
+${charList || '无'}
 
-【返回格式】必须是包含多个对象的 JSON 数组，绝不输出其他废话：[
+【任务要求】：
+请生成 4 到 6 条帖子，混合以下三种类型：
+
+1. "event" (世界事件)：突发大事件，需要比较生活化有网感。标题用 \\n 换行。
+2. "treehole" (匿名树洞)：匿名网友发的加密动态。文风像真实活人冲浪。
+3. "char" (角色动态) — 1~2 条：让角色以自己身份发朋友圈！内容要符合角色人设和性格。作者必须用角色真名。
+
+【返回格式】JSON 数组：
+[
   {
-    "type": "event", // 或 "treehole"
-    "author": "如果是event可写 'SYSTEM' 或 'NEWS'，如果是treehole写路人网名",
-    "title": "event专用标题(带\\n，treehole可留空)",
-    "content": "treehole的正文，或event的客观描述不超过30个字"
+    "type": "event",
+    "author": "SYSTEM",
+    "title": "标题(带\\n)",
+    "content": "描述"
+  },
+  {
+    "type": "treehole",
+    "author": "路人网名",
+    "content": "正文"
+  },
+  {
+    "type": "char",
+    "author": "角色真名(必须与档案一致)",
+    "content": "角色发的朋友圈内容"
   }
 ]`;
 
@@ -1612,21 +1695,31 @@ ${worldViewStr ? `【当前世界观设定】：\n${worldViewStr}\n` : ''}
             const now = Date.now();
             for (const p of postsData) {
                 const isEvent = p.type === 'event';
+                const isCharPost = p.type === 'char';
+                // 角色动态以 'event' 类型存储（实名可见）
+                const postType = isCharPost ? 'event' : (isEvent ? 'event' : 'treehole');
+
+                // 角色发帖时查找角色头像
+                let avatarKey = '';
+                if (isCharPost) {
+                    const char = chars.find(c => c.name === p.author);
+                    if (char) avatarKey = `char-avatar-${char.id}`;
+                }
+
                 const post = {
                     id: 'fp_' + now + Math.floor(Math.random() * 100000),
-                    // 👇 核心修复：把广场去掉了，路人只能发树洞和事件
-                    type: isEvent ? 'event' : 'treehole',
-                    timestamp: now - Math.floor(Math.random() * 3600000), 
+                    type: postType,
+                    timestamp: now - Math.floor(Math.random() * 3600000),
                     likes: [],
                     comments:[],
                     author: p.author || 'Anonymous',
-                    avatarKey: '' 
+                    avatarKey: avatarKey
                 };
 
-                if (isEvent) {
-                    post.title = p.title || 'UNNAMED\nEVENT';
+                if (postType === 'event') {
+                    post.title = isCharPost ? (p.author + '的动态') : (p.title || 'UNNAMED\nEVENT');
                     post.desc = p.content || '...';
-                    post.image = EVENT_IMG_URLS[Math.floor(Math.random() * EVENT_IMG_URLS.length)];
+                    if (!isCharPost) post.image = EVENT_IMG_URLS[Math.floor(Math.random() * EVENT_IMG_URLS.length)];
                 } else {
                     post.content = p.content || '...';
                     post.hasImage = false;

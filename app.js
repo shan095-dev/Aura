@@ -5680,14 +5680,25 @@ const ChatModule = (() => {
 
     const list = document.getElementById('ch-roster-list');
     list.innerHTML = '';
-    g.members.forEach(mid => {
+    g.members.forEach(async mid => {
       const c = _chars.find(x => x.id === String(mid)); if (!c) return;
+      // 解析显示名：备注 > 昵称 > 原名
+      let displayName = c.name;
+      try {
+        const remark = await DB.settings.get(`char-remark-${c.id}`);
+        if (remark?.trim()) {
+          displayName = remark.trim();
+        } else {
+          const aliasOn = (await DB.settings.get(`alias-mode-${c.id}`)) === true;
+          if (aliasOn && c.role && c.role !== 'MUSE') displayName = c.role;
+        }
+      } catch(e) {}
       const item = document.createElement('div');
       item.className = 'ch-roster-item';
       item.onclick   = () => startChat(c.id, null); // 点击直接进入 1v1 聊天
       item.innerHTML = `
         <img src="${c.img}" class="ch-roster-avatar" alt="">
-        <span class="ch-roster-name">${c.name}</span>
+        <span class="ch-roster-name">${displayName}</span>
         <div class="ch-roster-dots"></div>
         <span class="ch-roster-role">${c.role}</span>
         <div class="ch-roster-icon"><i class="ph ph-arrow-up-right"></i></div>`;
@@ -9755,10 +9766,11 @@ const ConvModule = (() => {
   let _gcMeta = null;           // { id, name, members: [charId...] }
   let _gcMembers = [];          // [{ id, name, char, imgUrl }]
   let _gcMemberMap = {};        // { charId: { name, imgUrl } } 快查表
+  let _gcDisplayNameMap = {};   // { charId: displayName } 群聊成员显示名（含备注/昵称）
   let _ghostUsers = [];         // 🌟 假 user 列表 [{ id, name, avatarKey, persona }]（运行时）
   let _ghostUserMap = {};       // { fakeUserId: { name, avatarUrl } } 快查表
   let _realUserAvatarUrl = '';  // 真 user 头像（供假 user 继承）
-  
+
 // ── 进入聊天 ──
   async function enter(charId, personaId) {
     _charId    = String(charId);
@@ -9770,6 +9782,7 @@ const ConvModule = (() => {
     _gcMeta = null;
     _gcMembers = [];
     _gcMemberMap = {};
+    _gcDisplayNameMap = {};
     _ghostUsers = [];
     _ghostUserMap = {};
     _realUserAvatarUrl = '';
@@ -9803,6 +9816,11 @@ const ConvModule = (() => {
     _gcMemberMap[String(mId)] = member;
   } catch(e) {}
 }
+      // 构建群聊成员显示名映射（备注 > 昵称 > 原名）
+      _gcDisplayNameMap = {};
+      for (const m of _gcMembers) {
+        _gcDisplayNameMap[String(m.id)] = await _getCharDisplayName(String(m.id));
+      }
       // 🌟 加载假 user（分身/冒充者）运行时映射
       await refreshGhostUsers(_gcMeta);
     } else {
@@ -9850,17 +9868,18 @@ const ConvModule = (() => {
       }
       
     } else {
-      let useAlias = false;
-      try { useAlias = (await DB.settings.get(`alias-mode-${charId}`)) === true; } catch(e) {}
-      if (useAlias && (!_char || !_char.title || !_char.title.trim())) useAlias = false;
+      await _updateChatHeaderName();
+      // 私聊模式：清掉群聊改名的点击态
       if (nameEl) {
-        nameEl.textContent = useAlias ? _char.title : (_char?.name || '—');
-        // 私聊模式：清掉群聊改名的点击态
         nameEl.style.cursor = 'default';
         nameEl.title = '';
         nameEl.onclick = null;
       }
-      
+      // 应用头像隐藏设置
+      const hideAv = (await DB.settings.get(`hide-avatar-${charId}`)) === true;
+      const screen = document.getElementById('conv-screen');
+      if (screen) screen.classList.toggle('no-avatar', hideAv);
+
       if (avatarEl) {
         avatarEl.src = _charImgUrl;
         avatarEl.style.cursor = 'pointer'; 
@@ -11623,7 +11642,7 @@ function _renderImgPreviewBar() {
         : _gcMembers[0];
       if (member) {
         avatarSrc = member.imgUrl || '';
-        senderLabel = member.name;
+        senderLabel = _gcDisplayNameMap[String(sid)] || member.name;
       }
     }
     // 🌟 假 user（分身）：靠右 user 气泡，但用分身自己的头像/名字（留空则继承真 user）
@@ -15380,6 +15399,8 @@ if (!isRecall && !isHtml && !isQuote && !isAudio && !isEmote && !isTransfer && !
     _loadTimePerception();
     _loadScheduleLink();
     _loadAliasToggle();
+    _loadHideAvatarToggle();
+    _loadRemark();
     _loadCustomCSS();
     _loadMemorySettings();
     _loadOfflineSettings();
@@ -15561,9 +15582,9 @@ if (!isRecall && !isHtml && !isQuote && !isAudio && !isEmote && !isTransfer && !
 #conv-screen .cv-btn-ai { background: #fff; color: #1a3a50; }
 
 /* AI 气泡 */
-#conv-screen .cv-msg-row.ai .cv-bubble { background: rgba(255,255,255,0.65); color: #1a3a50; border: 0.5px solid rgba(200,235,250,0.5); backdrop-filter: blur(5px); border-radius: 14px; }
+#conv-screen .cv-msg-row.ai .cv-bubble { background: rgba(255,255,255,0.65); color: #1a3a50; border: 0.5px solid rgba(18,18,18,0.08); backdrop-filter: blur(5px); border-radius: 14px; }
 /* 用户气泡 */
-#conv-screen .cv-msg-row.user .cv-bubble { background: #fff; color: #1a3a50; border: 0.5px solid #1a3a50; border-radius: 14px; }
+#conv-screen .cv-msg-row.user .cv-bubble { background: #fff; color: #1a3a50; border: 0.5px solid rgba(18,18,18,0.1); border-radius: 14px; }
 
 /* 引用块 */
 #conv-screen .cv-quote-ref { border-bottom: 0.3px solid rgba(255,255,255,0.2); }
@@ -15978,12 +15999,91 @@ if (!isRecall && !isHtml && !isQuote && !isAudio && !isEmote && !isTransfer && !
     try { await DB.settings.set(_aliasKey(), isOn); } catch(e) {}
 
     // 实时同步更新聊天页头部的名字
-    const nameEl = document.getElementById('cv-header-name');
-    if (nameEl && _char) {
-      nameEl.textContent = isOn ? _char.title : _char.name;
-    }
+    _updateChatHeaderName();
 
     Toast.show(isOn ? '已开启昵称显示' : '已恢复原名显示');
+  }
+
+  // ── 隐藏头像 (Hide Avatar) 逻辑 ──
+  function _hideAvatarKey() { return `hide-avatar-${_charId}`; }
+
+  async function _loadHideAvatarToggle() {
+    let isOn = false;
+    try { isOn = (await DB.settings.get(_hideAvatarKey())) === true; } catch(e) {}
+    const toggle = document.getElementById('cv-hide-avatar-toggle');
+    if (toggle) toggle.classList.toggle('on', isOn);
+    const screen = document.getElementById('conv-screen');
+    if (screen) screen.classList.toggle('no-avatar', isOn);
+  }
+
+  async function _toggleHideAvatar(el) {
+    el.classList.toggle('on');
+    const isOn = el.classList.contains('on');
+    try { await DB.settings.set(_hideAvatarKey(), isOn); } catch(e) {}
+    const screen = document.getElementById('conv-screen');
+    if (screen) screen.classList.toggle('no-avatar', isOn);
+    Toast.show(isOn ? '已隐藏头像' : '已显示头像');
+  }
+
+  // ── 角色备注 (Character Remark) 逻辑 ──
+  function _remarkKey() { return `char-remark-${_charId}`; }
+
+  async function _getCharDisplayName(charId) {
+    // 1. 备注优先
+    let remark = '';
+    try { remark = (await DB.settings.get(`char-remark-${charId}`)) || ''; } catch(e) {}
+    if (remark.trim()) return remark.trim();
+    // 2. 昵称模式（使用角色 title）
+    let useAlias = false;
+    try { useAlias = (await DB.settings.get(`alias-mode-${charId}`)) === true; } catch(e) {}
+    if (useAlias) {
+      try {
+        const ch = await DB.characters.get(Number(charId));
+        if (ch?.title?.trim()) return ch.title;
+      } catch(e) {}
+    }
+    // 3. 回退到角色原名
+    try {
+      const ch = await DB.characters.get(Number(charId));
+      if (ch?.name) return ch.name;
+    } catch(e) {}
+    return '—';
+  }
+
+  async function _updateChatHeaderName() {
+    const nameEl = document.getElementById('cv-header-name');
+    if (!nameEl) return;
+    if (_isGroup) { nameEl.textContent = _gcMeta?.name || '—'; return; }
+    nameEl.textContent = await _getCharDisplayName(_charId);
+  }
+
+  async function _loadRemark() {
+    let remark = '';
+    try { remark = (await DB.settings.get(_remarkKey())) || ''; } catch(e) {}
+    const input = document.getElementById('cv-char-remark-input');
+    const clearBtn = document.getElementById('cv-char-remark-clear');
+    if (input) input.value = remark;
+    if (clearBtn) clearBtn.style.display = remark.trim() ? '' : 'none';
+  }
+
+  async function _onRemarkInput() {
+    const input = document.getElementById('cv-char-remark-input');
+    const clearBtn = document.getElementById('cv-char-remark-clear');
+    const val = (input?.value || '').trim();
+    if (clearBtn) clearBtn.style.display = val ? '' : 'none';
+    try { await DB.settings.set(_remarkKey(), val); } catch(e) {}
+    await _updateChatHeaderName();
+    Toast.show(val ? '备注已保存' : '备注已清除');
+  }
+
+  async function _clearRemark() {
+    const input = document.getElementById('cv-char-remark-input');
+    if (input) input.value = '';
+    const clearBtn = document.getElementById('cv-char-remark-clear');
+    if (clearBtn) clearBtn.style.display = 'none';
+    try { await DB.settings.set(_remarkKey(), ''); } catch(e) {}
+    await _updateChatHeaderName();
+    Toast.show('备注已清除');
   }
 
   function _renderPersonaList() {
@@ -17344,7 +17444,7 @@ if (action === 'quote') {
     document.getElementById('cv-dist-overlay').classList.remove('active');
   }
   
-  return { enter, back, openQuickReply, closeQuickReply,openSettings, closeSettings, openFuncPanel, loadMore, sendUserMsg, sendAndTriggerAI, fetchModels, closeApiModal, confirmApi, openRecallModal, closeRecallModal, collectTransfer, openHangTag, closeHangTag, tearHangTag, sendUserTransfer, sendImgMsg, closeMenu,handleMenuAction,cancelQuote, updateMultiSelectUI, cancelMultiSelect, favoriteSelected, deleteSelected,addEmoteToPreview,_toggleChatEmotePicker,_switchChatEmoteDict,_pickChatEmote,_openImgViewer, _openImgViewerFromEl, _viewerDownloadImage, _regenerateNovelFromViewer, toggleAudio, clearWallpaper, clearHistory, deleteChat, _toggleAccordion, _selectRadio, _selectPersona,_removePendingImg,playAudio, playUserAudio, previewVoice, _toggleTTS, _toggleFeedVoice, _toggleNovel, _toggleTranslate, _appendNovelImageMessage, _replaceMessageBubble, _showNovelPending, _hideNovelPending, _toggleAlias,copyDefaultCSS, applyAndSaveCSS, clearCustomCSS, saveCssPreset, confirmSaveCssPreset, applyCssPreset, deleteCssPreset,manualSummarize, clearMemory, archiveToWorldBook, confirmArchive, syncSummary, _onSummaryEdit,openCallRecordModal, closeCallRecordModal,_toggleOfflineMsg, _scrollToBottom, openContextConsole,_splitAiBubbles, openLocModal, closeLocModal, sendLocationMsg, openDistModal, closeDistModal, _removeFace, _setFaceFidelity, _onFaceConsent, _pickFace, refreshGhostUsers };
+  return { enter, back, openQuickReply, closeQuickReply,openSettings, closeSettings, openFuncPanel, loadMore, sendUserMsg, sendAndTriggerAI, fetchModels, closeApiModal, confirmApi, openRecallModal, closeRecallModal, collectTransfer, openHangTag, closeHangTag, tearHangTag, sendUserTransfer, sendImgMsg, closeMenu,handleMenuAction,cancelQuote, updateMultiSelectUI, cancelMultiSelect, favoriteSelected, deleteSelected,addEmoteToPreview,_toggleChatEmotePicker,_switchChatEmoteDict,_pickChatEmote,_openImgViewer, _openImgViewerFromEl, _viewerDownloadImage, _regenerateNovelFromViewer, toggleAudio, clearWallpaper, clearHistory, deleteChat, _toggleAccordion, _selectRadio, _selectPersona,_removePendingImg,playAudio, playUserAudio, previewVoice, _toggleTTS, _toggleFeedVoice, _toggleNovel, _toggleTranslate, _appendNovelImageMessage, _replaceMessageBubble, _showNovelPending, _hideNovelPending, _toggleAlias, _toggleHideAvatar, _onRemarkInput, _clearRemark,copyDefaultCSS, applyAndSaveCSS, clearCustomCSS, saveCssPreset, confirmSaveCssPreset, applyCssPreset, deleteCssPreset,manualSummarize, clearMemory, archiveToWorldBook, confirmArchive, syncSummary, _onSummaryEdit,openCallRecordModal, closeCallRecordModal,_toggleOfflineMsg, _scrollToBottom, openContextConsole,_splitAiBubbles, openLocModal, closeLocModal, sendLocationMsg, openDistModal, closeDistModal, _removeFace, _setFaceFidelity, _onFaceConsent, _pickFace, refreshGhostUsers };
 })();
 /** 供 NovelModule 等脚本用 window 访问；const 不会自动挂到 window */
 window.ConvModule = ConvModule;
@@ -17357,6 +17457,22 @@ const AgentModule = (() => {
   const KEY_CFG = 'agent-config';
   const KEY_LAST_POST = 'agent-last-proactive-time'; 
   
+  // ── API 调用带重试（应对 429 限流）──
+  async function _callWithRetry(fn, label) {
+    var retries = 3;
+    while (retries > 0) {
+      try { return await fn(); }
+      catch (e) {
+        if (e._apiStatus === 429 && retries > 1) {
+          var wait = (4 - retries) * 8000 + Math.floor(Math.random() * 5000);
+          console.warn('[Agent] 429 限流(' + (label||'?') + ')，' + wait/1000 + '秒后重试... (剩余' + (retries-1) + '次)');
+          await new Promise(function(r) { return setTimeout(r, wait); });
+          retries--;
+        } else { throw e; }
+      }
+    }
+  }
+
   // ⚡️ 快队列：处理实时社交回复 (如动态点赞评论)
   let _taskQueue =[];
   let _tickTimer = null;
@@ -17657,10 +17773,10 @@ ${promptContext}
 【你们近期的私聊记忆】：${historyStr || '无'}
 ${emoteHint}
 请根据你的性格和【近期私聊记忆】中的默契，决定如何回复 ${userName}。如果私聊中聊过相关话题，请在评论中体现出你们的知根知底。
-可以纯文字回复，也可以发一个表情包。严格按照以下格式输出（绝不输出多余废话）：
-[REPLY_COMMENT:你的回复内容]  或  [REPLY_COMMENT:[EMOTE:关键词]]`;
+可以纯文字回复，也可以文字 + 表情包一起发。格式（绝不输出多余废话）：
+[REPLY_COMMENT:回复内容]  或  [REPLY_COMMENT:回复内容 [EMOTE:关键词]]`;
 
-     const response = await ApiHelper.chatCompletion(activeApi,[{ role: 'user', content: prompt }]);
+     const response = await _callWithRetry(function() { return ApiHelper.chatCompletion(activeApi,[{ role: 'user', content: prompt }]); }, 'Reply');
 
       const match = response.match(/\[REPLY_COMMENT:(.+?)\]/s);
       if (match) {
@@ -17673,12 +17789,17 @@ ${emoteHint}
         const currentPost = feedPosts.find(p => p.id === postId);
         if (!currentPost) return;
 
-        // 🌟 检测表情包引用
+        // 🌟 检测表情包引用（文字 + 表情包可以共存）
         const emoteMatch = replyText.match(/\[EMOTE:(.+?)\]/);
         let imgUrl = null, imgKeyword = null;
+        let cleanText = _clean;
         if (emoteMatch) {
           imgKeyword = emoteMatch[1].trim();
           imgUrl = emoteMap.get(imgKeyword) || null;
+          // 从文本中移除 [EMOTE:xxx] 标签，保留其余文字
+          cleanText = _clean.replace(/\[EMOTE:.+?\]/g, '').trim();
+          // 如果去掉表情包后没有文字，给一个简短默认
+          if (!cleanText) cleanText = '发了一个表情';
         }
 
         let imgDesc = '';
@@ -17690,7 +17811,7 @@ ${emoteHint}
           id: Date.now() + Math.floor(Math.random() * 1000),
           authorId: targetCharId,
           authorName: char.name,
-          text: imgUrl ? `回复 ${globalProfileName}：[表情包:${imgKeyword}]` : `回复 ${globalProfileName}：${_clean}`,
+          text: `回复 ${globalProfileName}：${cleanText}`,
           imgUrl: imgUrl || undefined,
           imgKeyword: imgKeyword || undefined
         };
@@ -17809,7 +17930,7 @@ ${charListText}
   “5”: “大半夜发这些，有病？”
 }`;
 
-     const response = await ApiHelper.chatCompletion(activeApi,[{ role: 'user', content: prompt }]);
+     const response = await _callWithRetry(function() { return ApiHelper.chatCompletion(activeApi,[{ role: 'user', content: prompt }]); }, 'BatchEval');
       const cleaned = response.replace(/```json|```/g, '').trim();
       const start = cleaned.indexOf('{');
       const end = cleaned.lastIndexOf('}');
@@ -17958,12 +18079,21 @@ ${charListText}
         var historyStr = recentMsgs.reverse().filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }).map(function(m) { var txt = (m.parts || []).map(function(p) { return p.content || p.text || ''; }).join('') || m.content; return (m.role === 'user' ? '用户' : ch.name) + ': ' + txt; }).join(' | ');
         charContexts += '[ID: ' + ch.id + '] ' + ch.name + '\n人设: ' + ch.persona + '\n近期记忆: ' + (historyStr || '无') + '\n---\n';
       }
-      var prompt = '[后台调度：朋友圈交叉互动 第' + (round + 1) + '轮]\n\n动态内容：' + postText + '\n\n已有评论：\n' + commentSummary + '\n\n角色档案：\n' + charContexts + '\n【任务】：模拟真实社交平台，角色看到彼此评论后可能回复/附和/调侃/反驳。每个角色最多回复1条。不想回复填"[IGNORE]"。\n\n返回JSON：{"角色ID":{"targetCommentId":评论ID,"text":"回复内容"}} 或 {"角色ID":"[IGNORE]"}';
-      var response = await ApiHelper.chatCompletion(activeApi, [{ role: 'user', content: prompt }]);
+      var prompt = '[后台调度：朋友圈交叉互动 第' + (round + 1) + '轮]\n\n动态内容：' + postText + '\n\n已有评论：\n' + commentSummary + '\n\n角色档案：\n' + charContexts + '\n【任务】：模拟真实社交平台，角色看到彼此评论后可能回复/附和/调侃/反驳。每个角色最多回复1条。不想回复填"[IGNORE]"。还没点赞的角色顺手点赞。\n\n返回JSON：{"角色ID":{"targetCommentId":评论ID,"text":"回复内容"}} 或 {"角色ID":"[IGNORE]"}、以及"likes":["角色名"]';
+      var response = await _callWithRetry(function() { return ApiHelper.chatCompletion(activeApi, [{ role: 'user', content: prompt }]); }, 'Cross');
       var cleaned = response.replace(/```json|```/g, '').trim();
       var start = cleaned.indexOf('{'), end = cleaned.lastIndexOf('}');
       if (start === -1 || end === -1) { console.warn('[Agent-Cross] JSON解析失败'); return; }
       var results = JSON.parse(cleaned.substring(start, end + 1));
+      // 处理点赞
+      if (results.likes && Array.isArray(results.likes)) {
+        if (!Array.isArray(post.likes)) post.likes = [];
+        for (var li = 0; li < results.likes.length; li++) {
+          var lname = results.likes[li];
+          if (lname && !post.likes.includes(lname)) { post.likes.push(lname); console.log('[Agent-Cross]', lname, '点赞'); }
+        }
+        await DB.feed.put(post);
+      }
       var newCount = 0, dIdx = 0;
       for (var cid in results) {
         if (!Object.prototype.hasOwnProperty.call(results, cid)) continue;
@@ -22025,6 +22155,7 @@ const SystemModule = (() => {
   const KEY_SIZE        = 'system-font-size';
   const KEY_FONTS       = 'system-fonts';
   const KEY_ICON_LABELS = 'system-icon-labels';
+  const KEY_SYSTEM_CSS  = 'system-css';
 
   let _fontSize      = 13;
   let _fonts         = [];
@@ -22074,6 +22205,39 @@ const SystemModule = (() => {
     document.head.appendChild(override);
   }
 
+  // ── 系统 CSS 注入 ──
+  function _injectSystemCSS(cssStr) {
+    let styleEl = document.getElementById('sys-dynamic-css');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'sys-dynamic-css';
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = cssStr || '';
+  }
+
+  async function _loadSystemCSS() {
+    try {
+      const css = await DB.settings.get(KEY_SYSTEM_CSS);
+      const ta = document.getElementById('sys-css-input');
+      if (ta) ta.value = css || '';
+    } catch(e) {}
+  }
+
+  async function applySystemCSS() {
+    const ta = document.getElementById('sys-css-input');
+    const cssStr = ta ? ta.value.trim() : '';
+    _injectSystemCSS(cssStr);
+    try { await DB.settings.set(KEY_SYSTEM_CSS, cssStr); Toast.show('系统样式已保存'); } catch(e) {}
+  }
+
+  async function clearSystemCSS() {
+    const ta = document.getElementById('sys-css-input');
+    if (ta) ta.value = '';
+    _injectSystemCSS('');
+    try { await DB.settings.del(KEY_SYSTEM_CSS); Toast.show('已清除系统样式'); } catch(e) {}
+  }
+
   // ── 渲染系统设置页 ──
   function render() {
     const slider  = document.getElementById('sys-font-size-slider');
@@ -22085,6 +22249,7 @@ const SystemModule = (() => {
     const toggle = document.getElementById('sys-toggle-icon-labels');
     if (toggle) toggle.checked = _showIconLabels;
     _renderFontList();
+    _loadSystemCSS();
   }
 
   async function toggleIconLabels(show) {
@@ -22252,9 +22417,15 @@ const SystemModule = (() => {
         if (active) _applyFont(active);
       }
     } catch(e) { console.warn('system fonts restore failed', e); }
+
+    // 恢复系统 CSS
+    try {
+      const savedCSS = await DB.settings.get(KEY_SYSTEM_CSS);
+      if (savedCSS) _injectSystemCSS(savedCSS);
+    } catch(e) { console.warn('system css restore failed', e); }
   }
 
-  return { render, onFontSizeInput, saveFontSize, previewFont, addFont, activateFont, deactivateFont, deleteFont, toggleIconLabels, init };
+  return { render, onFontSizeInput, saveFontSize, previewFont, addFont, activateFont, deactivateFont, deleteFont, toggleIconLabels, init, applySystemCSS, clearSystemCSS };
 })();
 
 // ============================================================
