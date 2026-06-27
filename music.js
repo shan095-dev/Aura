@@ -2480,8 +2480,10 @@ if (fwLabelNum) {
         const a = document.createElement('a');
         a.href = url;
         a.download = 'aura-playlists-' + new Date().toISOString().slice(0,10) + '.json';
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
         if (typeof Toast !== 'undefined') Toast.show(`已导出 ${exportData.length} 个歌单`);
       } catch(e) {
         console.error('[MusicModule] 导出失败:', e);

@@ -740,6 +740,11 @@ const ForumModule = (() => {
         // 新增点击触发回复交互
         let commentsList = visibleComments.map(c => {
             const replyToHtml = c.replyTo ? `<div class="clog-reply-to"><i class="ph ph-arrow-bend-up-right"></i> ${_escHtml(c.replyTo)}</div>` : '';
+            // 🌟 表情包评论：渲染图片
+            let emoteHtml = '';
+            if (c.imgUrl) {
+                emoteHtml = `<img src="${_escHtml(c.imgUrl)}" alt="${_escHtml(c.imgKeyword || '表情')}" loading="lazy" onclick="event.stopPropagation(); window.open('${_escHtml(c.imgUrl)}')" style="max-width:120px;max-height:120px;border-radius:8px;margin-top:6px;display:block;cursor:pointer;">`;
+            }
             return `
             <div class="comment-log" onclick="ForumModule.prepareReply('${post.id}', '${_escHtml(c.author)}')">
                 <div class="clog-meta">
@@ -748,6 +753,7 @@ const ForumModule = (() => {
                 </div>
                 ${replyToHtml}
                 <div class="clog-text">${_escHtml(c.text)}</div>
+                ${emoteHtml}
             </div>
         `}).join('');
 

@@ -2766,8 +2766,11 @@ const DataModule = (() => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            a.href = url; a.download = `ChillOS_Orphans_${dateStr}.zip`; a.click();
-            URL.revokeObjectURL(url); res();
+            a.href = url; a.download = `ChillOS_Orphans_${dateStr}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000); res();
           });
         });
       }
@@ -17993,6 +17996,7 @@ ${charListText}
       // 🌟 检测表情包引用 [EMOTE:关键词]
       const emoteMatch = replyText.match(/\[EMOTE:(.+?)\]/);
       let imgUrl = null, imgKeyword = null;
+      let cleanText = replyText;
       if (emoteMatch) {
         imgKeyword = emoteMatch[1].trim();
         try {
@@ -18000,12 +18004,15 @@ ${charListText}
             imgUrl = EmoteModule.getUrlByKeyword(imgKeyword, String(charId));
           }
         } catch(e) {}
+        // 从文本中移除 [EMOTE:xxx] 标签，保留其余文字
+        cleanText = replyText.replace(/\[EMOTE:.+?\]/g, '').trim();
+        if (!cleanText) cleanText = '发了一个表情';
       }
       const _newComment = {
         id: Date.now() + Math.floor(Math.random() * 1000),
         authorId: charId,
         authorName: char.name,
-        text: imgUrl ? `[表情包:${imgKeyword}]` : replyText,
+        text: cleanText,
         imgUrl: imgUrl || undefined,
         imgKeyword: imgKeyword || undefined
       };
