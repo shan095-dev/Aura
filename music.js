@@ -213,6 +213,18 @@ const MusicModule = (() => {
       #music-root .ms-song-item.playing .ms-song-name { color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5); }
       #music-root .ms-song-item.playing .ms-song-index { color:#fff; }
 
+      /* 批量模式 */
+      #music-root .ms-batch-toggle { font-size:1.3rem; cursor:pointer; color:rgba(255,255,255,0.5); transition:color 0.2s; }
+      #music-root .ms-batch-toggle.active { color:#fff; }
+      #music-root .ms-song-checkbox { width:22px; height:22px; border:2px solid rgba(255,255,255,0.25); border-radius:50%; display:flex; align-items:center; justify-content:center; margin-right:10px; flex-shrink:0; transition:all 0.2s; font-size:0.7rem; color:transparent; }
+      #music-root .ms-song-item.batch-selected .ms-song-checkbox { border-color:#fff; background:#fff; color:#000; }
+      #music-root .ms-batch-bar { position:fixed; bottom:0; left:0; right:0; background:rgba(15,15,20,0.95); backdrop-filter:blur(20px); border-top:1px solid rgba(255,255,255,0.1); padding:15px 25px calc(15px + env(safe-area-inset-bottom, 0px)); display:flex; align-items:center; justify-content:space-between; z-index:50; }
+      #music-root .ms-batch-btn { padding:8px 16px; border-radius:20px; border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.8); font-size:0.85rem; cursor:pointer; letter-spacing:1px; transition:all 0.2s; }
+      #music-root .ms-batch-btn:active { background:rgba(255,255,255,0.1); }
+      #music-root .ms-batch-del { border-color:rgba(220,60,60,0.5); color:rgba(220,60,60,0.9); }
+      #music-root .ms-batch-del:active { background:rgba(220,60,60,0.2); }
+      #music-root .ms-batch-info { font-size:0.85rem; color:var(--ms-text-sub); }
+
       /* ── 搜索 ── */
       #music-root .ms-search-box { position:relative; margin:20px 25px; }
       #music-root .ms-search-icon { position:absolute; left:0; top:50%; transform:translateY(-50%); color:var(--ms-text-sub); font-size:1.2rem; }
@@ -469,6 +481,9 @@ const MusicModule = (() => {
                 <div class="ms-dropdown-item" id="ms-btn-go-ui">
                   <i class="ph ph-palette"></i> 皮肤
                 </div>
+                <div class="ms-dropdown-item" id="ms-btn-scan-local">
+                  <i class="ph ph-folder-search"></i> 扫描本地
+                </div>
                 <div class="ms-dropdown-item" id="ms-btn-export-pl">
                   <i class="ph ph-download-simple"></i> 导出歌单
                 </div>
@@ -692,7 +707,10 @@ const MusicModule = (() => {
         <div class="ms-sl-header" id="ms-sl-header-bg">
           <div class="ms-sl-top-bar">
             <i class="ph ph-caret-left ms-back-btn" id="ms-btn-sl-back" style="text-shadow:0 2px 4px rgba(0,0,0,0.8);"></i>
-            <i class="ph ph-upload-simple ms-icon-btn" id="ms-sl-upload-btn" style="text-shadow:0 2px 4px rgba(0,0,0,0.8);display:none;"></i>
+            <div style="display:flex;gap:12px;">
+              <i class="ph ph-check-square ms-icon-btn ms-batch-toggle" id="ms-sl-batch-btn" style="text-shadow:0 2px 4px rgba(0,0,0,0.8);display:none;"></i>
+              <i class="ph ph-upload-simple ms-icon-btn" id="ms-sl-upload-btn" style="text-shadow:0 2px 4px rgba(0,0,0,0.8);display:none;"></i>
+            </div>
           </div>
           <div class="ms-sl-title-box">
             <h2 class="ms-sl-title" id="ms-sl-title">标题</h2>
@@ -700,6 +718,11 @@ const MusicModule = (() => {
           </div>
         </div>
         <div class="ms-song-list" id="ms-song-list-render"></div>
+        <div class="ms-batch-bar" id="ms-batch-bar" style="display:none;">
+          <span class="ms-batch-btn" id="ms-batch-select-all">全选</span>
+          <span class="ms-batch-info" id="ms-batch-info">已选 0 首</span>
+          <span class="ms-batch-btn ms-batch-del" id="ms-batch-delete"><i class="ph ph-trash"></i> 删除</span>
+        </div>
       </div>
 
       <!-- 搜索页 -->
@@ -812,6 +835,26 @@ const MusicModule = (() => {
         </div>
       </div>
 
+      <!-- 扫描本地音乐 -->
+      <div class="ms-modal-overlay" id="ms-modal-scan">
+        <div class="ms-modal-content">
+          <div class="ms-modal-title">扫描本地音乐</div>
+          <div id="ms-scan-status" style="text-align:center;padding:20px;">
+            <i class="ph ph-spinner" style="font-size:2rem;animation:ms-spin 1s linear infinite;"></i>
+            <p style="margin-top:15px;" id="ms-scan-status-text">正在扫描目录...</p>
+          </div>
+          <div id="ms-scan-results" style="max-height:200px;overflow-y:auto;margin:10px 0;"></div>
+          <div id="ms-scan-target" style="margin:10px 0;display:none;">
+            <p style="font-size:0.85rem;color:var(--ms-text-sub);margin-bottom:8px;">添加到歌单：</p>
+            <select id="ms-scan-target-pl" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.4);color:#fff;font-size:0.9rem;"></select>
+          </div>
+          <div class="ms-modal-actions">
+            <button class="ms-modal-btn" id="ms-btn-cancel-scan">取消</button>
+            <button class="ms-modal-btn" id="ms-btn-confirm-scan" style="display:none;">确认添加 (<span id="ms-scan-count">0</span>首)</button>
+          </div>
+        </div>
+      </div>
+
       <!-- 上传工作台 -->
       <div class="ms-modal-overlay" id="ms-modal-upload">
         <div class="ms-action-sheet">
@@ -865,6 +908,8 @@ const MusicModule = (() => {
   let _contextIsLocal = true;
   let _pendingFiles =[];
   let _uploadImgTargetId = null;
+  let _batchMode = false;
+  let _selectedSongs = new Set();
   let _tempCover = '';
   const _playModeIcons = ['ph-repeat', 'ph-shuffle', 'ph-repeat-once'];
   
@@ -924,6 +969,7 @@ const MusicModule = (() => {
     try { await MusicDB.del('audio', songId); } catch(e) {}
     try { await MusicDB.del('lyrics', `lrc_${songId}`); } catch(e) {}
     if (_blobCache.has(songId)) { URL.revokeObjectURL(_blobCache.get(songId)); _blobCache.delete(songId); }
+    _selectedSongs.delete(songId);
     await _savePlaylistToDB(_currentPlaylistObj);
     _renderLocalPlaylists();
     _renderSongList(_currentPlaylistObj.songs, _$('ms-song-list-render'));
@@ -1443,10 +1489,13 @@ const MusicModule = (() => {
   }
 
   async function _loadDailyRec() {
+    _batchMode = false; _selectedSongs.clear();
     _navTo('ms-songlist-view');
     _$('ms-sl-title').textContent = 'DAILY ECHO';
     _$('ms-sl-desc').textContent = '每日推荐';
     _$('ms-sl-upload-btn').style.display = 'none';
+    _$('ms-sl-batch-btn').style.display = 'none';
+    _$('ms-batch-bar').style.display = 'none';
     const container = _$('ms-song-list-render');
     container.innerHTML = '<div class="ms-text-light" style="text-align:center;padding:40px;">加载中...</div>';
     try {
@@ -1466,12 +1515,15 @@ const MusicModule = (() => {
   }
 
   async function _loadCloudSongList(pl) {
+    _batchMode = false; _selectedSongs.clear();
     _navTo('ms-songlist-view');
     _$('ms-sl-title').textContent = pl.name.toUpperCase().slice(0, 16);
     _$('ms-sl-desc').textContent = `${pl.name} • ${pl.trackCount} 首`;
     _$('ms-sl-header-bg').style.backgroundImage = `url('${pl.coverImgUrl}')`;
     _$('ms-fp-pl-name').textContent = pl.name;
     _$('ms-sl-upload-btn').style.display = 'none';
+    _$('ms-sl-batch-btn').style.display = 'none';
+    _$('ms-batch-bar').style.display = 'none';
     const container = _$('ms-song-list-render');
     container.innerHTML = '<div class="ms-text-light" style="text-align:center;padding:40px;">加载中...</div>';
     try {
@@ -1491,12 +1543,17 @@ const MusicModule = (() => {
 
   function _openSongList(pl) {
     _currentPlaylistObj = pl;
+    _batchMode = false;
+    _selectedSongs.clear();
     _navTo('ms-songlist-view');
     _$('ms-sl-title').textContent = (pl.titleEn || 'STORY').toUpperCase();
     _$('ms-sl-desc').textContent = `${pl.name} • ${pl.count} Tracks`;
     _$('ms-sl-header-bg').style.backgroundImage = `url('${pl.cover}')`;
     _$('ms-fp-pl-name').textContent = pl.name;
     _$('ms-sl-upload-btn').style.display = pl.isLocal ? 'block' : 'none';
+    _$('ms-sl-batch-btn').style.display = pl.isLocal ? 'block' : 'none';
+    _$('ms-sl-batch-btn').classList.remove('active');
+    _$('ms-batch-bar').style.display = 'none';
     _currentPlaylist = pl.songs;
     const container = _$('ms-song-list-render');
     _renderSongList(pl.songs, container);
@@ -1512,35 +1569,50 @@ const MusicModule = (() => {
     songs.forEach((song, i) => {
       const el = document.createElement('div');
       el.className = 'ms-song-item ms-fade-in';
+      if (_batchMode && isLocal && _selectedSongs.has(song.id)) el.classList.add('batch-selected');
       el.style.animationDelay = `${i * 0.03}s`;
-      const rightSide = isLocal
-        ? `<div class="ms-song-actions">
-             ${song.hasLrc ? `<span class="ms-lrc-badge" data-id="${song.id}" title="点击删除歌词">LRC</span>` : ''}
-             <i class="ph ph-trash ms-song-del" data-id="${song.id}"></i>
-           </div>`
-        : `<i class="ph ph-play-circle ms-text-light"></i>`;
-      el.innerHTML = `
-        <div class="ms-song-index">${String(i + 1).padStart(2, '0')}</div>
-        <div class="ms-song-info">
-          <div class="ms-song-name">${song.title || song.name}</div>
-          <div class="ms-song-artist">${song.artist || ''}</div>
-        </div>
-        ${rightSide}`;
-      el.onclick = (e) => {
-        if (e.target.closest?.('.ms-song-del') || e.target.closest?.('.ms-lrc-badge')) return;
-        _playSong(i);
-      };
-      if (isLocal) {
-        const delBtn = el.querySelector('.ms-song-del');
-        if (delBtn) delBtn.onclick = async e => {
-          e.stopPropagation();
-          if (confirm(`确认删除「${song.title || song.name}」？`)) await _deleteSong(song.id);
+
+      if (_batchMode && isLocal) {
+        // Batch mode: show checkbox
+        const checked = _selectedSongs.has(song.id);
+        el.innerHTML = `
+          <div class="ms-song-checkbox">${checked ? '<i class="ph ph-check"></i>' : ''}</div>
+          <div class="ms-song-index">${String(i + 1).padStart(2, '0')}</div>
+          <div class="ms-song-info">
+            <div class="ms-song-name">${song.title || song.name}</div>
+            <div class="ms-song-artist">${song.artist || ''}</div>
+          </div>`;
+        el.onclick = () => _toggleSongSelection(song.id);
+      } else {
+        const rightSide = isLocal
+          ? `<div class="ms-song-actions">
+               ${song.hasLrc ? `<span class="ms-lrc-badge" data-id="${song.id}" title="点击删除歌词">LRC</span>` : ''}
+               <i class="ph ph-trash ms-song-del" data-id="${song.id}"></i>
+             </div>`
+          : `<i class="ph ph-play-circle ms-text-light"></i>`;
+        el.innerHTML = `
+          <div class="ms-song-index">${String(i + 1).padStart(2, '0')}</div>
+          <div class="ms-song-info">
+            <div class="ms-song-name">${song.title || song.name}</div>
+            <div class="ms-song-artist">${song.artist || ''}</div>
+          </div>
+          ${rightSide}`;
+        el.onclick = (e) => {
+          if (e.target.closest?.('.ms-song-del') || e.target.closest?.('.ms-lrc-badge')) return;
+          _playSong(i);
         };
-        const lrcBadge = el.querySelector('.ms-lrc-badge');
-        if (lrcBadge) lrcBadge.onclick = async e => {
-          e.stopPropagation();
-          if (confirm(`确认删除「${song.title || song.name}」的歌词？`)) await _deleteSongLrc(song.id);
-        };
+        if (isLocal) {
+          const delBtn = el.querySelector('.ms-song-del');
+          if (delBtn) delBtn.onclick = async e => {
+            e.stopPropagation();
+            if (confirm(`确认删除「${song.title || song.name}」？`)) await _deleteSong(song.id);
+          };
+          const lrcBadge = el.querySelector('.ms-lrc-badge');
+          if (lrcBadge) lrcBadge.onclick = async e => {
+            e.stopPropagation();
+            if (confirm(`确认删除「${song.title || song.name}」的歌词？`)) await _deleteSongLrc(song.id);
+          };
+        }
       }
       container.appendChild(el);
     });
@@ -1757,6 +1829,411 @@ if (fwLabelNum) {
   function _fmtTime(s) {
     if (isNaN(s) || s === Infinity) return '00:00';
     return `${Math.floor(s / 60).toString().padStart(2, '0')}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
+  }
+
+  // ── 批量删除 ──
+  function _toggleBatchMode() {
+    _batchMode = !_batchMode;
+    _selectedSongs.clear();
+    const btn = _$('ms-sl-batch-btn');
+    if (_batchMode) {
+      btn.classList.add('active');
+      _$('ms-batch-bar').style.display = 'flex';
+      _$('ms-sl-upload-btn').style.display = 'none';
+    } else {
+      btn.classList.remove('active');
+      _$('ms-batch-bar').style.display = 'none';
+      _$('ms-sl-upload-btn').style.display = _currentPlaylistObj?.isLocal ? 'block' : 'none';
+    }
+    _updateBatchInfo();
+    _renderSongList(_currentPlaylistObj?.songs || [], _$('ms-song-list-render'));
+  }
+
+  function _toggleSongSelection(songId) {
+    if (_selectedSongs.has(songId)) {
+      _selectedSongs.delete(songId);
+    } else {
+      _selectedSongs.add(songId);
+    }
+    _updateBatchInfo();
+    _renderSongList(_currentPlaylistObj?.songs || [], _$('ms-song-list-render'));
+  }
+
+  function _selectAllSongs() {
+    const songs = _currentPlaylistObj?.songs || [];
+    if (_selectedSongs.size === songs.length) {
+      _selectedSongs.clear();
+    } else {
+      songs.forEach(s => _selectedSongs.add(s.id));
+    }
+    _updateBatchInfo();
+    _renderSongList(songs, _$('ms-song-list-render'));
+  }
+
+  function _updateBatchInfo() {
+    const info = _$('ms-batch-info');
+    if (info) info.textContent = `已选 ${_selectedSongs.size} 首`;
+  }
+
+  async function _batchDeleteSelected() {
+    if (!_selectedSongs.size || !_currentPlaylistObj) return;
+    if (!confirm(`确认删除选中的 ${_selectedSongs.size} 首歌曲？`)) return;
+
+    const ids = Array.from(_selectedSongs);
+    for (const songId of ids) {
+      try { await MusicDB.del('audio', songId); } catch(e) {}
+      try { await MusicDB.del('lyrics', `lrc_${songId}`); } catch(e) {}
+      if (_blobCache.has(songId)) { URL.revokeObjectURL(_blobCache.get(songId)); _blobCache.delete(songId); }
+    }
+    _currentPlaylistObj.songs = _currentPlaylistObj.songs.filter(s => !_selectedSongs.has(s.id));
+    _currentPlaylistObj.count = _currentPlaylistObj.songs.length;
+    await _savePlaylistToDB(_currentPlaylistObj);
+    _selectedSongs.clear();
+    _renderLocalPlaylists();
+    _renderSongList(_currentPlaylistObj.songs, _$('ms-song-list-render'));
+    _updateBatchInfo();
+    if (typeof Toast !== 'undefined') Toast.show(`已删除 ${ids.length} 首`);
+  }
+
+  // ── 扫描本地音乐 ──
+  let _scanFoundFiles = [];
+  let _scanLrcFiles = [];
+
+  async function _scanLocalMusic() {
+    try {
+      let fileHandles = [];
+
+      if (window.showDirectoryPicker) {
+        // Modern File System Access API (Chrome / Edge 86+)
+        try {
+          const dirHandle = await window.showDirectoryPicker({ mode: 'read' });
+          await _scanWithDirHandle(dirHandle, fileHandles);
+        } catch(e) {
+          if (e.name === 'AbortError') return; // User cancelled
+          console.warn('[MusicModule] showDirectoryPicker 失败，降级到文件选择器:', e);
+        }
+      }
+
+      // Fallback or primary: <input webkitdirectory>
+      if (!fileHandles.length) {
+        fileHandles = await _scanWithFileInput();
+      }
+
+      if (!fileHandles.length) {
+        const hasLrc = _scanLrcFiles && _scanLrcFiles.length;
+        if (typeof Toast !== 'undefined') Toast.show(hasLrc
+          ? `仅发现 ${_scanLrcFiles.length} 个歌词文件，未找到匹配的音频`
+          : '未发现音频文件，请确认目录中包含 mp3/flac/wav 等格式');
+        return;
+      }
+
+      await _analyzeAndShowResults(fileHandles);
+
+    } catch(e) {
+      if (e.name !== 'AbortError') {
+        console.error('[MusicModule] 扫描失败:', e);
+        if (typeof Toast !== 'undefined') Toast.show('扫描失败: ' + e.message);
+      }
+      _closeModal('ms-modal-scan');
+    }
+  }
+
+  async function _scanWithDirHandle(dirHandle, fileHandles) {
+    const AUDIO_EXTS = new Set(['mp3','flac','wav','ogg','m4a','aac','wma','ape','opus','webm']);
+    _scanLrcFiles = [];
+    let _scanCancelled = false;
+    let _scanTotalEntries = 0;
+    _$('ms-btn-cancel-scan').onclick = () => { _scanCancelled = true; _closeModal('ms-modal-scan'); };
+
+    async function walk(dirHandle, label) {
+      if (_scanCancelled) return;
+      try {
+        const entries = [];
+        try {
+          for await (const entry of dirHandle.values()) {
+            entries.push(entry);
+          }
+        } catch(e1) {
+          console.warn('[MusicModule] values() 失败，尝试 entries():', e1);
+          try {
+            for await (const [name, handle] of dirHandle.entries()) {
+              entries.push(handle);
+            }
+          } catch(e2) {
+            console.error('[MusicModule] 无法读取目录:', label, e2);
+            return;
+          }
+        }
+
+        for (const handle of entries) {
+          if (_scanCancelled) return;
+          _scanTotalEntries++;
+          try {
+            if (handle.kind === 'directory') {
+              await walk(handle, label + '/' + handle.name);
+            } else if (handle.kind === 'file') {
+              const name = handle.name;
+              const ext = (name.split('.').pop() || '').toLowerCase();
+              if (AUDIO_EXTS.has(ext)) {
+                fileHandles.push({ name, handle });
+                _$('ms-scan-status-text').textContent = `已发现 ${fileHandles.length} 个音频 + ${_scanLrcFiles.length} 个歌词 (扫描 ${_scanTotalEntries} 项)...`;
+              } else if (ext === 'lrc') {
+                _scanLrcFiles.push({ name, handle });
+                _$('ms-scan-status-text').textContent = `已发现 ${fileHandles.length} 个音频 + ${_scanLrcFiles.length} 个歌词 (扫描 ${_scanTotalEntries} 项)...`;
+              }
+            }
+          } catch(e) {
+            console.warn('[MusicModule] 跳过条目:', e);
+          }
+        }
+      } catch(e) {
+        console.warn('[MusicModule] 遍历目录失败:', label, e);
+      }
+    }
+
+    _openModal('ms-modal-scan');
+    _$('ms-scan-status').style.display = 'block';
+    _$('ms-scan-results').innerHTML = '';
+    _$('ms-btn-confirm-scan').style.display = 'none';
+    _$('ms-scan-target').style.display = 'none';
+    _$('ms-scan-status-text').textContent = '正在扫描目录...';
+    _$('ms-btn-cancel-scan').style.display = 'inline-block';
+    _$('ms-btn-cancel-scan').textContent = '取消';
+
+    await walk(dirHandle, dirHandle.name);
+    console.log('[MusicModule] 扫描完成，总条目:', _scanTotalEntries, '音频:', fileHandles.length, 'LRC:', _scanLrcFiles.length);
+  }
+
+  function _scanWithFileInput() {
+    return new Promise((resolve) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.webkitdirectory = true;
+      input.multiple = true;
+      // NO accept attr — it conflicts with webkitdirectory on Windows
+      input.onchange = () => {
+        const files = Array.from(input.files || []);
+        const AUDIO_EXTS = new Set(['mp3','flac','wav','ogg','m4a','aac','wma','ape','opus','webm']);
+        const results = [];
+        _scanLrcFiles = [];
+        files.forEach(file => {
+          const ext = (file.name.split('.').pop() || '').toLowerCase();
+          if (AUDIO_EXTS.has(ext)) {
+            results.push({ name: file.name, file });
+          } else if (ext === 'lrc') {
+            _scanLrcFiles.push({ name: file.name, file });
+          }
+        });
+        input.remove();
+        resolve(results);
+      };
+      input.oncancel = () => { input.remove(); resolve([]); };
+      document.body.appendChild(input);
+      input.click();
+    });
+  }
+
+  async function _analyzeAndShowResults(foundFiles) {
+    _openModal('ms-modal-scan');
+    _$('ms-scan-status').style.display = 'block';
+    _$('ms-scan-results').innerHTML = '';
+    _$('ms-btn-confirm-scan').style.display = 'none';
+    _$('ms-scan-target').style.display = 'none';
+    _$('ms-scan-status-text').textContent = `正在分析 ${foundFiles.length} 个文件的时长...`;
+    _$('ms-btn-cancel-scan').style.display = 'inline-block';
+    _$('ms-btn-cancel-scan').textContent = '取消';
+
+    let _scanCancelled = false;
+    _$('ms-btn-cancel-scan').onclick = () => { _scanCancelled = true; _closeModal('ms-modal-scan'); };
+
+    const validFiles = [];
+    let processed = 0;
+
+    for (const f of foundFiles) {
+      if (_scanCancelled) break;
+      try {
+        // Get file: either from FileSystemHandle or direct File object
+        const file = f.handle ? await f.handle.getFile() : f.file;
+        let duration = 0;
+
+        // Primary: use <audio> element to read metadata (fast, only reads header)
+        try {
+          duration = await new Promise((resolve) => {
+            const blobUrl = URL.createObjectURL(file);
+            const a = new Audio();
+            a.preload = 'metadata';
+            a.src = blobUrl;
+            const cleanup = () => { URL.revokeObjectURL(blobUrl); };
+            a.addEventListener('loadedmetadata', () => {
+              cleanup();
+              resolve(isFinite(a.duration) && a.duration > 0 ? a.duration : 0);
+            }, { once: true });
+            a.addEventListener('error', () => {
+              cleanup();
+              resolve(0);
+            }, { once: true });
+            setTimeout(() => { cleanup(); resolve(0); }, 15000);
+          });
+        } catch(e) { /* fall through */ }
+
+        // Fallback: AudioContext decode
+        if (!duration) {
+          try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const ab = await file.arrayBuffer();
+            const audioBuffer = await audioCtx.decodeAudioData(ab);
+            duration = audioBuffer.duration || 0;
+            audioCtx.close();
+          } catch(e2) { /* skip */ }
+        }
+
+        processed++;
+        _$('ms-scan-status-text').textContent = `分析中 ${processed}/${foundFiles.length}...`;
+        if (duration >= 60) {
+          validFiles.push({ ...f, duration, file });
+        }
+      } catch(e) {
+        processed++;
+      }
+    }
+
+    _scanFoundFiles = validFiles;
+
+    // Show results
+    _$('ms-scan-status').style.display = 'none';
+    const resultsEl = _$('ms-scan-results');
+    if (!validFiles.length) {
+      resultsEl.innerHTML = '<p style="text-align:center;padding:20px;color:var(--ms-text-sub);">未发现时长 ≥ 60 秒的音频文件</p>';
+      return;
+    }
+
+    // LRC match preview: which LRC files will match which songs
+    const lrcMatchPreview = new Map(); // song name → lrc name
+    if (_scanLrcFiles && _scanLrcFiles.length) {
+      const candidates = validFiles.map(f => ({
+        title: _normalizeName(f.name)
+      }));
+      _scanLrcFiles.forEach(lrc => {
+        const lrcName = _normalizeName(lrc.name);
+        let best = null, bestScore = 0.3;
+        candidates.forEach((c, i) => {
+          const sc = _nameSimilarity(lrcName, c.title);
+          if (sc > bestScore) { bestScore = sc; best = validFiles[i]; }
+        });
+        if (best) lrcMatchPreview.set(best.name, lrc.name);
+      });
+    }
+
+    resultsEl.innerHTML = validFiles.map((f, i) => {
+      const matchedLrc = lrcMatchPreview.get(f.name);
+      const lrcTag = matchedLrc
+        ? `<span style="color:rgba(120,200,120,0.8);font-size:0.7rem;flex-shrink:0;margin-left:6px;">🎤 ${matchedLrc}</span>`
+        : '';
+      return `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.85rem;">
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:4px;">${f.name}${lrcTag}</span>
+        <span style="color:var(--ms-text-sub);margin-left:10px;flex-shrink:0;">${Math.floor(f.duration/60)}:${String(Math.floor(f.duration%60)).padStart(2,'0')}</span>
+      </div>`;
+    }).join('');
+
+    // Build target playlist dropdown
+    const select = _$('ms-scan-target-pl');
+    select.innerHTML = _localPlaylists.map(pl => `<option value="${pl.id}">${pl.name}</option>`).join('')
+      + '<option value="__new__">+ 新建歌单</option>';
+    _$('ms-scan-target').style.display = 'block';
+    _$('ms-btn-confirm-scan').style.display = 'inline-block';
+    _$('ms-scan-count').textContent = validFiles.length;
+    _$('ms-btn-cancel-scan').textContent = '关闭';
+  }
+
+  async function _confirmScanImport() {
+    if (!_scanFoundFiles.length) return;
+    const btn = _$('ms-btn-confirm-scan');
+    btn.disabled = true;
+    btn.textContent = '导入中...';
+
+    try {
+      const targetId = _$('ms-scan-target-pl')?.value;
+      let targetPl;
+      if (targetId === '__new__') {
+        const name = `扫描导入 ${new Date().toLocaleDateString()}`;
+        targetPl = { id: 'p_' + Date.now(), name, titleEn: 'SCAN IMPORT', count: 0, cover: _DEFAULT_COVER, songs: [], isLocal: true };
+        _localPlaylists.push(targetPl);
+      } else {
+        targetPl = _localPlaylists.find(p => p.id === targetId);
+      }
+      if (!targetPl) { if (typeof Toast !== 'undefined') Toast.show('歌单未找到'); return; }
+
+      // ① 导入音频
+      let added = 0;
+      for (const f of _scanFoundFiles) {
+        try {
+          const file = f.file || await f.handle.getFile();
+          const ab = await file.arrayBuffer();
+          const songId = 'local_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+          await MusicDB.put('audio', { id: songId, mimeType: file.type || 'audio/mpeg', data: ab });
+          targetPl.songs.push({
+            id: songId,
+            title: f.name.replace(/\.[^.]+$/, ''),
+            artist: 'Local',
+            cover: targetPl.cover,
+            hasLrc: false,
+            lrcId: null,
+            isCloud: false
+          });
+          added++;
+        } catch(e) { console.error('[MusicModule] 导入失败:', f.name, e); }
+      }
+
+      // ② 匹配 LRC 歌词文件
+      let lrcCount = 0;
+      if (_scanLrcFiles && _scanLrcFiles.length) {
+        const candidates = targetPl.songs.map(s => ({
+          id: s.id,
+          title: _normalizeName(s.title),
+          display: s.title
+        }));
+
+        for (const lrc of _scanLrcFiles) {
+          try {
+            const file = lrc.file || await lrc.handle.getFile();
+            const lrcName = _normalizeName(lrc.name);
+            let best = null, bestScore = 0.3;
+            candidates.forEach(c => {
+              const sc = _nameSimilarity(lrcName, c.title);
+              if (sc > bestScore) { bestScore = sc; best = c; }
+            });
+
+            if (best) {
+              const song = targetPl.songs.find(s => s.id === best.id);
+              if (song && !song.hasLrc) {
+                const text = await file.text();
+                const lrcId = `lrc_${song.id}`;
+                await MusicDB.put('lyrics', { id: lrcId, songId: song.id, text });
+                song.hasLrc = true;
+                song.lrcId = lrcId;
+                lrcCount++;
+              }
+            }
+          } catch(e) { console.warn('[MusicModule] LRC 导入失败:', lrc.name, e); }
+        }
+      }
+
+      targetPl.count = targetPl.songs.length;
+      await _savePlaylistToDB(targetPl);
+      _renderLocalPlaylists();
+      _closeModal('ms-modal-scan');
+
+      let msg = `成功导入 ${added} 首歌曲`;
+      if (lrcCount > 0) msg += `，匹配 ${lrcCount} 首歌词`;
+      if (typeof Toast !== 'undefined') Toast.show(msg);
+    } catch(e) {
+      console.error('[MusicModule] 扫描导入失败:', e);
+      if (typeof Toast !== 'undefined') Toast.show('导入失败');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = `确认添加 (${_scanFoundFiles.length}首)`;
+    }
   }
 
   // ── 上传逻辑 ──
@@ -2148,6 +2625,9 @@ if (fwLabelNum) {
 
     _$('ms-btn-pl-back').onclick = _navBack;
     _$('ms-btn-sl-back').onclick = _navBack;
+    _$('ms-sl-batch-btn').onclick = _toggleBatchMode;
+    _$('ms-batch-select-all').onclick = _selectAllSongs;
+    _$('ms-batch-delete').onclick = _batchDeleteSelected;
     _$('ms-sl-upload-btn').onclick = () => {
       _pendingFiles = [];
       _renderPendingList();
@@ -2286,6 +2766,9 @@ if (fwLabelNum) {
 
     _$('ms-btn-confirm-upload').onclick = _confirmUpload;
 
+    _$('ms-btn-scan-local').onclick = _scanLocalMusic;
+    _$('ms-btn-cancel-scan').onclick = () => { _closeModal('ms-modal-scan'); };
+    _$('ms-btn-confirm-scan').onclick = _confirmScanImport;
     _$('ms-btn-cancel-create').onclick = () => _closeModal('ms-modal-create-pl');
     _$('ms-new-pl-cover').onclick = () => { _uploadImgTargetId = 'ms-new-pl-cover'; _$('ms-file-img').click(); };
     _$('ms-btn-confirm-create').onclick = async () => {
@@ -2300,7 +2783,7 @@ if (fwLabelNum) {
       _closeModal('ms-modal-create-pl');
     };
 
-    ['ms-modal-create-pl', 'ms-modal-upload', 'ms-modal-api-guide'].forEach(id => {
+    ['ms-modal-create-pl', 'ms-modal-upload', 'ms-modal-api-guide', 'ms-modal-scan'].forEach(id => {
       const el = _$(id);
       if (el) {
         el.onclick = e => { if (e.target === el) _closeModal(id); };
