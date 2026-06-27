@@ -1314,17 +1314,17 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-watermark { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-size:120px;font-style:italic;font-weight:300;color:rgba(0,0,0,0.02);pointer-events:none;z-index:0;line-height:1; }
 
 /* Header */
-#conv-screen .cv-header { position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top, 20px) + 8px) 16px 8px;background:rgba(239,236,231,0.75);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:none;border-bottom:0.5px solid rgba(0,0,0,0.06);border-radius:0;box-shadow:none;z-index:20;will-change:transform; }
+#conv-screen .cv-header { position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top, 20px) + 8px) 16px 8px;background:#f6f6f6;border:none;border-bottom:0.5px solid rgba(0,0,0,0.08);border-radius:0;box-shadow:none;z-index:20;will-change:transform; }
 
-#conv-screen .cv-icon-btn { width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid rgba(18,18,18,0.05);color:#1a3a50;font-size:1.2rem;display:flex;justify-content:center;align-items:center;cursor:pointer;transition:0.2s;box-shadow:0 2px 10px rgba(0,0,0,0.03); flex-shrink:0; }
-#conv-screen .cv-icon-btn:active { transform:scale(0.9); }
+#conv-screen .cv-icon-btn { width:36px;height:36px;border-radius:6px;background:transparent;border:none;color:#333;font-size:1.2rem;display:flex;justify-content:center;align-items:center;cursor:pointer;transition:0.2s;box-shadow:none;flex-shrink:0; }
+#conv-screen .cv-icon-btn:active { opacity:0.5;transform:none; }
 
-/* 👇 去掉了 flex:1，加上了 margin:0 12px 保证和两边按钮的安全距离 */
-#conv-screen .cv-header-profile { display:flex;align-items:center;gap:12px; min-width:0; margin:0 12px; }
-#conv-screen .cv-header-profile > div { min-width:0; display:flex; flex-direction:column; justify-content:center; }
+/* 微信风格：头像+昵称居中 */
+#conv-screen .cv-header-profile { display:flex;align-items:center;gap:10px; min-width:0; flex:1; justify-content:center; }
+#conv-screen .cv-header-profile > div { min-width:0; display:flex; flex-direction:column; justify-content:center; align-items:center; }
 
 #conv-screen .cv-header-avatar { width:38px;height:38px;border-radius:50%;object-fit:cover; flex-shrink:0; }
-#conv-screen .cv-header-name { font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:500;font-style:italic;color:#1a3a50;line-height:1;display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#conv-screen .cv-header-name { font-family:'Inter','Noto Sans SC',sans-serif;font-size:1.05rem;font-weight:600;font-style:normal;color:#333;line-height:1;display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 #conv-screen .cv-header-status { font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:2px;color:#888;margin-top:4px;text-transform:uppercase;display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 /* Feed */
@@ -1749,7 +1749,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-dr-value { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 500; font-style: italic; color: #1e3d54; line-height: 1; }
 
 /* Footer */
-#conv-screen .cv-footer { position:absolute;bottom:0;left:0;right:0;padding:8px 12px calc(env(safe-area-inset-bottom, 24px) + 8px);background:rgba(239,236,231,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:none;border-top:0.5px solid rgba(0,0,0,0.06);border-radius:0;box-shadow:none;display:flex;flex-direction:column;z-index:20;transition:transform 0.5s cubic-bezier(0.19,1,0.22,1),opacity 0.5s cubic-bezier(0.19,1,0.22,1);will-change:transform; }
+#conv-screen .cv-footer { position:absolute;bottom:0;left:0;right:0;padding:8px 12px calc(env(safe-area-inset-bottom, 24px) + 8px);background:#f6f6f6;border:none;border-top:0.5px solid rgba(0,0,0,0.08);border-radius:0;box-shadow:none;display:flex;flex-direction:column;z-index:20;transition:transform 0.5s cubic-bezier(0.19,1,0.22,1),opacity 0.5s cubic-bezier(0.19,1,0.22,1);will-change:transform; }
 /* Action panel grid */
 #conv-screen .cv-action-panel { width:100%;display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.6s cubic-bezier(0.16,1,0.3,1); }
 #conv-screen .cv-footer.expanded .cv-action-panel { grid-template-rows:1fr; }
@@ -1794,7 +1794,35 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-footer.expanded .cv-panel-card:nth-child(5){transition-delay:0.10s}
 #conv-screen .cv-footer.expanded .cv-panel-card:nth-child(6){transition-delay:0.14s}
 /* Footer base row */
-#conv-screen .cv-footer-base { display:flex;align-items:flex-end;gap:12px;width:100%; }
+#conv-screen .cv-footer-base { display:flex;align-items:flex-end;gap:6px;width:100%; }
+/* ── 微信风格按钮通用 ── */
+#conv-screen .cv-func-btn { width:34px;height:34px;border-radius:6px;background:transparent;border:none;color:#666;font-size:1.35rem;display:flex;justify-content:center;align-items:center;cursor:pointer;flex-shrink:0;margin-bottom:0;box-shadow:none;transition:opacity 0.15s; }
+#conv-screen .cv-func-btn:active { opacity:0.5;transform:none; }
+/* 麦克风按钮 */
+#conv-screen .cv-mic-btn { color:#555; }
+/* 表情按钮 */
+#conv-screen .cv-emoji-btn { color:#555; }
+/* 加号按钮 */
+#conv-screen .cv-plus-btn { color:#555; }
+#conv-screen .cv-plus-icon { transition:transform 0.4s cubic-bezier(0.19,1,0.22,1); }
+#conv-screen .cv-footer.expanded .cv-plus-icon { transform:rotate(135deg); }
+/* 输入框区域 */
+#conv-screen .cv-input-area { flex:1;background:#fff;border:1px solid #ddd;border-radius:6px;overflow:hidden;min-width:0; }
+#conv-screen .cv-input-area textarea { width:100%;background:transparent;border:none;font-family:'Inter','Noto Sans SC',sans-serif;font-size:0.92rem;color:#333;resize:none;max-height:100px;line-height:1.45;padding:8px 8px;height:36px;outline:none; }
+#conv-screen .cv-input-area textarea::placeholder { color:#b3b3b3;font-family:'Inter','Noto Sans SC',sans-serif;font-style:normal; }
+/* 发送按钮组 - 默认隐藏，有文字时显示 */
+#conv-screen .cv-send-group { display:none;align-items:center;gap:4px;flex-shrink:0; }
+#conv-screen .cv-footer-base.has-text .cv-send-group { display:flex; }
+/* 有文字时隐藏 麦克风 和 加号 */
+#conv-screen .cv-footer-base.has-text .cv-mic-btn,
+#conv-screen .cv-footer-base.has-text .cv-plus-btn,
+#conv-screen .cv-footer-base.has-text .cv-self-send-btn,
+#conv-screen .cv-footer-base.has-text .cv-emoji-btn { display:none; }
+/* 自发送按钮（不上屏AI） */
+#conv-screen .cv-self-send-btn { color:#999;font-size:1.15rem;width:30px;height:30px; }
+/* 绿色发送键（微信风格） */
+#conv-screen .cv-send-btn { height:34px;padding:0 14px;border-radius:6px;background:#07c160;border:none;color:#fff;font-size:0.88rem;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-bottom:0;transition:background 0.15s;font-family:'Inter','Noto Sans SC',sans-serif; }
+#conv-screen .cv-send-btn:active { background:#06ad56;transform:scale(0.95); }
 /* ── 图片预览条（输入框上方）── */
 #conv-screen .cv-img-preview-bar { display:none;align-items:flex-end;gap:8px;padding:6px 4px 0;width:100%; }
 #conv-screen .cv-img-preview-bar.visible { display:flex; }
@@ -1815,19 +1843,6 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen #cv-img-viewer-actions .cv-img-viewer-btn { flex:1;min-width:132px;padding:10px 16px;border:0.5px solid rgba(255,255,255,0.35);border-radius:100px;background:rgba(255,255,255,0.06);color:#fff;font-family:'Inter','Noto Sans SC',sans-serif;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:0.2s; }
 #conv-screen #cv-img-viewer-actions .cv-img-viewer-btn:active { background:#fff;color:#1a3a50;transform:scale(0.97); }
 #conv-screen #cv-img-viewer-actions .cv-img-viewer-btn:disabled { opacity:0.45;pointer-events:none; }
-#conv-screen .cv-func-btn { width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid rgba(18,18,18,0.05);color:#1a3a50;font-size:1.4rem;display:flex;justify-content:center;align-items:center;cursor:pointer;flex-shrink:0;margin-bottom:2px;box-shadow:0 2px 10px rgba(0,0,0,0.03); }
-#conv-screen .cv-func-btn:active { transform:scale(0.9); }
-#conv-screen .cv-plus-icon { transition:transform 0.5s cubic-bezier(0.19,1,0.22,1); }
-#conv-screen .cv-footer.expanded .cv-plus-icon { transform:rotate(135deg); }
-#conv-screen .cv-input-area { flex:1;background:transparent; }
-#conv-screen .cv-input-area textarea { width:100%;background:transparent;border:none;font-family:'Inter','Noto Sans SC',sans-serif;font-size:0.95rem;color:#1a3a50;resize:none;max-height:120px;line-height:1.5;padding:12px 4px;height:44px; }
-#conv-screen .cv-input-area textarea::placeholder { color:#8abccc;font-family:'Playfair Display',serif;font-style:italic; }
-#conv-screen .cv-action-capsule { display:flex;align-items:center;gap:4px;background:#1a3a50;border-radius:100px;padding:4px;flex-shrink:0;margin-bottom:2px; }
-#conv-screen .cv-btn-user { width:40px;height:40px;border-radius:50%;background:transparent;border:none;color:#fff;font-size:1.2rem;display:flex;justify-content:center;align-items:center;cursor:pointer;transition:0.2s; }
-#conv-screen .cv-btn-user:active { opacity:0.5; }
-#conv-screen .cv-btn-ai { width:40px;height:40px;border-radius:50%;background:#fff;border:none;color:#1a3a50;font-size:1.2rem;display:flex;justify-content:center;align-items:center;cursor:pointer;transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.2); }
-#conv-screen .cv-btn-ai:active { transform:scale(0.9); }
-
 /* API Modal */
 #conv-screen .cv-api-overlay { position:absolute;inset:0;z-index:100;background:rgba(239,236,231,0.92);display:flex;justify-content:center;align-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.5s cubic-bezier(0.16,1,0.3,1); }
 #conv-screen .cv-api-overlay.active { opacity:1;pointer-events:auto; }
@@ -4531,9 +4546,9 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
 #conv-screen .cv-msg-row.user .cv-bubble{background:#fff;border:1px solid rgba(18,18,18,0.08);color:#1a3a50;}
 
 /* 输入区 */
-#conv-screen .cv-footer{background:rgba(245,252,255,0.8);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-top:0.5px solid rgba(18,18,18,0.06);}
-#conv-screen .cv-input{background:rgba(255,255,255,0.6) !important;border:1px solid rgba(200,235,250,0.5) !important;color:#1a3a50 !important;border-radius:20px !important;}
-#conv-screen .cv-input::placeholder{color:#8ab8cc !important;}
+#conv-screen .cv-footer{background:#f6f6f6;border-top:0.5px solid rgba(0,0,0,0.08);}
+#conv-screen .cv-input{background:#fff !important;border:1px solid #e0e0e0 !important;color:#333 !important;border-radius:8px !important;}
+#conv-screen .cv-input::placeholder{color:#b2b2b2 !important;}
 
 /* Settings */
 #settings-screen{background:rgba(220,240,255,0.7) !important;backdrop-filter:blur(3px) !important;-webkit-backdrop-filter:blur(3px) !important;}

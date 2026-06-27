@@ -10056,6 +10056,7 @@ const ConvModule = (() => {
     input.addEventListener('input', function() {
       // 1. 自适应高度 — 用 rAF 批量执行避免每次按键触发强制同步布局
       var self = this;
+      var oldHeight = this.style.height;
       if (_inputRaf) cancelAnimationFrame(_inputRaf);
       _inputRaf = requestAnimationFrame(function() {
         self.style.height = '44px';
@@ -10080,6 +10081,12 @@ const ConvModule = (() => {
       const heightChanged = (oldHeight !== this.style.height);
 
       const text = this.value.trim();
+      // ── 微信风格：有字显示发送键，隐藏麦克风和加号 ──
+      const footerBase = document.getElementById('cv-footer-base');
+      if (footerBase) {
+        if (text) { footerBase.classList.add('has-text'); }
+        else      { footerBase.classList.remove('has-text'); }
+      }
       const suggestBar = document.getElementById('cv-emote-suggest-bar');
       let emoteBarChanged = false;
 
@@ -12343,6 +12350,7 @@ function _renderImgPreviewBar() {
 
   _appendBubble(msg);
     input.value = '';
+    const fb = document.getElementById('cv-footer-base'); if (fb) fb.classList.remove('has-text');
     input.style.height = '44px';
     input.style.overflowY = 'hidden';
     // 🌟 发消息也算互动，重置计时器
@@ -15568,38 +15576,40 @@ if (!isRecall && !isHtml && !isQuote && !isAudio && !isEmote && !isTransfer && !
   function _cssPresetsKey() { return `css-presets-global`; }
 
   const DEFAULT_CSS_TEMPLATE = `/* 聊天页背景 */
-#conv-screen { background: rgba(210,238,252,0.45); }
+#conv-screen { background: #ededed; }
 
 /* 顶部栏 */
-#conv-screen .cv-header { background: rgba(239,236,231,0.75); backdrop-filter: blur(10px); border: none; border-bottom: 0.5px solid rgba(0,0,0,0.06); border-radius: 0; }
-/* 顶部返回与更多按钮 */
-#conv-screen .cv-icon-btn { background: #fff; color: #1a3a50; border: 1px solid rgba(18,18,18,0.05); }
+#conv-screen .cv-header { background: #f6f6f6; border: none; border-bottom: 0.5px solid rgba(0,0,0,0.08); border-radius: 0; }
+/* 顶部按钮 */
+#conv-screen .cv-icon-btn { background: transparent; color: #333; border: none; }
 
-/* 底部栏面板 */
-#conv-screen .cv-footer { background: rgba(239,236,231,0.85); backdrop-filter: blur(8px); border: none; border-top: 0.5px solid rgba(0,0,0,0.06); border-radius: 0; }
-/* 底部 + 号按钮 */
-#conv-screen .cv-func-btn { background: #fff; color: #1a3a50; border: 1px solid rgba(18,18,18,0.05); }
-/* 底部 ↑ 强制上屏按钮 */
-#conv-screen .cv-btn-user { background: transparent; color: #fff; }
-/* 底部 ✦ AI 生成按钮 */
-#conv-screen .cv-btn-ai { background: #fff; color: #1a3a50; }
+/* 底部栏 */
+#conv-screen .cv-footer { background: #f6f6f6; border: none; border-top: 0.5px solid rgba(0,0,0,0.08); border-radius: 0; }
+/* 底部按钮 (麦克风/表情/加号) */
+#conv-screen .cv-func-btn { background: transparent; color: #555; border: none; }
+/* 输入框 */
+#conv-screen .cv-input-area { background: #fff; border: 1px solid #ddd; border-radius: 6px; }
+#conv-screen .cv-input-area textarea { color: #333; }
+#conv-screen .cv-input-area textarea::placeholder { color: #b3b3b3; }
+/* 绿色发送键 */
+#conv-screen .cv-send-btn { background: #07c160; color: #fff; }
 
 /* AI 气泡 */
-#conv-screen .cv-msg-row.ai .cv-bubble { background: rgba(255,255,255,0.65); color: #1a3a50; border: 0.5px solid rgba(18,18,18,0.08); backdrop-filter: blur(5px); border-radius: 14px; }
-/* 用户气泡 */
-#conv-screen .cv-msg-row.user .cv-bubble { background: #fff; color: #1a3a50; border: 0.5px solid rgba(18,18,18,0.1); border-radius: 14px; }
+#conv-screen .cv-msg-row.ai .cv-bubble { background: #fff; color: #333; border: none; border-radius: 8px; }
+/* 用户气泡 (微信绿) */
+#conv-screen .cv-msg-row.user .cv-bubble { background: #95ec69; color: #000; border: none; border-radius: 8px; }
 
 /* 引用块 */
-#conv-screen .cv-quote-ref { border-bottom: 0.3px solid rgba(255,255,255,0.2); }
-#conv-screen .cv-msg-row.user .cv-quote-ref { border-bottom: 0.3px solid rgba(0,0,0,0.12); }
+#conv-screen .cv-quote-ref { border-bottom: 0.3px solid rgba(0,0,0,0.1); }
+#conv-screen .cv-msg-row.user .cv-quote-ref { border-bottom: 0.3px solid rgba(0,0,0,0.15); }
 
 /* 转账卡片 */
-#conv-screen .cv-transfer { background: #fbfaf8; border: 1px solid #e0e0e0; border-radius: 6px; }
-/* 转账绶带 (Pending / Success) */
-#conv-screen .cv-transfer-ribbon { background: #1a3a50; color: #fff; }
+#conv-screen .cv-transfer { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; }
+/* 转账绶带 */
+#conv-screen .cv-transfer-ribbon { background: #07c160; color: #fff; }
 
 /* 语音条 */
-#conv-screen .cv-audio-bubble { background: #1a3a50 !important; color: #fff !important; border-radius: 14px !important; }
+#conv-screen .cv-audio-bubble { background: #07c160 !important; color: #fff !important; border-radius: 8px !important; }
 
 /* 翻译展开区 */
 #conv-screen .cv-translate-divider { background: rgba(255,255,255,0.18); }

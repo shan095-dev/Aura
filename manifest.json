@@ -5,8 +5,8 @@
   "start_url": "./",
   "scope": "/Aura/",
   "display": "standalone",
-  "background_color": "#c8e8f5",
-  "theme_color": "#1a3a50",
+  "background_color": "#ededed",
+  "theme_color": "#ededed",
   "orientation": "portrait",
   "icons": [
     {

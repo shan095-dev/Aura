@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Chill OS">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="rgba(235,248,255,0.7)">
+<meta name="theme-color" content="#ededed">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
 <script src="https://unpkg.com/fflate@0.8.2/umd/index.js"></script>
@@ -1930,14 +1930,17 @@
         <button class="cv-qp-close-btn" onclick="ConvModule.cancelQuote()"><i class="ph ph-x"></i></button>
       </div>
       <!-- 基础输入区 -->
-      <div class="cv-footer-base">
-        <button class="cv-func-btn" id="cv-btn-plus"><i class="ph-thin ph-plus cv-plus-icon"></i></button>
-        <button class="cv-func-btn" id="cv-btn-emote" title="表情包" onclick="ConvModule._toggleChatEmotePicker(event)"><i class="ph-thin ph-smiley"></i></button>
+      <div class="cv-footer-base" id="cv-footer-base">
+        <button class="cv-func-btn cv-mic-btn" id="cv-btn-mic" title="语音"><i class="ph ph-microphone"></i></button>
         <div class="cv-input-area">
           <textarea id="cv-input" rows="1" placeholder="Type a message..."></textarea>
         </div>
-        <button class="cv-func-btn" id="cv-btn-user" title="上屏不触发AI"><i class="ph ph-arrow-up"></i></button>
-        <button class="cv-func-btn" id="cv-btn-ai"   title="触发AI回复"><i class="ph-fill ph-sparkle"></i></button>
+        <button class="cv-func-btn cv-emoji-btn" id="cv-btn-emote" title="表情包" onclick="ConvModule._toggleChatEmotePicker(event)"><i class="ph-thin ph-smiley"></i></button>
+        <button class="cv-func-btn cv-plus-btn" id="cv-btn-plus"><i class="ph-thin ph-plus cv-plus-icon"></i></button>
+        <div class="cv-send-group" id="cv-send-group">
+          <button class="cv-func-btn cv-self-send-btn" id="cv-btn-user" title="上屏不触发AI"><i class="ph ph-arrow-up"></i></button>
+          <button class="cv-send-btn" id="cv-btn-ai" title="发送"><span>发送</span></button>
+        </div>
       </div>
     </footer>
 
