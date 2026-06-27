@@ -15547,12 +15547,12 @@ if (!isRecall && !isHtml && !isQuote && !isAudio && !isEmote && !isTransfer && !
 #conv-screen { background: rgba(210,238,252,0.45); }
 
 /* 顶部栏 */
-#conv-screen .cv-header { background: rgba(239,236,231,0.75); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); border-radius: 28px; }
+#conv-screen .cv-header { background: rgba(239,236,231,0.75); backdrop-filter: blur(10px); border: none; border-bottom: 0.5px solid rgba(0,0,0,0.06); border-radius: 0; }
 /* 顶部返回与更多按钮 */
 #conv-screen .cv-icon-btn { background: #fff; color: #1a3a50; border: 1px solid rgba(18,18,18,0.05); }
 
 /* 底部栏面板 */
-#conv-screen .cv-footer { background: rgba(239,236,231,0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); border-radius: 36px; }
+#conv-screen .cv-footer { background: rgba(239,236,231,0.85); backdrop-filter: blur(8px); border: none; border-top: 0.5px solid rgba(0,0,0,0.06); border-radius: 0; }
 /* 底部 + 号按钮 */
 #conv-screen .cv-func-btn { background: #fff; color: #1a3a50; border: 1px solid rgba(18,18,18,0.05); }
 /* 底部 ↑ 强制上屏按钮 */

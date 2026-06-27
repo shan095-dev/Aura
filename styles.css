@@ -1314,7 +1314,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-watermark { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-size:120px;font-style:italic;font-weight:300;color:rgba(0,0,0,0.02);pointer-events:none;z-index:0;line-height:1; }
 
 /* Header */
-#conv-screen .cv-header { position:absolute;top:calc(env(safe-area-inset-top, 20px) + 10px);left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(239,236,231,0.75);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,0.4);border-radius:28px;box-shadow:0 10px 30px rgba(0,0,0,0.06);z-index:20;will-change:transform; }
+#conv-screen .cv-header { position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top, 20px) + 8px) 16px 8px;background:rgba(239,236,231,0.75);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:none;border-bottom:0.5px solid rgba(0,0,0,0.06);border-radius:0;box-shadow:none;z-index:20;will-change:transform; }
 
 #conv-screen .cv-icon-btn { width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid rgba(18,18,18,0.05);color:#1a3a50;font-size:1.2rem;display:flex;justify-content:center;align-items:center;cursor:pointer;transition:0.2s;box-shadow:0 2px 10px rgba(0,0,0,0.03); flex-shrink:0; }
 #conv-screen .cv-icon-btn:active { transform:scale(0.9); }
@@ -1328,7 +1328,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-header-status { font-family:'Space Mono',monospace;font-size:0.5rem;letter-spacing:2px;color:#888;margin-top:4px;text-transform:uppercase;display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 /* Feed */
-#conv-screen .cv-feed { height:100%;overflow-y:auto;padding:calc(env(safe-area-inset-top, 20px) + 90px) 20px 130px;display:flex;flex-direction:column;gap:28px;position:relative;scroll-behavior:smooth;z-index:10;contain:strict;will-change:scroll-position; }
+#conv-screen .cv-feed { height:100%;overflow-y:auto;padding:calc(env(safe-area-inset-top, 20px) + 64px) 16px calc(env(safe-area-inset-bottom, 24px) + 68px);display:flex;flex-direction:column;gap:28px;position:relative;scroll-behavior:smooth;z-index:10;contain:strict;will-change:scroll-position; }
 #conv-screen .cv-feed::-webkit-scrollbar { display:none; }
 
 /* Load more */
@@ -1746,8 +1746,7 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 #conv-screen .cv-dr-value { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 500; font-style: italic; color: #1e3d54; line-height: 1; }
 
 /* Footer */
-#conv-screen .cv-footer { position:absolute;bottom:24px;left:16px;right:16px;padding:8px 12px;background:rgba(239,236,231,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.4);border-radius:36px;box-shadow:0 15px 40px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.6);display:flex;flex-direction:column;z-index:20;transition:border-radius 0.5s cubic-bezier(0.19,1,0.22,1),transform 0.5s cubic-bezier(0.19,1,0.22,1),opacity 0.5s cubic-bezier(0.19,1,0.22,1);will-change:transform,border-radius; }
-#conv-screen .cv-footer.expanded { border-radius:24px; }
+#conv-screen .cv-footer { position:absolute;bottom:0;left:0;right:0;padding:8px 12px calc(env(safe-area-inset-bottom, 24px) + 8px);background:rgba(239,236,231,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:none;border-top:0.5px solid rgba(0,0,0,0.06);border-radius:0;box-shadow:none;display:flex;flex-direction:column;z-index:20;transition:transform 0.5s cubic-bezier(0.19,1,0.22,1),opacity 0.5s cubic-bezier(0.19,1,0.22,1);will-change:transform; }
 /* Action panel grid */
 #conv-screen .cv-action-panel { width:100%;display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.6s cubic-bezier(0.16,1,0.3,1); }
 #conv-screen .cv-footer.expanded .cv-action-panel { grid-template-rows:1fr; }
@@ -2103,8 +2102,8 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
   transform: translateY(0) translateX(0) !important; /* 升起 */
 }
 /* 调整半屏模式下头部的位置，使其不被刘海遮挡或显得太靠上 */
-#conv-screen.quick-reply-mode .cv-header { top: 15px; }
-#conv-screen.quick-reply-mode .cv-feed { padding-top: 85px; }
+#conv-screen.quick-reply-mode .cv-header { top: 0; }
+#conv-screen.quick-reply-mode .cv-feed { padding-top: 54px; }
 /* ── 高奢解构风横幅 ── */
 .couture-wrapper {
   position: absolute;
@@ -2300,12 +2299,12 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(145deg,#b8dff5 
 
 /* 多选底部操作舱 */
 .cv-ms-footer {
-  position: absolute; bottom: 24px; left: 16px; right: 16px;
-  padding: 12px 20px; background: rgba(18, 18, 18, 0.96);
-  border-radius: 36px; display: flex; justify-content: space-between; align-items: center;
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 12px 20px calc(env(safe-area-inset-bottom, 24px) + 12px); background: rgba(18, 18, 18, 0.96);
+  border-radius: 0; display: flex; justify-content: space-between; align-items: center;
   z-index: 300; transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
   transform: translateY(100px); opacity: 0; pointer-events: none;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  box-shadow: none;
 }
 #conv-screen.multi-select-mode .cv-ms-footer {
   transform: translateY(0); opacity: 1; pointer-events: auto;
@@ -4529,7 +4528,7 @@ body{background:linear-gradient(145deg,#b8dff5 0%,#c8eaf5 30%,#d5eef8 55%,#cce8f
 #conv-screen .cv-msg-row.user .cv-bubble{background:linear-gradient(135deg,rgba(168,216,240,0.75),rgba(140,200,230,0.65)) !important;border:1px solid rgba(200,235,250,0.6) !important;color:#1a3a50 !important;}
 
 /* 输入区 */
-#conv-screen .cv-footer{background:rgba(245,252,255,0.8) !important;backdrop-filter:blur(3px) !important;-webkit-backdrop-filter:blur(3px) !important;border-top:1px solid rgba(200,235,250,0.4) !important;}
+#conv-screen .cv-footer{background:rgba(245,252,255,0.8) !important;backdrop-filter:blur(3px) !important;-webkit-backdrop-filter:blur(3px) !important;border-top:0.5px solid rgba(200,235,250,0.5) !important;}
 #conv-screen .cv-input{background:rgba(255,255,255,0.6) !important;border:1px solid rgba(200,235,250,0.5) !important;color:#1a3a50 !important;border-radius:20px !important;}
 #conv-screen .cv-input::placeholder{color:#8ab8cc !important;}
 
