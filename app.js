@@ -1444,6 +1444,7 @@ const ApiHelper = (() => {
     const url = buildUrl(apiProfile.url, 'chat');
     const msgs = [...messages];
     let lastContent = ''; // 留住模型最后说过的一句人话,兜底时不至于空手而归
+    let finishReason = null; // 🌟 记录截断状态
 
     for (let round = 0; round < maxRounds; round++) {
       const body = {
@@ -1465,11 +1466,12 @@ const ApiHelper = (() => {
       if (!res.ok) throw await _apiErr(res);
       const data = await res.json();
       const msg = data.choices?.[0]?.message;
-      if (!msg) return lastContent || '';
+      if (!msg) return { content: lastContent || '', finishReason };
 
       // 模型没要调工具 → 直接返回最终回复
       if (!msg.tool_calls || !msg.tool_calls.length) {
-        return msg.content ?? lastContent ?? '';
+        finishReason = data.choices?.[0]?.finish_reason || null;
+        return { content: msg.content ?? lastContent ?? '', finishReason };
       }
 
       // 有些模型边带话边调工具,先把这句留住
@@ -1529,11 +1531,12 @@ const ApiHelper = (() => {
       if (res.ok) {
         const data = await res.json();
         const c = data.choices?.[0]?.message?.content;
-        if (c) return c;
+        finishReason = data.choices?.[0]?.finish_reason || null;
+        if (c) return { content: c, finishReason };
       }
     } catch (_) {}
 
-    return lastContent || '(工具调用轮次过多,已中止)';
+    return { content: lastContent || '(工具调用轮次过多,已中止)', finishReason };
   }
 
   return { buildUrl, fetchModels, chatCompletion, chatWithTools };
@@ -7177,6 +7180,10 @@ const EmoteModule = (() => {
     close();
     if (window.ConvModule && window.ConvModule.addEmoteToPreview) {
       window.ConvModule.addEmoteToPreview(keyword, url);
+      // 🌟 像微信一样，从管理弹窗选完表情包立刻发送
+      if (window.ConvModule._flushAndTriggerAI) {
+        window.ConvModule._flushAndTriggerAI();
+      }
     }
   }
 
@@ -11077,6 +11084,8 @@ const ConvModule = (() => {
     const picker = document.getElementById('cv-emote-picker');
     if (picker) picker.remove();
     addEmoteToPreview(keyword, url);
+    // 🌟 像微信一样，选完表情包立刻发送
+    _flushAndTriggerAI();
   }
 
   // ── 用户语音逻辑 ──
@@ -11781,7 +11790,8 @@ function _renderImgPreviewBar() {
       const hasTrans = !isUser && !!part.translation;
       const transClass = hasTrans ? ' translatable translate-open' : '';
       const transHtml  = hasTrans ? _buildTranslateHtml(part.translation) : '';
-      row.innerHTML = `${avatarHtml}<div class="cv-bubble${transClass}">${replyToHtml}${senderNameHtml}${quoteHtml}${_escHtml(_stripXhsTag(part.content))}${transHtml}</div>`;
+      const continueHtml = (!isUser && msg.truncated) ? `<button class="cv-continue-btn" onclick="event.stopPropagation();window.ConvModule._continueAI('${String(msg.charId)}')"><i class="ph ph-arrow-line-down"></i> 继续生成</button>` : '';
+      row.innerHTML = `${avatarHtml}<div class="cv-bubble${transClass}">${replyToHtml}${senderNameHtml}${quoteHtml}${_escHtml(_stripXhsTag(part.content))}${transHtml}${continueHtml}</div>`;
       return row;
     }
    
@@ -12371,6 +12381,15 @@ function _renderImgPreviewBar() {
     const input = document.getElementById('cv-input');
     if (input?.value.trim()) await sendUserMsg();
     await _triggerAI();
+  }
+
+  // 🌟 继续生成：当 API 回复被截断时，用户点击「继续生成」按钮
+  async function _continueAI(charId) {
+    if (_typingChars.has(String(charId))) return;
+    if (String(_charId) !== String(charId)) return; // 已切屏，放弃
+    Toast.show('继续生成中…');
+    // 直接调用 _triggerAI，模型会看到被截断的上一条消息，自然会接着续写
+    await _triggerAI(false);
   }
 // ── 群聊：一次 API 调用生成所有角色回复 ──
   async function _triggerGroupAI(userJustSpoke = 'auto') {
@@ -13259,8 +13278,18 @@ function _renderImgPreviewBar() {
         _removeTyping();
       }
 
+      // 🌟 提取截断标记：chatWithTools 现在返回 { content, finishReason }
+      let responseText, truncated;
+      if (response && typeof response === 'object' && 'content' in response) {
+        responseText = response.content || '';
+        truncated = response.finishReason === 'length';
+      } else {
+        responseText = String(response || '');
+        truncated = false;
+      }
+
       // 🛡️ 空回防护
-      if (!response || !String(response).trim()) {
+      if (!responseText.trim()) {
         console.warn('[Conv] AI 空回，response:', JSON.stringify(response));
         Toast.show('AI 返回了空内容，请检查 API 余额或切换模型重试');
         _pending = false;
@@ -13268,7 +13297,7 @@ function _renderImgPreviewBar() {
       }
 
      // 🌟 核心修复：防止 AI 忘了打 ||| 导致的长串文字，按双换行符强行切分
-     let rawBubbles = _splitAiBubbles(response);
+     let rawBubbles = _splitAiBubbles(responseText);
       let isFirstBubble = true;
 
       // 🌟 Fix: 用 index 循环代替 for-of，方便 emote 粘连时向 rawBubbles 注入新气泡
@@ -13714,6 +13743,34 @@ function _renderImgPreviewBar() {
 
         if (rawBubbles.length > 1) await _sleep(400);
       }
+
+      // 🌟 截断检测：如果 API 返回 finish_reason=length，标记最后一条 AI 消息
+      if (truncated && _charId === sessionCharId) {
+        try {
+          const msgs = await DB.messages.getPage(sessionCharId, 0, 3);
+          const lastMsg = msgs.find(m => m.role === 'assistant');
+          if (lastMsg && !lastMsg.recalled) {
+            lastMsg.truncated = true;
+            await DB.messages.put(lastMsg);
+            // 更新 DOM 中已渲染的气泡，追加「继续生成」按钮
+            const lastRow = document.querySelector(`[data-msg-id="${lastMsg.id}"]`);
+            if (lastRow) {
+              const continueBtn = document.createElement('button');
+              continueBtn.className = 'cv-continue-btn';
+              continueBtn.title = '回复被截断，点击继续生成';
+              continueBtn.innerHTML = '<i class="ph ph-arrow-line-down"></i> 继续生成';
+              continueBtn.onclick = (e) => { e.stopPropagation(); _continueAI(sessionCharId); };
+              const bubble = lastRow.querySelector('.cv-bubble');
+              if (bubble) {
+                bubble.appendChild(continueBtn);
+              } else {
+                lastRow.appendChild(continueBtn);
+              }
+            }
+          }
+        } catch(e) { console.warn('[Conv] 标记截断失败', e); }
+      }
+
     } catch(e) {
       if (_charId === sessionCharId) {
           _removeTyping();
@@ -15593,6 +15650,10 @@ if (!isRecall && !isHtml && !isQuote && !isAudio && !isEmote && !isTransfer && !
 #conv-screen .cv-input-area textarea::placeholder { color: #b3b3b3; }
 /* 绿色发送键 */
 #conv-screen .cv-send-btn { background: #07c160; color: #fff; }
+/* 🌟 截断续写按钮 */
+#conv-screen .cv-continue-btn { display: block; margin-top: 10px; padding: 8px 16px; background: rgba(7,193,96,0.08); color: #07c160; border: 1px solid rgba(7,193,96,0.25); border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; width: 100%; text-align: center; transition: 0.2s; }
+#conv-screen .cv-continue-btn:active { background: rgba(7,193,96,0.18); transform: scale(0.98); }
+#conv-screen .cv-continue-btn i { margin-right: 4px; }
 
 /* AI 气泡 */
 #conv-screen .cv-msg-row.ai .cv-bubble { background: #fff; color: #333; border: none; border-radius: 8px; }
@@ -17457,7 +17518,7 @@ if (action === 'quote') {
     document.getElementById('cv-dist-overlay').classList.remove('active');
   }
   
-  return { enter, back, openQuickReply, closeQuickReply,openSettings, closeSettings, openFuncPanel, loadMore, sendUserMsg, sendAndTriggerAI, fetchModels, closeApiModal, confirmApi, openRecallModal, closeRecallModal, collectTransfer, openHangTag, closeHangTag, tearHangTag, sendUserTransfer, sendImgMsg, closeMenu,handleMenuAction,cancelQuote, updateMultiSelectUI, cancelMultiSelect, favoriteSelected, deleteSelected,addEmoteToPreview,_toggleChatEmotePicker,_switchChatEmoteDict,_pickChatEmote,_openImgViewer, _openImgViewerFromEl, _viewerDownloadImage, _regenerateNovelFromViewer, toggleAudio, clearWallpaper, clearHistory, deleteChat, _toggleAccordion, _selectRadio, _selectPersona,_removePendingImg,playAudio, playUserAudio, previewVoice, _toggleTTS, _toggleFeedVoice, _toggleNovel, _toggleTranslate, _appendNovelImageMessage, _replaceMessageBubble, _showNovelPending, _hideNovelPending, _toggleAlias, _toggleHideAvatar, _onRemarkInput, _clearRemark,copyDefaultCSS, applyAndSaveCSS, clearCustomCSS, saveCssPreset, confirmSaveCssPreset, applyCssPreset, deleteCssPreset,manualSummarize, clearMemory, archiveToWorldBook, confirmArchive, syncSummary, _onSummaryEdit,openCallRecordModal, closeCallRecordModal,_toggleOfflineMsg, _scrollToBottom, openContextConsole,_splitAiBubbles, openLocModal, closeLocModal, sendLocationMsg, openDistModal, closeDistModal, _removeFace, _setFaceFidelity, _onFaceConsent, _pickFace, refreshGhostUsers };
+  return { enter, back, openQuickReply, closeQuickReply,openSettings, closeSettings, openFuncPanel, loadMore, sendUserMsg, sendAndTriggerAI, _flushAndTriggerAI, _continueAI, fetchModels, closeApiModal, confirmApi, openRecallModal, closeRecallModal, collectTransfer, openHangTag, closeHangTag, tearHangTag, sendUserTransfer, sendImgMsg, closeMenu,handleMenuAction,cancelQuote, updateMultiSelectUI, cancelMultiSelect, favoriteSelected, deleteSelected,addEmoteToPreview,_toggleChatEmotePicker,_switchChatEmoteDict,_pickChatEmote,_openImgViewer, _openImgViewerFromEl, _viewerDownloadImage, _regenerateNovelFromViewer, toggleAudio, clearWallpaper, clearHistory, deleteChat, _toggleAccordion, _selectRadio, _selectPersona,_removePendingImg,playAudio, playUserAudio, previewVoice, _toggleTTS, _toggleFeedVoice, _toggleNovel, _toggleTranslate, _appendNovelImageMessage, _replaceMessageBubble, _showNovelPending, _hideNovelPending, _toggleAlias, _toggleHideAvatar, _onRemarkInput, _clearRemark,copyDefaultCSS, applyAndSaveCSS, clearCustomCSS, saveCssPreset, confirmSaveCssPreset, applyCssPreset, deleteCssPreset,manualSummarize, clearMemory, archiveToWorldBook, confirmArchive, syncSummary, _onSummaryEdit,openCallRecordModal, closeCallRecordModal,_toggleOfflineMsg, _scrollToBottom, openContextConsole,_splitAiBubbles, openLocModal, closeLocModal, sendLocationMsg, openDistModal, closeDistModal, _removeFace, _setFaceFidelity, _onFaceConsent, _pickFace, refreshGhostUsers };
 })();
 /** 供 NovelModule 等脚本用 window 访问；const 不会自动挂到 window */
 window.ConvModule = ConvModule;
